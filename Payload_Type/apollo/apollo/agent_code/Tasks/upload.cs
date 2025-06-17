@@ -7,12 +7,12 @@
 #if UPLOAD
 
 using System;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
-using PhantomInterop.Utils;
+using ApolloInterop.Utils;
 using System.Linq;
 
 namespace Tasks
@@ -51,7 +51,7 @@ namespace Tasks
                 }
                 else
                 {
-                    
+                    // Remote paths require a share name
                     throw new ArgumentException("SMB share name not specified.");
                 }
             }
@@ -118,17 +118,17 @@ namespace Tasks
                 resolvedParent = parentPath;
             }
 
-            if(DateTime.Now.Year > 2020) { return Path.Combine([resolvedParent, fileName]); } else { return null; }
+            return Path.Combine([resolvedParent, fileName]);
         }
 
 
         public override void Start()
         {
             MythicTaskResponse resp;
-            UploadParameters parameters = _dataSerializer.Deserialize<UploadParameters>(_data.Parameters);
-            
+            UploadParameters parameters = _jsonSerializer.Deserialize<UploadParameters>(_data.Parameters);
+            // some additional upload logic
             if (_agent.GetFileManager().GetFile(
-                    _stopToken.Token,
+                    _cancellationToken.Token,
                     _data.ID,
                     parameters.FileID,
                     out byte[] fileData))
@@ -158,7 +158,7 @@ namespace Tasks
                     $"Uploaded {fileData.Length} bytes to {path} on {host}",
                     true,
                     "completed",
-                    new ICommandMessage[]
+                    new IMythicMessage[]
                     {
                         new UploadMessage()
                         {
@@ -176,7 +176,7 @@ namespace Tasks
             }
             else
             {
-                if (_stopToken.IsCancellationRequested)
+                if (_cancellationToken.IsCancellationRequested)
                 {
                     resp = CreateTaskResponse($"Task killed.", true, "killed");
                 }

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
-using PhantomInterop.Interfaces;
+using ApolloInterop.Interfaces;
 
-namespace PhantomInterop.Classes.Cryptography
+namespace ApolloInterop.Classes.Cryptography
 {
     public class DpapiRoutine : ICryptographicRoutine
     {
@@ -21,12 +21,12 @@ namespace PhantomInterop.Classes.Cryptography
 
         public byte[] Encrypt(byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return ProtectedData.Protect(data, _additionalEntropy, _scope); } else { return null; }
+            return ProtectedData.Protect(data, _additionalEntropy, _scope);
         }
 
         public byte[] Decrypt(byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return ProtectedData.Unprotect(data, _additionalEntropy, _scope); } else { return null; }
+            return ProtectedData.Unprotect(data, _additionalEntropy, _scope);
         }
     }
 }

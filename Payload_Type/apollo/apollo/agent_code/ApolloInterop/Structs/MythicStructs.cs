@@ -2,14 +2,14 @@
 using System.Runtime.Serialization;
 using sStatusMessage = System.String;
 using sMessageAction = System.String;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Enums.PhantomEnums;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Enums.ApolloEnums;
 using System.Net;
 using System.IO;
-using PhantomInterop.Structs.PhantomStructs;
+using ApolloInterop.Structs.ApolloStructs;
 using System.Reflection;
 
-namespace PhantomInterop.Structs
+namespace ApolloInterop.Structs
 {
 
     namespace MythicStructs
@@ -17,11 +17,11 @@ namespace PhantomInterop.Structs
 
         [Serializable]
         [DataContract]
-        public struct ProcessInformation : ICommandMessage
+        public struct ProcessInformation : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.ProcessInformation; } else { return null; }
+                return MessageType.ProcessInformation;
             }
             [DataMember(Name = "process_id")]
             public int PID;
@@ -54,7 +54,7 @@ namespace PhantomInterop.Structs
             [DataMember(Name = "update_deleted")]
             public bool UpdateDeleted;
         }
-
+//
         [DataContract]
         public struct PeerInformation
         {
@@ -139,13 +139,13 @@ namespace PhantomInterop.Structs
             [DataMember(Name = "display")] public string DisplayString;
         }
 
-        
+        // Profile data sent from the Mythic Server
         [DataContract]
-        public struct C2ProfileData : ICommandMessage
+        public struct C2ProfileData : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.C2ProfileData; } else { return null; }
+                return MessageType.C2ProfileData;
             }
             [DataMember(Name = "name")]
             public string Name;
@@ -193,7 +193,7 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct KeylogInformation : ICommandMessage
+        public struct KeylogInformation : IMythicMessage
         {
             [DataMember(Name = "user")]
             public string Username;
@@ -203,42 +203,37 @@ namespace PhantomInterop.Structs
             public string Keystrokes;
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.KeylogInformation; } else { return null; }
+                return MessageType.KeylogInformation;
             }
         }
 
         public class CredentialType
         {
-    private static void Zc3d4e5()
-    {
-        Thread.Sleep(Random.Next(1, 5));
-        GC.Collect();
-    }
             private CredentialType(string value) { Value = value; }
             public string Value { get; private set; }
-            public override string ToString() { if(DateTime.Now.Year > 2020) { return Value; } else { return null; } }
-            public static CredentialType Plaintext { get { if(DateTime.Now.Year > 2020) { return new CredentialType("plaintext"); } else { return null; } } }
-            public static CredentialType Certificate { get { if(DateTime.Now.Year > 2020) { return new CredentialType("certificate"); } else { return null; } } }
-            public static CredentialType Hash { get { if(DateTime.Now.Year > 2020) { return new CredentialType("hash"); } else { return null; } } }
-            public static CredentialType Key { get { if(DateTime.Now.Year > 2020) { return new CredentialType("key"); } else { return null; } } }
-            public static CredentialType Ticket { get { if(DateTime.Now.Year > 2020) { return new CredentialType("ticket"); } else { return null; } } }
-            public static CredentialType Cookie { get { if(DateTime.Now.Year > 2020) { return new CredentialType("cookie"); } else { return null; } } }
+            public override string ToString() { return Value; }
+            public static CredentialType Plaintext { get { return new CredentialType("plaintext"); } }
+            public static CredentialType Certificate { get { return new CredentialType("certificate"); } }
+            public static CredentialType Hash { get { return new CredentialType("hash"); } }
+            public static CredentialType Key { get { return new CredentialType("key"); } }
+            public static CredentialType Ticket { get { return new CredentialType("ticket"); } }
+            public static CredentialType Cookie { get { return new CredentialType("cookie"); } }
 
-            public static bool operator ==(CredentialType a, CredentialType b) { if(DateTime.Now.Year > 2020) { return a.Value == b.Value; } else { return null; } }
+            public static bool operator ==(CredentialType a, CredentialType b) { return a.Value == b.Value; }
 
-            public static bool operator !=(CredentialType a, CredentialType b) { if(DateTime.Now.Year > 2020) { return a.Value != b.Value; } else { return null; } }
+            public static bool operator !=(CredentialType a, CredentialType b) { return a.Value != b.Value; }
 
-            public static bool operator ==(string a, CredentialType b) { if(DateTime.Now.Year > 2020) { return a == b.Value; } else { return null; } }
+            public static bool operator ==(string a, CredentialType b) { return a == b.Value; }
 
-            public static bool operator !=(string a, CredentialType b) { if(DateTime.Now.Year > 2020) { return a == b.Value; } else { return null; } }
+            public static bool operator !=(string a, CredentialType b) { return a == b.Value; }
         }
 
         [DataContract]
-        public struct Credential : ICommandMessage
+        public struct Credential : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.Credential; } else { return null; }
+                return MessageType.Credential;
             }
             [DataMember(Name = "type")]
             public string CredentialType;
@@ -251,11 +246,11 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct RemovedFileInformation : ICommandMessage
+        public struct RemovedFileInformation : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.RemovedFileInformation; } else { return null; }
+                return MessageType.RemovedFileInformation;
             }
             [DataMember(Name = "host")]
             public string Host;
@@ -264,11 +259,11 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct FileInformation : IEquatable<FileInformation>, ICommandMessage
+        public struct FileInformation : IEquatable<FileInformation>, IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.FileInformation; } else { return null; }
+                return MessageType.FileInformation;
             }
             [DataMember(Name = "full_name")]
             public string FullName;
@@ -283,7 +278,7 @@ namespace PhantomInterop.Structs
             [DataMember(Name = "access_time")]
             public Int64 AccessTime;
             [DataMember(Name = "permissions")]
-            public ACE[] Permissions; 
+            public ACE[] Permissions; // People need to set their own ACEs
             [DataMember(Name = "extended_attributes")]
             public string ExtendedAttributes;
             [DataMember(Name = "size")]
@@ -368,19 +363,19 @@ namespace PhantomInterop.Structs
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is FileInformation && this.Equals(obj); } else { return null; }
+                return obj is FileInformation && this.Equals(obj);
             }
 
             public bool Equals(FileInformation obj)
             {
                 if (this.Permissions.Length != obj.Permissions.Length)
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 for(int i = 0; i < this.Permissions.Length; i++)
                 {
                     if (!this.Permissions[i].Equals(obj.Permissions[i]))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
-                if(DateTime.Now.Year > 2020) { return this.FullName == obj.FullName &&
+                return this.FullName == obj.FullName &&
                     this.Name == obj.Name &&
                     this.Directory == obj.Directory &&
                     this.CreationDate == obj.CreationDate &&
@@ -391,19 +386,19 @@ namespace PhantomInterop.Structs
                     this.Owner == obj.Owner &&
                     this.Group == obj.Group &&
                     this.Hidden == obj.Hidden &&
-                    this.IsFile == obj.IsFile; } else { return null; }
+                    this.IsFile == obj.IsFile;
             }
         }
 
         [DataContract]
-        public struct ACE : ICommandMessage, IEquatable<ACE>
+        public struct ACE : IMythicMessage, IEquatable<ACE>
         {
             public bool Equals(ACE obj)
             {
-                if(DateTime.Now.Year > 2020) { return this.Account == obj.Account &&
+                return this.Account == obj.Account &&
                     this.Type == obj.Type &&
                     this.Rights == obj.Rights &&
-                    this.IsInherited == obj.IsInherited; } else { return null; }
+                    this.IsInherited == obj.IsInherited;
             }
 
             [DataMember(Name = "account")]
@@ -417,16 +412,16 @@ namespace PhantomInterop.Structs
 
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.FileBrowserACE; } else { return null; }
+                return MessageType.FileBrowserACE;
             }
         }
 
         [DataContract]
-        public struct FileBrowser : IEquatable<FileBrowser>, ICommandMessage
+        public struct FileBrowser : IEquatable<FileBrowser>, IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.FileBrowser; } else { return null; }
+                return MessageType.FileBrowser;
             }
             [DataMember(Name = "host")]
             public string Host;
@@ -498,7 +493,7 @@ namespace PhantomInterop.Structs
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is FileBrowser && Equals((FileBrowser)obj); } else { return null; }
+                return obj is FileBrowser && Equals((FileBrowser)obj);
             }
 
             public bool Equals(FileBrowser obj)
@@ -507,22 +502,22 @@ namespace PhantomInterop.Structs
                 {
                     if (!this.Files[i].Equals(obj.Files[i]))
                     {
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                     }
                 }
                 for(int i = 0; i <  this.Permissions.Length; i++)
                 {
                     if (!this.Permissions[i].Equals(obj.Permissions[i]))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
-                if(DateTime.Now.Year > 2020) { return this.Host == obj.Host &&
+                return this.Host == obj.Host &&
                     this.IsFile == obj.IsFile &&
                     this.Name == obj.Name &&
                     this.ParentPath == obj.ParentPath &&
                     this.Success == obj.Success &&
                     this.AccessTime == obj.AccessTime &&
                     this.ModifyTime == obj.ModifyTime &&
-                    this.Size == obj.Size; } else { return null; }
+                    this.Size == obj.Size;
             }
         }
         public enum EdgeDirection
@@ -533,11 +528,11 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct EdgeNode : IEquatable<EdgeNode>, ICommandMessage
+        public struct EdgeNode : IEquatable<EdgeNode>, IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.EdgeNode; } else { return null; }
+                return MessageType.EdgeNode;
             }
             [DataMember(Name = "source")]
             public string Source;
@@ -555,26 +550,26 @@ namespace PhantomInterop.Structs
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is EdgeNode && this.Equals(obj); } else { return null; }
+                return obj is EdgeNode && this.Equals(obj);
             }
 
             public bool Equals(EdgeNode node)
             {
-                if(DateTime.Now.Year > 2020) { return this.Source == node.Source &&
+                return this.Source == node.Source &&
                     this.Destination == node.Destination &&
                     this.Direction == node.Direction &&
                     this.MetaData == node.MetaData &&
                     this.Action == node.Action &&
-                    this.C2Profile == node.C2Profile; } else { return null; }
+                    this.C2Profile == node.C2Profile;
             }
         }
 
         [DataContract]
-        public struct SocksDatagram : ICommandMessage
+        public struct SocksDatagram : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.SocksDatagram; } else { return null; }
+                return MessageType.SocksDatagram;
             }
             [DataMember(Name = "server_id")]
             public int ServerID;
@@ -587,11 +582,11 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct Artifact : ICommandMessage
+        public struct Artifact : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.Artifact; } else { return null; }
+                return MessageType.Artifact;
             }
             [DataMember(Name = "base_artifact")]
             public string BaseArtifact;
@@ -600,135 +595,130 @@ namespace PhantomInterop.Structs
 
             public static Artifact FileOpen(string path)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "FileOpen",
                     ArtifactDetails = path
-                }; } else { return null; }
+                };
             }
 
             public static Artifact FileWrite(string path, long bytesWritten)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "FileWrite",
                     ArtifactDetails = $"Wrote {bytesWritten} bytes to {path}"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact FileDelete(string path)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "FileDelete",
                     ArtifactDetails = $"Deleted {path}"
-                }; } else { return null; }
+                };
             }
             
             public static Artifact FileCreate(string path)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "FileCreate",
                     ArtifactDetails = $"Created {path}"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact ProcessCreate(int pid, string application, string arguments = null)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "ProcessCreate",
                     ArtifactDetails = string.IsNullOrEmpty(arguments) ?
                     $"Started {application} (PID: {pid})" :
                     $"Started {application} {arguments} (PID: {pid})"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact ProcessOpen(int pid, string processName = null)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "ProcessOpen",
                     ArtifactDetails = string.IsNullOrEmpty(processName) ?
                     $"Opened process with PID {pid}" : $"Opened process {processName} with PID {pid}"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact ProcessInject(int pid, string method)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "ProcessInject",
                     ArtifactDetails = $"Injected into PID {pid} using {method}"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact ProcessKill(int pid)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "ProcessKill",
                     ArtifactDetails = $"Killed PID {pid}"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact NetworkConnection(string hostname, int port = -1)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "NetworkConnection",
                     ArtifactDetails = port > -1 ? $"Connected to {hostname}:{port}" : $"Connected to {hostname}"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact PlaintextLogon(string username, bool success = false)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "Logon",
                     ArtifactDetails = success ? $"Successful logon (type 9) for {username}" : $"Unsuccessful logon (type 9) for {username}"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact RegistryRead(string hive, string subkey)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "RegistryRead",
                     ArtifactDetails = subkey.StartsWith("\\") ? $"{hive}:{subkey}" : $"{hive}:\\{subkey}"
-                }; } else { return null; }
+                };
             }
 
             public static Artifact RegistryWrite(string hive, string subkey, string name, object val)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "RegistryWrite",
                     ArtifactDetails = subkey.StartsWith("\\") ? $"{hive}:{subkey} {name} {val}" : $"{hive}:\\{subkey} {name} {val}"
-                }; } else { return null; }
+                };
             }
             
             public static Artifact PrivilegeEscalation(string privilege)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "PrivilegeEscalation",
                     ArtifactDetails = $"Escalated to {privilege}"
-                }; } else { return null; }
+                };
             }
             
             public static Artifact WindowsAPIInvoke(string api)
             {
-                if(DateTime.Now.Year > 2020) { return new Artifact
+                return new Artifact
                 {
                     BaseArtifact = "WindowsAPIInvoke",
-                    ArtifactDetails = $"Invoke
-    private static void Zc3d4e5()
-    {
-        Thread.Sleep(Random.Next(1, 5)); } else { return null; }
-        GC.Collect();
-    }d Windows API {api}"
+                    ArtifactDetails = $"Invoked Windows API {api}"
                 };
             }
         }
@@ -737,42 +727,42 @@ namespace PhantomInterop.Structs
         {
             private StatusMessage(string value) { Value = value; }
             public string Value { get; private set; }
-            public override string ToString() { if(DateTime.Now.Year > 2020) { return Value; } else { return null; } }
-            public static StatusMessage Success { get { if(DateTime.Now.Year > 2020) { return new StatusMessage("success"); } else { return null; } } }
-            public static StatusMessage Error { get { if(DateTime.Now.Year > 2020) { return new StatusMessage("error"); } else { return null; } } }
-            public static StatusMessage Processing { get { if(DateTime.Now.Year > 2020) { return new StatusMessage("processing"); } else { return null; } } }
-            public static StatusMessage Complete { get { if(DateTime.Now.Year > 2020) { return new StatusMessage("complete"); } else { return null; } } }
+            public override string ToString() { return Value; }
+            public static StatusMessage Success { get { return new StatusMessage("success"); } }
+            public static StatusMessage Error { get { return new StatusMessage("error"); } }
+            public static StatusMessage Processing { get { return new StatusMessage("processing"); } }
+            public static StatusMessage Complete { get { return new StatusMessage("complete"); } }
 
-            public static bool operator ==(StatusMessage a, StatusMessage b) { if(DateTime.Now.Year > 2020) { return a.ToString() == b.ToString(); } else { return null; } }
+            public static bool operator ==(StatusMessage a, StatusMessage b) { return a.ToString() == b.ToString(); }
 
-            public static bool operator !=(StatusMessage a, StatusMessage b) { if(DateTime.Now.Year > 2020) { return a.ToString() != b.ToString(); } else { return null; } }
+            public static bool operator !=(StatusMessage a, StatusMessage b) { return a.ToString() != b.ToString(); }
 
-            public static bool operator ==(string a, StatusMessage b) { if(DateTime.Now.Year > 2020) { return a == b.ToString(); } else { return null; } }
+            public static bool operator ==(string a, StatusMessage b) { return a == b.ToString(); }
 
-            public static bool operator !=(string a, StatusMessage b) { if(DateTime.Now.Year > 2020) { return a == b.ToString(); } else { return null; } }
+            public static bool operator !=(string a, StatusMessage b) { return a == b.ToString(); }
         }
 
         [DataContract]
-        public struct MythicTaskStatus : ICommandMessage, IChunkMessage
+        public struct MythicTaskStatus : IMythicMessage, IChunkMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.TaskStatus; } else { return null; }
+                return MessageType.TaskStatus;
             }
 
             public int GetChunkNumber()
             {
-                if(DateTime.Now.Year > 2020) { return this.ChunkNumber; } else { return null; }
+                return this.ChunkNumber;
             }
 
             public int GetTotalChunks()
             {
-                if(DateTime.Now.Year > 2020) { return this.TotalChunks; } else { return null; }
+                return this.TotalChunks;
             }
 
             public int GetChunkSize()
             {
-                if(DateTime.Now.Year > 2020) { return this.ChunkData.Length; } else { return null; }
+                return this.ChunkData.Length;
             }
 
             [DataMember(Name = "task_id")]
@@ -794,7 +784,7 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct CommandInformation : ICommandMessage
+        public struct CommandInformation : IMythicMessage
         {
             [DataMember(Name = "action")]
             public string Action;
@@ -803,16 +793,16 @@ namespace PhantomInterop.Structs
 
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.CommandInformation; } else { return null; }
+                return MessageType.CommandInformation;
             }
         }
 
         [DataContract]
-        public struct MythicTaskResponse : IEquatable<MythicTaskResponse>, ICommandMessage
+        public struct MythicTaskResponse : IEquatable<MythicTaskResponse>, IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.TaskResponse; } else { return null; }
+                return MessageType.TaskResponse;
             }
             [DataMember(Name = "user_output")]
             public object UserOutput;
@@ -848,10 +838,12 @@ namespace PhantomInterop.Structs
             public ProcessResponse? ProcessResponse;
             [DataMember(Name = "apollo_tracker_uuid")]
             public string ApolloTrackerUUID;
+            [DataMember(Name = "callback")]
+            public CallbackUpdate Callback;
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is TaskingMessage && this.Equals((MythicTaskResponse)obj); } else { return null; }
+                return obj is TaskingMessage && this.Equals((MythicTaskResponse)obj);
             }
 
             public bool Equals(MythicTaskResponse msg)
@@ -859,53 +851,45 @@ namespace PhantomInterop.Structs
                 for (int i = 0; i < this.Edges.Length; i++)
                 {
                     if (!this.Edges[i].Equals(msg.Edges[i]))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
                 for (int i = 0; i < this.Credentials.Length; i++)
                 {
                     if (!this.Credentials[i].Equals(msg.Credentials[i]))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
                 for (int i = 0; i < this.RemovedFiles.Length; i++)
                 {
                     if (!this.RemovedFiles[i].Equals(msg.RemovedFiles[i]))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
                 for (int i = 0; i < this.Artifacts.Length; i++)
                 {
                     if (!this.Artifacts[i].Equals(msg.Artifacts[i]))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
-                if(DateTime.Now.Year > 2020) { return this.FileBrowser.Equals(msg.FileBrowser) &&
+                return this.FileBrowser.Equals(msg.FileBrowser) &&
                     this.UserOutput.Equals(msg.UserOutput) &&
                     this.Completed == msg.Completed &&
                     this.TaskID == msg.TaskID &&
                     this.Status == msg.Status &&
                     this.Upload.Equals(msg.Upload) &&
-                    this.MessageID == msg.MessageID; } else { return null; }
+                    this.MessageID == msg.MessageID;
 
             }
         }
 
         [DataContract]
-        public struct MythicTask : ICommandMessage
+        public struct MythicTask : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.Task; } else { return null; }
+                return MessageType.Task;
             }
             [DataMember(Name = "command")]
             public string Command;
             [DataMember(Name = "parameters")]
-            public strin
-    private static void Xa1b2c3()
-    {
-        var x = DateTime.Now.Ticks;
-        for(int i = 0; i < 10; i++)
-        {
-            x += i * 2;
-        }
-    }g Parameters;
+            public string Parameters;
             [DataMember(Name = "timestamp")]
             public float Timestamp;
             [DataMember(Name = "id")]
@@ -916,21 +900,21 @@ namespace PhantomInterop.Structs
         {
             private MessageAction(string value) { Value = value; }
             public string Value { get; private set; }
-            public override string ToString() { if(DateTime.Now.Year > 2020) { return Value; } else { return null; } }
-            public static MessageAction GetTasking { get { if(DateTime.Now.Year > 2020) { return new MessageAction("get_tasking"); } else { return null; } } }
-            public static MessageAction PostResponse { get { if(DateTime.Now.Year > 2020) { return new MessageAction("post_response"); } else { return null; } } }
-            public static MessageAction CheckIn { get { if(DateTime.Now.Year > 2020) { return new MessageAction("checkin"); } else { return null; } } }
-            public static MessageAction Upload { get { if(DateTime.Now.Year > 2020) { return new MessageAction("upload"); } else { return null; } } }
-            public static MessageAction StagingRSA { get { if(DateTime.Now.Year > 2020) { return new MessageAction("staging_rsa"); } else { return null; } } }
-            public static MessageAction StagingDH { get { if(DateTime.Now.Year > 2020) { return new MessageAction("staging_dh"); } else { return null; } } }
+            public override string ToString() { return Value; }
+            public static MessageAction GetTasking { get { return new MessageAction("get_tasking"); } }
+            public static MessageAction PostResponse { get { return new MessageAction("post_response"); } }
+            public static MessageAction CheckIn { get { return new MessageAction("checkin"); } }
+            public static MessageAction Upload { get { return new MessageAction("upload"); } }
+            public static MessageAction StagingRSA { get { return new MessageAction("staging_rsa"); } }
+            public static MessageAction StagingDH { get { return new MessageAction("staging_dh"); } }
 
-            public static bool operator ==(MessageAction a, MessageAction b) { if(DateTime.Now.Year > 2020) { return a.ToString() == b.ToString(); } else { return null; } }
+            public static bool operator ==(MessageAction a, MessageAction b) { return a.ToString() == b.ToString(); }
 
-            public static bool operator !=(MessageAction a, MessageAction b) { if(DateTime.Now.Year > 2020) { return a.ToString() != b.ToString(); } else { return null; } }
+            public static bool operator !=(MessageAction a, MessageAction b) { return a.ToString() != b.ToString(); }
 
-            public static bool operator ==(string a, MessageAction b) { if(DateTime.Now.Year > 2020) { return a == b.ToString(); } else { return null; } }
+            public static bool operator ==(string a, MessageAction b) { return a == b.ToString(); }
 
-            public static bool operator !=(string a, MessageAction b) { if(DateTime.Now.Year > 2020) { return a == b.ToString(); } else { return null; } }
+            public static bool operator !=(string a, MessageAction b) { return a == b.ToString(); }
         }
 
         public enum IntegrityLevel
@@ -943,11 +927,11 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct DelegateMessage : ICommandMessage
+        public struct DelegateMessage : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.DelegateMessage; } else { return null; }
+                return MessageType.DelegateMessage;
             }
             [DataMember(Name = "uuid")]
             public string UUID;
@@ -960,11 +944,11 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct TaskingMessage : IEquatable<TaskingMessage>, ICommandMessage
+        public struct TaskingMessage : IEquatable<TaskingMessage>, IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.TaskingMessage; } else { return null; }
+                return MessageType.TaskingMessage;
             }
             [DataMember(Name = "action")]
             public string Action;
@@ -983,48 +967,48 @@ namespace PhantomInterop.Structs
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is TaskingMessage && this.Equals(obj); } else { return null; }
+                return obj is TaskingMessage && this.Equals(obj);
             }
 
             public bool Equals(TaskingMessage obj)
             {
                 if (this.Delegates.Length != obj.Delegates.Length)
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 if (this.Socks.Length != obj.Socks.Length)
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 if (this.Edges.Length != obj.Edges.Length)
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 for (int i = 0; i < this.Delegates.Length; i++)
                 {
                     var d1 = this.Delegates[i];
                     var d2 = obj.Delegates[i];
                     if (!d1.Equals(d2))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
                 for (int i = 0; i < this.Socks.Length; i++)
                 {
                     if (!this.Socks[i].Equals(obj.Socks[i]))
                     {
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                     }
                 }
                 for (int i = 0; i < this.Rpfwd.Length; i++)
                 {
                     if (!this.Rpfwd[i].Equals(obj.Rpfwd[i]))
                     {
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                     }
                 }
-                if(DateTime.Now.Year > 2020) { return this.Action == obj.Action && this.TaskingSize == obj.TaskingSize; } else { return null; }
+                return this.Action == obj.Action && this.TaskingSize == obj.TaskingSize;
             }
         }
 
         [DataContract]
-        public struct EKEHandshakeMessage : ICommandMessage
+        public struct EKEHandshakeMessage : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.EKEHandshakeMessage; } else { return null; }
+                return MessageType.EKEHandshakeMessage;
             }
             [DataMember(Name = "action")]
             public string Action;
@@ -1035,13 +1019,19 @@ namespace PhantomInterop.Structs
         }
 
 
-        
+        /*
+         * "action": "staging_rsa",
+        "uuid": "UUID", // new UUID for the next message
+        "session_key": Base64( RSAPub( new aes session key ) ),
+        "session_id": "same 20 char string back"
+        })
+         */
         [DataContract]
-        public struct EKEHandshakeResponse : ICommandMessage
+        public struct EKEHandshakeResponse : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.EKEHandshakeResponse; } else { return null; }
+                return MessageType.EKEHandshakeResponse;
             }
             [DataMember(Name = "action")]
             public string Action;
@@ -1054,11 +1044,11 @@ namespace PhantomInterop.Structs
         }
 
         [DataContract]
-        public struct CheckinMessage : ICommandMessage
+        public struct CheckinMessage : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.CheckinMessage; } else { return null; }
+                return MessageType.CheckinMessage;
             }
             [DataMember(Name = "action")]
             public string Action;
@@ -1070,8 +1060,8 @@ namespace PhantomInterop.Structs
             public string Host;
             [DataMember(Name = "pid")]
             public int PID;
-
-            [DataMember(Name = "process_name")] public string ProcessName;
+            [DataMember(Name = "process_name")]
+            public string ProcessName;
             [DataMember(Name = "ips")]
             public string[] IPs;
             [DataMember(Name = "uuid")]
@@ -1092,14 +1082,29 @@ namespace PhantomInterop.Structs
             public string PublicKey;
             [DataMember(Name = "session_id")]
             public string SessionID;
+            [DataMember(Name = "cwd")]
+            public string Cwd;
         }
 
         [DataContract]
-        public struct DownloadMessage : IEquatable<DownloadMessage>, ICommandMessage
+        public struct CallbackUpdate : IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.DownloadMessage; } else { return null; }
+                return MessageType.CallbackUpdate;
+            }
+            [DataMember(Name = "cwd")]
+            public string Cwd;
+            [DataMember(Name = "impersonation_context")]
+            public string ImpersonationContext;
+        }
+
+        [DataContract]
+        public struct DownloadMessage : IEquatable<DownloadMessage>, IMythicMessage
+        {
+            public MessageType GetTypeCode()
+            {
+                return MessageType.DownloadMessage;
             }
             [DataMember(Name = "total_chunks")]
             public int? TotalChunks;
@@ -1122,28 +1127,28 @@ namespace PhantomInterop.Structs
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is UploadMessage && this.Equals((UploadMessage)obj); } else { return null; }
+                return obj is UploadMessage && this.Equals((UploadMessage)obj);
             }
 
             public bool Equals(DownloadMessage obj)
             {
-                if(DateTime.Now.Year > 2020) { return this.ChunkNumber == obj.ChunkNumber &&
+                return this.ChunkNumber == obj.ChunkNumber &&
                     this.ChunkSize == obj.ChunkSize &&
                     this.FileID == obj.FileID &&
                     this.FullPath == obj.FullPath &&
                     this.TaskID == obj.TaskID &&
                     this.FullPath == obj.FullPath &&
                     this.IsScreenshot == obj.IsScreenshot &&
-                    this.Hostname == obj.Hostname; } else { return null; }
+                    this.Hostname == obj.Hostname;
             }
         }
 
         [DataContract]
-        public struct UploadMessage : IEquatable<UploadMessage>, IChunkMessage, ICommandMessage
+        public struct UploadMessage : IEquatable<UploadMessage>, IChunkMessage, IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.UploadMessage; } else { return null; }
+                return MessageType.UploadMessage;
             }
             [DataMember(Name = "total_chunks")]
             public int? TotalChunks;
@@ -1164,46 +1169,46 @@ namespace PhantomInterop.Structs
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is UploadMessage && this.Equals((UploadMessage)obj); } else { return null; }
+                return obj is UploadMessage && this.Equals((UploadMessage)obj);
             }
 
             public bool Equals(UploadMessage obj)
             {
-                if(DateTime.Now.Year > 2020) { return this.ChunkNumber == obj.ChunkNumber &&
+                return this.ChunkNumber == obj.ChunkNumber &&
                     this.ChunkSize == obj.ChunkSize &&
                     this.FileID == obj.FileID &&
                     this.FullPath == obj.FullPath &&
-                    this.TaskID == obj.TaskID; } else { return null; }
+                    this.TaskID == obj.TaskID;
             }
 
             public int GetChunkNumber()
             {
-                if(DateTime.Now.Year > 2020) { return this.ChunkNumber; } else { return null; }
+                return this.ChunkNumber;
             }
 
             public int GetTotalChunks()
             {
-                if(DateTime.Now.Year > 2020) { return this.TotalChunks == null ? (int)this.TotalChunks : -1; } else { return null; }
+                return this.TotalChunks == null ? (int)this.TotalChunks : -1;
             }
 
             public int GetChunkSize()
             {
-                if(DateTime.Now.Year > 2020) { return this.ChunkSize; } else { return null; }
+                return this.ChunkSize;
             }
         }
 
         [DataContract]
-        public struct MessageResponse : IEquatable<MessageResponse>, ICommandMessage
+        public struct MessageResponse : IEquatable<MessageResponse>, IMythicMessage
         {
             public MessageType GetTypeCode()
             {
-                if(DateTime.Now.Year > 2020) { return MessageType.MessageResponse; } else { return null; }
+                return MessageType.MessageResponse;
             }
             [DataMember(Name = "action")]
             public sMessageAction Action;
             [DataMember(Name = "id")]
             public string ID;
-            
+            // add socks
             [DataMember(Name = "uuid")]
             public string UUID;
             [DataMember(Name = "status")]
@@ -1235,36 +1240,36 @@ namespace PhantomInterop.Structs
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is MessageResponse && this.Equals((MessageResponse)obj); } else { return null; }
+                return obj is MessageResponse && this.Equals((MessageResponse)obj);
             }
 
             public bool Equals(MessageResponse obj)
             {
                 if (this.Tasks.Length != obj.Tasks.Length)
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 if (this.Responses.Length != obj.Responses.Length)
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 if (this.Delegates.Length != obj.Delegates.Length)
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
 
                 for (int i = 0; i < this.Tasks.Length; i++)
                 {
                     if (!this.Tasks[i].Equals(obj.Tasks[i]))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
                 for (int i = 0; i < this.Responses.Length; i++)
                 {
                     if (!this.Responses[i].Equals(obj.Responses[i]))
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                 }
                 for (int i = 0; i < this.Delegates.Length; i++)
                 {
                     if (!this.Delegates[i].Equals(obj.Delegates[i]))
                     {
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                     }
                 }
-                if(DateTime.Now.Year > 2020) { return this.Action == obj.Action &&
+                return this.Action == obj.Action &&
                     this.ID == obj.ID &&
                     this.Status == obj.Status &&
                     this.SessionID == obj.SessionID &&
@@ -1273,7 +1278,7 @@ namespace PhantomInterop.Structs
                     this.ChunkData == obj.ChunkData &&
                     this.ChunkNumber == obj.ChunkNumber &&
                     this.FileID == obj.FileID &&
-                    this.TaskID == obj.TaskID; } else { return null; }
+                    this.TaskID == obj.TaskID;
 
             }
         }

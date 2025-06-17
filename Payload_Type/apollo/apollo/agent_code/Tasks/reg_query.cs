@@ -6,10 +6,10 @@
 
 #if REG_QUERY
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -43,7 +43,7 @@ namespace Tasks
             [DataMember(Name = "result_type")]
             public string ResultType;
         }
-        public reg_query(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public reg_query(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -52,7 +52,7 @@ namespace Tasks
         {
             using (RegistryKey regKey = RegistryUtils.GetRegistryKey(hive, subkey, false))
             {
-                if(DateTime.Now.Year > 2020) { return regKey.GetValueNames(); } else { return null; }
+                return regKey.GetValueNames();
             }
         }
 
@@ -60,7 +60,7 @@ namespace Tasks
         {
             using (RegistryKey regKey = RegistryUtils.GetRegistryKey(hive, subkey, false))
             {
-                if(DateTime.Now.Year > 2020) { return regKey.GetValue(key); } else { return null; }
+                return regKey.GetValue(key);
             }
         }
 
@@ -68,7 +68,7 @@ namespace Tasks
         {
             using (RegistryKey regKey = RegistryUtils.GetRegistryKey(hive, subkey, false))
             {
-                if(DateTime.Now.Year > 2020) { return regKey.GetSubKeyNames(); } else { return null; }
+                return regKey.GetSubKeyNames();
             }
         }
 
@@ -105,9 +105,9 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            RegQueryParameters parameters = _dataSerializer.Deserialize<RegQueryParameters>(_data.Parameters);
+            RegQueryParameters parameters = _jsonSerializer.Deserialize<RegQueryParameters>(_data.Parameters);
             List<RegQueryResult> results = new List<RegQueryResult>();
-            List<ICommandMessage> artifacts = new List<ICommandMessage>();
+            List<IMythicMessage> artifacts = new List<IMythicMessage>();
             string error = "";
 
             try
@@ -169,12 +169,12 @@ namespace Tasks
             else
             {
                 resp = CreateTaskResponse(
-                    _dataSerializer.Serialize(results.ToArray()), true, "completed", artifacts.ToArray());
+                    _jsonSerializer.Serialize(results.ToArray()), true, "completed", artifacts.ToArray());
             }
 
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

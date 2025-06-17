@@ -1,6 +1,6 @@
-﻿using PhantomInterop.Classes.P2P;
-using PhantomInterop.Structs.MythicStructs;
-namespace PhantomInterop.Interfaces
+﻿using ApolloInterop.Classes.P2P;
+using ApolloInterop.Structs.MythicStructs;
+namespace ApolloInterop.Interfaces
 {
     public interface IPeerManager
     {

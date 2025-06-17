@@ -1,9 +1,9 @@
-﻿using PhantomInterop.Classes.Events;
+﻿using ApolloInterop.Classes.Events;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace PhantomInterop.Classes.IO
+namespace ApolloInterop.Classes.IO
 {
     public class EventableStringWriter : StringWriter
     {

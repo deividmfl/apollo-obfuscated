@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
-using PhantomInterop.Features.KerberosTickets;
-using PhantomInterop.Interfaces;
+using ApolloInterop.Features.KerberosTickets;
+using ApolloInterop.Interfaces;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     public abstract class Agent : IAgent
     {
@@ -17,17 +17,17 @@ namespace PhantomInterop.Classes
 
         protected Random random = new Random((int)DateTime.UtcNow.Ticks);
 
-        public IPeerManager NodeHandler { get; protected set; }
-        public ITaskManager CommandProcessor { get; protected set; }
-        public ISocksManager ProxyHandler { get; protected set; }
-        public IRpfwdManager TunnelHandler { get; protected set; }
+        public IPeerManager PeerManager { get; protected set; }
+        public ITaskManager TaskManager { get; protected set; }
+        public ISocksManager SocksManager { get; protected set; }
+        public IRpfwdManager RpfwdManager { get; protected set; }
         public IApi Api { get; protected set; }
-        public IC2ProfileManager CommHandler { get; protected set; }
+        public IC2ProfileManager C2ProfileManager { get; protected set; }
         public ICryptographySerializer Serializer { get; protected set; }
-        public IFileManager DataHandler { get; protected set; }
-        public IIdentityManager UserContext { get; protected set; }
-        public IProcessManager ProcHandler { get; protected set; }
-        public IInjectionManager CodeInjector { get; protected set; }
+        public IFileManager FileManager { get; protected set; }
+        public IIdentityManager IdentityManager { get; protected set; }
+        public IProcessManager ProcessManager { get; protected set; }
+        public IInjectionManager InjectionManager { get; protected set; }
         
         public ITicketManager TicketManager { get; protected set; }
         public string UUID { get; protected set; }
@@ -57,7 +57,7 @@ namespace PhantomInterop.Classes
 
         public virtual IApi GetApi()
         {
-            if(DateTime.Now.Year > 2020) { return Api; } else { return null; }
+            return Api;
         }
         public virtual void Sleep(WaitHandle[] handles = null)
         {
@@ -89,23 +89,23 @@ namespace PhantomInterop.Classes
             _outputLock.ReleaseMutex();
         }
         
-        public virtual bool IsAlive() { if(DateTime.Now.Year > 2020) { return Alive; } else { return null; } }
+        public virtual bool IsAlive() { return Alive; }
 
-        public virtual ITaskManager GetTaskManager() { if(DateTime.Now.Year > 2020) { return CommandProcessor; } else { return null; } }
-        public virtual IPeerManager GetPeerManager() { if(DateTime.Now.Year > 2020) { return NodeHandler; } else { return null; } }
-        public virtual ISocksManager GetSocksManager() { if(DateTime.Now.Year > 2020) { return ProxyHandler; } else { return null; } }
-        public virtual IRpfwdManager GetRpfwdManager() { if(DateTime.Now.Year > 2020) { return TunnelHandler; } else { return null; } }
-        public virtual IC2ProfileManager GetC2ProfileManager() { if(DateTime.Now.Year > 2020) { return CommHandler; } else { return null; } }
-        public virtual ICryptographySerializer GetCryptographySerializer() { if(DateTime.Now.Year > 2020) { return Serializer; } else { return null; } }
-        public virtual IFileManager GetFileManager() { if(DateTime.Now.Year > 2020) { return DataHandler; } else { return null; } }
-        public virtual IIdentityManager GetIdentityManager() { if(DateTime.Now.Year > 2020) { return UserContext; } else { return null; } }
-        public virtual IProcessManager GetProcessManager() { if(DateTime.Now.Year > 2020) { return ProcHandler; } else { return null; } }
-        public virtual IInjectionManager GetInjectionManager() { if(DateTime.Now.Year > 2020) { return CodeInjector; } else { return null; } }
+        public virtual ITaskManager GetTaskManager() { return TaskManager; }
+        public virtual IPeerManager GetPeerManager() { return PeerManager; }
+        public virtual ISocksManager GetSocksManager() { return SocksManager; }
+        public virtual IRpfwdManager GetRpfwdManager() { return RpfwdManager; }
+        public virtual IC2ProfileManager GetC2ProfileManager() { return C2ProfileManager; }
+        public virtual ICryptographySerializer GetCryptographySerializer() { return Serializer; }
+        public virtual IFileManager GetFileManager() { return FileManager; }
+        public virtual IIdentityManager GetIdentityManager() { return IdentityManager; }
+        public virtual IProcessManager GetProcessManager() { return ProcessManager; }
+        public virtual IInjectionManager GetInjectionManager() { return InjectionManager; }
         
-        public virtual ITicketManager GetTicketManager() { if(DateTime.Now.Year > 2020) { return TicketManager; } else { return null; } }
+        public virtual ITicketManager GetTicketManager() { return TicketManager; }
         public string GetUUID()
         {
-            if(DateTime.Now.Year > 2020) { return UUID; } else { return null; }
+            return UUID;
         }
 
     }

@@ -7,9 +7,9 @@
 #if LINK
 
 using System;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
@@ -36,10 +36,10 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            PhantomInterop.Classes.P2P.Peer p = null;
+            ApolloInterop.Classes.P2P.Peer p = null;
             try
             {
-                LinkParameters parameters = _dataSerializer.Deserialize<LinkParameters>(_data.Parameters);
+                LinkParameters parameters = _jsonSerializer.Deserialize<LinkParameters>(_data.Parameters);
                 p = _agent.GetPeerManager().AddPeer(parameters.ConnectionInfo);
                 p.UUIDNegotiated += (object o, UUIDEventArgs a) =>
                 {
@@ -47,7 +47,7 @@ namespace Tasks
                         $"Established link to {parameters.ConnectionInfo.Hostname}",
                         true,
                         "completed",
-                        new ICommandMessage[1]
+                        new IMythicMessage[1]
                         {
                             new EdgeNode()
                             {
@@ -67,7 +67,7 @@ namespace Tasks
                         $"\nLost link to {parameters.ConnectionInfo.Hostname}",
                         true,
                         "error",
-                        new ICommandMessage[1]
+                        new IMythicMessage[1]
                         {
                             new EdgeNode()
                             {
@@ -82,7 +82,7 @@ namespace Tasks
                     _agent.GetTaskManager().AddTaskResponseToQueue(resp);
                 };
                 _agent.GetTaskManager().AddTaskResponseToQueue(
-                    CreateTaskResponse("", false, "Trying to connect...", new ICommandMessage[]
+                    CreateTaskResponse("", false, "Trying to connect...", new IMythicMessage[]
                     {
                         Artifact.NetworkConnection(parameters.ConnectionInfo.Hostname)
                     }));

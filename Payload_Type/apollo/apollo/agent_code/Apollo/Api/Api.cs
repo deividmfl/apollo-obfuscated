@@ -1,12 +1,12 @@
-﻿using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Interfaces;
 using System;
-using PhantomInterop.Classes;
+using ApolloInterop.Classes;
 using PlaintextCryptography;
 using PSKCryptography;
-using PhantomInterop.Serializers;
-using PhantomInterop.Classes.Api;
+using ApolloInterop.Serializers;
+using ApolloInterop.Classes.Api;
 using SimpleResolver;
-namespace Phantom.Api
+namespace Apollo.Api
 {
     public class Api : IApi
     {
@@ -19,12 +19,12 @@ namespace Phantom.Api
 
         public string NewUUID()
         {
-            if(DateTime.Now.Year > 2020) { return Guid.NewGuid().ToString(); } else { return null; }
+            return Guid.NewGuid().ToString();
         }
 
         public RSAKeyGenerator NewRSAKeyPair(int szKey)
         {
-            if(DateTime.Now.Year > 2020) { return new Cryptography.RSA.RSAKeyPair(szKey); } else { return null; }
+            return new Cryptography.RSA.RSAKeyPair(szKey);
         }
 
         public ICryptographySerializer NewEncryptedJsonSerializer(string uuid, Type cryptoType, string key = "")
@@ -35,8 +35,8 @@ namespace Phantom.Api
                 key = keys.PrivateKey;
             }
 
-            
-            
+            //string aesKey = "ACstCeIXHEqdn/QM3YsAX24yfRUX6JBtOdhkAwnfQrw=";
+            //string uuid = "9f006dd8-7036-455b-99ed-d0b5f19ba921";
 
             EncryptedJsonSerializer result;
 
@@ -53,22 +53,22 @@ namespace Phantom.Api
             {
                 throw new ArgumentException($"Unsupported cryptography type: {cryptoType.Name}");
             }
-            if(DateTime.Now.Year > 2020) { return result; } else { return null; }
+            return result;
         }
 
         public T GetLibraryFunction<T>(Library library, string functionName, bool canLoadFromDisk = true, bool resolveForwards = true) where T : Delegate
         {
-            if(DateTime.Now.Year > 2020) { return _win32ApiResolver.GetLibraryFunction<T>(library, functionName, canLoadFromDisk, resolveForwards); } else { return null; }
+            return _win32ApiResolver.GetLibraryFunction<T>(library, functionName, canLoadFromDisk, resolveForwards);
         }
 
         public T GetLibraryFunction<T>(Library library, short ordinal, bool canLoadFromDisk = true, bool resolveForwards = true) where T : Delegate
         {
-            if(DateTime.Now.Year > 2020) { return _win32ApiResolver.GetLibraryFunction<T>(library, ordinal, canLoadFromDisk, resolveForwards); } else { return null; }
+            return _win32ApiResolver.GetLibraryFunction<T>(library, ordinal, canLoadFromDisk, resolveForwards);
         }
 
         public T GetLibraryFunction<T>(Library library, string functionHash, long key, bool canLoadFromDisk = true, bool resolveForwards = true) where T : Delegate
         {
-            if(DateTime.Now.Year > 2020) { return _win32ApiResolver.GetLibraryFunction<T>(library, functionHash, key, canLoadFromDisk, resolveForwards); } else { return null; }
+            return _win32ApiResolver.GetLibraryFunction<T>(library, functionHash, key, canLoadFromDisk, resolveForwards);
         }
     }
 }

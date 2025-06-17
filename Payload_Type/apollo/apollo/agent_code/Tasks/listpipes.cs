@@ -10,9 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 
 namespace Tasks
 {
@@ -70,7 +70,7 @@ namespace Tasks
                 FindClose(handle);
             }
 
-            if(DateTime.Now.Year > 2020) { return pipeList; } else { return null; }
+            return pipeList;
         }
 
         private const int MAX_PATH = 260;

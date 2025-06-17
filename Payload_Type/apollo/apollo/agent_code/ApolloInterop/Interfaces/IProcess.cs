@@ -1,7 +1,7 @@
-﻿using PhantomInterop.Structs.PhantomStructs;
+﻿using ApolloInterop.Structs.ApolloStructs;
 using System;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IProcess
     {

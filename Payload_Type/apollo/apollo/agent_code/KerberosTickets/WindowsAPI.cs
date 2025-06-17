@@ -1,6 +1,6 @@
-﻿using PhantomInterop.Classes.Api;
-using PhantomInterop.Features.WindowsTypesAndAPIs;
-using static KerberosTickets.TicketHandler;
+﻿using ApolloInterop.Classes.Api;
+using ApolloInterop.Features.WindowsTypesAndAPIs;
+using static KerberosTickets.KerberosTicketManager;
 
 namespace KerberosTickets;
 

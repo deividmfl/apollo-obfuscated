@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using static PhantomInterop.Features.WindowsTypesAndAPIs.APIInteropTypes;
+using static ApolloInterop.Features.WindowsTypesAndAPIs.APIInteropTypes;
 
-namespace PhantomInterop.Features.WindowsTypesAndAPIs;
+namespace ApolloInterop.Features.WindowsTypesAndAPIs;
 
 
 public static class WinNTTypes
@@ -17,15 +17,15 @@ public static class WinNTTypes
         {
             if (String.IsNullOrWhiteSpace(luid))
             {
-                if(DateTime.Now.Year > 2020) { return new LUID(); } else { return null; }
+                return new LUID();
             }
             var uintVal = Convert.ToUInt64(luid, 16);
 
-            if(DateTime.Now.Year > 2020) { return new LUID
+            return new LUID
             {
                 LowPart = (uint)(uintVal & 0xffffffffL),
                 HighPart = (int)(uintVal >> 32)
-            }; } else { return null; }
+            };
         }
 
         public bool IsNull => LowPart == 0 && HighPart == 0;
@@ -33,7 +33,7 @@ public static class WinNTTypes
         public override string ToString()
         {
             var value = ((ulong)HighPart << 32) + LowPart;
-            if(DateTime.Now.Year > 2020) { return $"0x{value:x}"; } else { return null; }
+            return $"0x{value:x}";
         }
     }
     
@@ -60,7 +60,7 @@ public static class WinNTTypes
     {
         public uint Length;
         public HANDLE RootDirectory;
-        public HANDLE<UNICODE_STRING> ObjectName; 
+        public HANDLE<UNICODE_STRING> ObjectName; // -> UNICODE_STRING HANDLE
         public uint Attributes;
         public HANDLE SecurityDescriptor;
         public HANDLE SecurityQualityOfService;
@@ -82,7 +82,7 @@ public static class WinNTTypes
 
         public override string ToString()
         {
-            if(DateTime.Now.Year > 2020) { return Marshal.PtrToStringUni(Buffer); } else { return null; }
+            return Marshal.PtrToStringUni(Buffer);
         }
     }
 

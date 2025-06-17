@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using PhantomInterop.Classes.Core;
-using PhantomInterop.Interfaces;
+using ApolloInterop.Classes.Core;
+using ApolloInterop.Interfaces;
 using Injection.Shared;
 
 namespace Injection.Techniques.Syscall_x64
@@ -255,10 +255,10 @@ namespace Injection.Techniques.Syscall_x64
             }
             catch
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
 
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
     }
 }

@@ -1,6 +1,6 @@
-﻿using PhantomInterop.Structs.MythicStructs;
+﻿using ApolloInterop.Structs.MythicStructs;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IPeer
     {

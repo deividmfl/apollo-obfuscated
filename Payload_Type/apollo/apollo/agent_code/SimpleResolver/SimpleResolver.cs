@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Utils;
 
 namespace SimpleResolver
 {
@@ -38,7 +38,7 @@ namespace SimpleResolver
                     throw new Win32Exception($"Failed to load library {functionName}",
                         new Win32Exception(Marshal.GetLastWin32Error()));
                 }
-                
+                //DebugHelp.DebugWriteLine($"Loaded library {library}");
                 _modulePointers[library] = libraryHandle;
             }
 
@@ -46,9 +46,9 @@ namespace SimpleResolver
             
             if (functionHandle != IntPtr.Zero)
             {
-                
-                
-                if(DateTime.Now.Year > 2020) { return Marshal.GetDelegateForFunctionPointer(functionHandle, typeof(T)) as T; } else { return null; }
+                //DebugHelp.DebugWriteLine($"Found function {functionName} in library {library}");
+                //todo: check if this is giving valid values back ?
+                return Marshal.GetDelegateForFunctionPointer(functionHandle, typeof(T)) as T;
             }
             DebugHelp.DebugWriteLine($"Could not find function {functionName} in library {library}");
             throw new Exception("Could not find function " + functionName + " in library " + library.ToString(),

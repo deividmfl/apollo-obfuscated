@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using PhantomInterop.Utils;
+using ApolloInterop.Utils;
 using ExecutePE.Helpers;
 
 namespace ExecutePE.Patchers
@@ -31,10 +31,10 @@ namespace ExecutePE.Patchers
             }
             catch (AccessViolationException)
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
 
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         internal bool RevertImageBasePatch()
@@ -45,10 +45,10 @@ namespace ExecutePE.Patchers
             }
             catch (AccessViolationException)
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
 
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
     }
 }

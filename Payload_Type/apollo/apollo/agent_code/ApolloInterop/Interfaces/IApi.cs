@@ -1,8 +1,8 @@
-﻿using PhantomInterop.Classes;
+﻿using ApolloInterop.Classes;
 using System;
-using PhantomInterop.Classes.Api;
+using ApolloInterop.Classes.Api;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IApi
     {
@@ -14,7 +14,7 @@ namespace PhantomInterop.Interfaces
 
         RSAKeyGenerator NewRSAKeyPair(int szKey);
 
-        
+        // Maybe other formats in the future?
         ICryptographySerializer NewEncryptedJsonSerializer(string uuid, Type cryptoType, string key = "");
         
     }

@@ -6,9 +6,9 @@
 
 #if KILL
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Runtime.Serialization;
 
@@ -22,7 +22,7 @@ namespace Tasks
             [DataMember(Name = "pid")]
             public int PID;
         }
-        public kill(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public kill(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -30,13 +30,13 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            KillArguments parameters = _dataSerializer.Deserialize<KillArguments>(_data.Parameters);
+            KillArguments parameters = _jsonSerializer.Deserialize<KillArguments>(_data.Parameters);
             try
             {
                 System.Diagnostics.Process proc = System.Diagnostics.Process.GetProcessById(parameters.PID);
                 proc.Kill();
                 resp = CreateTaskResponse($"Killed {proc.ProcessName} ({proc.Id})", true, "completed",
-                    new ICommandMessage[]
+                    new IMythicMessage[]
                     {
                         Artifact.ProcessKill(proc.Id)
                     });
@@ -46,8 +46,8 @@ namespace Tasks
                 resp = CreateTaskResponse($"Failed to kill process. Reason: {ex.Message}", true, "error");
             }
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

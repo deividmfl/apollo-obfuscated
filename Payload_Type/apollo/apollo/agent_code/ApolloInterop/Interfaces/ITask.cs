@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface ITask
     {

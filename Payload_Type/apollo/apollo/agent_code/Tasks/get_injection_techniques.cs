@@ -6,9 +6,9 @@
 
 #if GET_INJECTION_TECHNIQUES
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -25,7 +25,7 @@ namespace Tasks
             [DataMember(Name = "is_current")]
             public bool IsCurrent;
         }
-        public get_injection_techniques(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public get_injection_techniques(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
         
@@ -46,9 +46,9 @@ namespace Tasks
             }
 
             resp = CreateTaskResponse(
-                _dataSerializer.Serialize(results.ToArray()), true);
-            
-            
+                _jsonSerializer.Serialize(results.ToArray()), true);
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

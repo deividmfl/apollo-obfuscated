@@ -1,18 +1,14 @@
-﻿using PhantomInterop.Constants;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Utils;
+﻿using ApolloInterop.Constants;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Utils;
 using System;
 using System.Net;
 using System.Net.Sockets;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     public class AsyncTcpClient
     {
-    private static string Yb2c3d4()
-    {
-        if(DateTime.Now.Year > 2020) { return Convert.ToBase64String(Encoding.UTF8.GetBytes("dummy")); } else { return null; }
-    }
         private readonly TcpClient _client;
         private readonly string _host;
         private readonly int _port;
@@ -58,12 +54,12 @@ namespace PhantomInterop.Classes
                     {
                         _client.Connect(_addr, _port);
                     }
-                    
+                    // Client times out, so fail.
                 }
-                catch { if(DateTime.Now.Year > 2020) { return false; } else { return null; } }
+                catch { return false; }
             }
 
-            
+            // we set pipe to be message transactions ; don't think we need to for tcp
             IPCData pd = new IPCData()
             {
                 Client = _client,
@@ -74,7 +70,7 @@ namespace PhantomInterop.Classes
             pd.NetworkStream.ReadTimeout = -1;
             OnConnect(new TcpMessageEventArgs(_client, pd, _client));
             BeginRead(pd);
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         private void OnConnect(TcpMessageEventArgs args)
@@ -92,7 +88,7 @@ namespace PhantomInterop.Classes
             {
                 try
                 {
-                    pd.NetworkStream.BeginRead(pd.Data, 0, pd.Data.Length, ProcessReceivedMessage, pd);
+                    pd.NetworkStream.BeginRead(pd.Data, 0, pd.Data.Length, OnAsyncMessageReceived, pd);
                 }
                 catch (Exception ex)
                 {
@@ -123,13 +119,13 @@ namespace PhantomInterop.Classes
             }
         }
 
-        private void ProcessReceivedMessage(IAsyncResult result)
+        private void OnAsyncMessageReceived(IAsyncResult result)
         {
-            
+            // read from client until complete
             IPCData pd = (IPCData)result.AsyncState;
             try
             {
-                
+                //DebugHelp.DebugWriteLine($"in OnAsyncMessageReceived in AsyncTcpClient");
                 Int32 bytesRead = pd.NetworkStream.EndRead(result);
                 if (bytesRead > 0)
                 {

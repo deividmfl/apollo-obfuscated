@@ -1,7 +1,7 @@
-﻿using PhantomInterop.Structs.MythicStructs;
+﻿using ApolloInterop.Structs.MythicStructs;
 using System.Threading;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IFileManager
     {

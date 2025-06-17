@@ -5,9 +5,9 @@
 #endif
 
 #if BLOCKDLLS
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
@@ -27,7 +27,7 @@ namespace Tasks
 
         public override void Start()
         {
-            BlockDllsParameters parameters = _dataSerializer.Deserialize<BlockDllsParameters>(_data.Parameters);
+            BlockDllsParameters parameters = _jsonSerializer.Deserialize<BlockDllsParameters>(_data.Parameters);
             _agent.GetProcessManager().BlockDLLs(parameters.Value);
             _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse("", true));
         }

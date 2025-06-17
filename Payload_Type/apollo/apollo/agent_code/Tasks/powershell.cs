@@ -6,7 +6,7 @@
 
 #if POWERSHELL
 
-using PhantomInterop.Classes.IO;
+using ApolloInterop.Classes.IO;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,14 +14,14 @@ using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Threading;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using ST = System.Threading.Tasks;
 using System.Management.Automation.Runspaces;
 using System.Collections.Concurrent;
 using System.Runtime.Serialization;
-using PhantomInterop.Classes.Collections;
+using ApolloInterop.Classes.Collections;
 
 namespace Tasks
 {
@@ -34,33 +34,33 @@ namespace Tasks
 
             public override Guid InstanceId
             {
-                get { if(DateTime.Now.Year > 2020) { return _hostId; } else { return null; } }
+                get { return _hostId; }
             }
 
             public override string Name
             {
-                get { if(DateTime.Now.Year > 2020) { return "ConsoleHost"; } else { return null; } }
+                get { return "ConsoleHost"; }
             }
 
             public override Version Version
             {
-                get { if(DateTime.Now.Year > 2020) { return new Version(1, 0); } else { return null; } }
+                get { return new Version(1, 0); }
             }
 
             public override PSHostUserInterface UI
             {
-                get { if(DateTime.Now.Year > 2020) { return _ui; } else { return null; } }
+                get { return _ui; }
             }
 
 
             public override CultureInfo CurrentCulture
             {
-                get { if(DateTime.Now.Year > 2020) { return Thread.CurrentThread.CurrentCulture; } else { return null; } }
+                get { return Thread.CurrentThread.CurrentCulture; }
             }
 
             public override CultureInfo CurrentUICulture
             {
-                get { if(DateTime.Now.Year > 2020) { return Thread.CurrentThread.CurrentUICulture; } else { return null; } }
+                get { return Thread.CurrentThread.CurrentUICulture; }
             }
 
             public override void EnterNestedPrompt()
@@ -91,7 +91,7 @@ namespace Tasks
 
         class CustomPSHostUserInterface : PSHostUserInterface
         {
-            
+            // Replace StringBuilder with whatever your preferred output method is (e.g. a socket or a named pipe)
             private CustomPSRHostRawUserInterface _rawUi = new CustomPSRHostRawUserInterface();
 
             public CustomPSHostUserInterface()
@@ -171,7 +171,7 @@ namespace Tasks
 
             public override PSHostRawUserInterface RawUI
             {
-                get { if(DateTime.Now.Year > 2020) { return _rawUi; } else { return null; } }
+                get { return _rawUi; }
             }
 
             public override string ReadLine()
@@ -188,7 +188,7 @@ namespace Tasks
 
         class CustomPSRHostRawUserInterface : PSHostRawUserInterface
         {
-            
+            // Warning: Setting _outputWindowSize too high will cause OutOfMemory execeptions.  I assume this will happen with other properties as well
             private Size _windowSize = new Size { Width = 120, Height = 100 };
 
             private Coordinates _cursorPosition = new Coordinates { X = 0, Y = 0 };
@@ -210,25 +210,25 @@ namespace Tasks
 
             public override ConsoleColor BackgroundColor
             {
-                get { if(DateTime.Now.Year > 2020) { return _backgroundColor; } else { return null; } }
+                get { return _backgroundColor; }
                 set { _backgroundColor = value; }
             }
 
             public override Size BufferSize
             {
-                get { if(DateTime.Now.Year > 2020) { return _bufferSize; } else { return null; } }
+                get { return _bufferSize; }
                 set { _bufferSize = value; }
             }
 
             public override Coordinates CursorPosition
             {
-                get { if(DateTime.Now.Year > 2020) { return _cursorPosition; } else { return null; } }
+                get { return _cursorPosition; }
                 set { _cursorPosition = value; }
             }
 
             public override int CursorSize
             {
-                get { if(DateTime.Now.Year > 2020) { return _cursorSize; } else { return null; } }
+                get { return _cursorSize; }
                 set { _cursorSize = value; }
             }
 
@@ -239,7 +239,7 @@ namespace Tasks
 
             public override ConsoleColor ForegroundColor
             {
-                get { if(DateTime.Now.Year > 2020) { return _foregroundColor; } else { return null; } }
+                get { return _foregroundColor; }
                 set { _foregroundColor = value; }
             }
 
@@ -255,12 +255,12 @@ namespace Tasks
 
             public override Size MaxPhysicalWindowSize
             {
-                get { if(DateTime.Now.Year > 2020) { return _maxPhysicalWindowSize; } else { return null; } }
+                get { return _maxPhysicalWindowSize; }
             }
 
             public override Size MaxWindowSize
             {
-                get { if(DateTime.Now.Year > 2020) { return _maxWindowSize; } else { return null; } }
+                get { return _maxWindowSize; }
             }
 
             public override KeyInfo ReadKey(ReadKeyOptions options)
@@ -285,30 +285,30 @@ namespace Tasks
 
             public override Coordinates WindowPosition
             {
-                get { if(DateTime.Now.Year > 2020) { return _windowPosition; } else { return null; } }
+                get { return _windowPosition; }
                 set { _windowPosition = value; }
             }
 
             public override Size WindowSize
             {
-                get { if(DateTime.Now.Year > 2020) { return _windowSize; } else { return null; } }
+                get { return _windowSize; }
                 set { _windowSize = value; }
             }
 
             public override string WindowTitle
             {
-                get { if(DateTime.Now.Year > 2020) { return _windowTitle; } else { return null; } }
+                get { return _windowTitle; }
                 set { _windowTitle = value; }
             }
         }
 
 
-        private AutoResetEvent _msgSendEvent = new AutoResetEvent(false);
-        private ConcurrentQueue<byte[]> _msgSendQueue = new ConcurrentQueue<byte[]>();
+        private AutoResetEvent _senderEvent = new AutoResetEvent(false);
+        private ConcurrentQueue<byte[]> _senderQueue = new ConcurrentQueue<byte[]>();
         private ThreadSafeList<string> _psOutput = new ThreadSafeList<string>();
-        private AutoResetEvent _isFinished = new AutoResetEvent(false);
-        private bool _taskComplete = false;
-        private Action _flushData;
+        private AutoResetEvent _completed = new AutoResetEvent(false);
+        private bool _complete = false;
+        private Action _flushMessages;
 
         [DataContract]
         internal struct PowerShellParameters
@@ -317,17 +317,17 @@ namespace Tasks
         }
         
         
-        public powershell(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public powershell(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
-            _flushData = () =>
+            _flushMessages = () =>
             {
                 string output = "";
-                while(!_stopToken.IsCancellationRequested && !_taskComplete)
+                while(!_cancellationToken.IsCancellationRequested && !_complete)
                 {
                     WaitHandle.WaitAny(new WaitHandle[]
                     {
-                        _isFinished,
-                        _stopToken.Token.WaitHandle
+                        _completed,
+                        _cancellationToken.Token.WaitHandle
                     }, 1000);
                     output = string.Join("", _psOutput.Flush());
                     if (!string.IsNullOrEmpty(output))
@@ -354,7 +354,7 @@ namespace Tasks
 
         public override void Start()
         {
-            System.Threading.Tasks.Task.Factory.StartNew(_flushData, _stopToken.Token);
+            System.Threading.Tasks.Task.Factory.StartNew(_flushMessages, _cancellationToken.Token);
             MythicTaskResponse resp;
             string cmd = "";
             var loadedScript = _agent.GetFileManager().GetScript();
@@ -363,7 +363,7 @@ namespace Tasks
                 cmd += loadedScript;
             }
 
-            PowerShellParameters parameters = _dataSerializer.Deserialize<PowerShellParameters>(_data.Parameters);
+            PowerShellParameters parameters = _jsonSerializer.Deserialize<PowerShellParameters>(_data.Parameters);
             cmd += "\n\n" + parameters.Command;
 
             _agent.AcquireOutputLock();
@@ -390,15 +390,15 @@ namespace Tasks
                         pipeline.Commands.AddScript(cmd);
                         pipeline.Commands[0].MergeMyResults(PipelineResultTypes.Error, PipelineResultTypes.Output);
                         pipeline.Commands.Add("Out-Default");
-                        ST.Task invokeTask = new ST.Task(() => { pipeline.Invoke(); }, _stopToken.Token);
+                        ST.Task invokeTask = new ST.Task(() => { pipeline.Invoke(); }, _cancellationToken.Token);
                         try
                         {
                             invokeTask.Start();
-                            
-                            
-                            
-                            
-                            invokeTask.Wait(_stopToken.Token);
+                            //ST.Task.WaitAny(new ST.Task[]
+                            //{
+                            //    invokeTask
+                            //}, _cancellationToken.Token);
+                            invokeTask.Wait(_cancellationToken.Token);
                         }
                         catch (OperationCanceledException)
                         {
@@ -417,17 +417,17 @@ namespace Tasks
                 Console.SetOut(oldStdout);
                 Console.SetError(oldStderr);
                 _agent.ReleaseOutputLock();
-                _taskComplete = true;
-                _isFinished.Set();
+                _complete = true;
+                _completed.Set();
             }
 
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
 
-        private void OnBufferWrite(object sender, PhantomInterop.Classes.Events.StringDataEventArgs e)
+        private void OnBufferWrite(object sender, ApolloInterop.Classes.Events.StringDataEventArgs e)
         {
             if(e.Data != null)
             {

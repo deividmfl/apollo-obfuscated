@@ -1,6 +1,6 @@
-﻿using PhantomInterop.Enums.PhantomEnums;
+﻿using ApolloInterop.Enums.ApolloEnums;
 
-namespace PhantomInterop.Types
+namespace ApolloInterop.Types
 {
     namespace Delegates
     {

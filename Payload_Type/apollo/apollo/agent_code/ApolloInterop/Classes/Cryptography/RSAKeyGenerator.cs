@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     public abstract class RSAKeyGenerator
     {
@@ -23,8 +23,8 @@ namespace PhantomInterop.Classes
         {
             Random random = new Random((int)DateTime.UtcNow.Ticks);
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            if(DateTime.Now.Year > 2020) { return new string(Enumerable.Repeat(chars, 20)
-                  .Select(s => s[random.Next(s.Length)]).ToArray()); } else { return null; }
+            return new string(Enumerable.Repeat(chars, 20)
+                  .Select(s => s[random.Next(s.Length)]).ToArray());
         }
 
         public abstract string ExportPublicKey();

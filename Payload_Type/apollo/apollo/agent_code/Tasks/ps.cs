@@ -7,18 +7,18 @@
 #if PS
 
 using System;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Threading;
 using TT = System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Management;
-using static PhantomInterop.Enums.Win32;
+using static ApolloInterop.Enums.Win32;
 using System.Security.Principal;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Classes.Collections;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Classes.Collections;
+using ApolloInterop.Utils;
 using System.Net.Http;
 
 namespace Tasks
@@ -95,10 +95,10 @@ namespace Tasks
         
         #endregion
 
-        private Action<object> _flushData;
+        private Action<object> _flushMessages;
         private ThreadSafeList<ProcessInformation> _processes = new ThreadSafeList<ProcessInformation>();
-        private AutoResetEvent _isFinished = new AutoResetEvent(false);
-        private bool _taskComplete = false;
+        private AutoResetEvent _completed = new AutoResetEvent(false);
+        private bool _complete = false;
         public ps(IAgent agent, MythicTask mythicTask) : base(agent, mythicTask)
         {
             try
@@ -148,14 +148,14 @@ namespace Tasks
             {
                 IntPtr tokenHandle = IntPtr.Zero;
                 _ = _pOpenProcessToken(
-                    procHandle,                                 
-                    TokenAccessLevels.MaximumAllowed,     
-                    out procHandle);                            
-                if(DateTime.Now.Year > 2020) { return new WindowsIdentity(procHandle).Name; } else { return null; }
+                    procHandle,                                 // ProcessHandle
+                    TokenAccessLevels.MaximumAllowed,     // desiredAccess
+                    out procHandle);                            // TokenHandle
+                return new WindowsIdentity(procHandle).Name;
             }
-            catch 
+            catch // If we can't open a handle to the process it will throw an exception
             {
-                if(DateTime.Now.Year > 2020) { return ""; } else { return null; }
+                return "";
             }
         }
 
@@ -165,16 +165,16 @@ namespace Tasks
             {
                 ProcessBasicInformation procinfo = new ProcessBasicInformation();
                 _ = _pNtQueryInformationProcess(
-                    procHandle,                 
-                    0,                          
-                    ref procinfo,               
-                    Marshal.SizeOf(procinfo),   
-                    out _);                     
-                if(DateTime.Now.Year > 2020) { return procinfo.InheritedFromUniqueProcessId.ToInt32(); } else { return null; }
+                    procHandle,                 // ProcessHandle
+                    0,                          // processInformationClass
+                    ref procinfo,               // ProcessBasicInfo
+                    Marshal.SizeOf(procinfo),   // processInformationLength
+                    out _);                     // returnLength
+                return procinfo.InheritedFromUniqueProcessId.ToInt32();
             }
             catch
             {
-                if(DateTime.Now.Year > 2020) { return -1; } else { return null; }
+                return -1;
             }
         }
 
@@ -200,7 +200,7 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
                 }
             }
             catch { }
-            if(DateTime.Now.Year > 2020) { return result; } else { return null; }
+            return result;
         }
 
         private int GetIntegerIntegrityLevel(string il)
@@ -232,13 +232,13 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
                 default:
                     break;
             }
-            if(DateTime.Now.Year > 2020) { return result; } else { return null; }
+            return result;
         }
 
         private string GetIntegrityLevel(IntPtr procHandle)
         {
-            
-            
+            // Returns all SIDs that the current user is a part of, whether they are disabled or not.
+            // slightly adapted from https://stackoverflow.com/questions/2146153/how-to-get-the-logon-sid-in-c-sharp/2146418#2146418
             IntPtr hProcToken;
             var TokenInfLength = 0;
             TokenMandatoryLevel pTIL;
@@ -252,10 +252,10 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
             }
             catch
             {
-                if(DateTime.Now.Year > 2020) { return ""; } else { return null; }
+                return "";
             }
-            if (!Result) if(DateTime.Now.Year > 2020) { return ""; } else { return null; }
-            
+            if (!Result) return "";
+            // first call gets length of TokenInformation
             Result = _pGetTokenInformation(hProcToken, TokenInformationClass.TokenIntegrityLevel, IntPtr.Zero, TokenInfLength, out TokenInfLength);
             var TokenInformation = Marshal.AllocHGlobal(TokenInfLength);
             Result = _pGetTokenInformation(hProcToken, TokenInformationClass.TokenIntegrityLevel, TokenInformation, TokenInfLength, out TokenInfLength);
@@ -263,7 +263,7 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
             if (!Result)
             {
                 Marshal.FreeHGlobal(TokenInformation);
-                if(DateTime.Now.Year > 2020) { return ""; } else { return null; }
+                return "";
             }
             pTIL = (TokenMandatoryLevel)Marshal.PtrToStructure(TokenInformation, typeof(TokenMandatoryLevel));
             if (!_pConvertSidToStringSid(pTIL.Label.Sid, out sidString))
@@ -272,7 +272,7 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
             }
             Marshal.FreeHGlobal(TokenInformation);
 
-            if(DateTime.Now.Year > 2020) { return sidString; } else { return null; }
+            return sidString;
         }
         #endregion
 
@@ -280,7 +280,7 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
         public override void Start()
         {
             TT.ParallelOptions po = new TT.ParallelOptions();
-            po.CancellationToken = _stopToken.Token;
+            po.CancellationToken = _cancellationToken.Token;
             po.MaxDegreeOfParallelism = System.Environment.ProcessorCount;
             try
             {
@@ -365,7 +365,7 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
                     }
                     catch
                     {
-                        current.IntegrityLevel = 0; 
+                        current.IntegrityLevel = 0; // probably redundant
                     }
 
                     try
@@ -421,17 +421,17 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
             {
             }
 
-            _taskComplete = true;
-            _isFinished.Set();
+            _complete = true;
+            _completed.Set();
             ProcessInformation[] output = null;
             output = _processes.Flush();
             if (output.Length > 0)
             {
-                ICommandMessage[] procs = new ICommandMessage[output.Length];
+                IMythicMessage[] procs = new IMythicMessage[output.Length];
                 Array.Copy(output, procs, procs.Length);
                 _agent.GetTaskManager().AddTaskResponseToQueue(
                     CreateTaskResponse(
-                        _dataSerializer.Serialize(output),
+                        _jsonSerializer.Serialize(output),
                         true,
                         "completed",
                         procs));

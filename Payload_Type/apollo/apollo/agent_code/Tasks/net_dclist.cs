@@ -6,9 +6,9 @@
 
 #if NET_DCLIST
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
@@ -35,7 +35,7 @@ namespace Tasks
             [DataMember(Name = "global_catalog")]
             public bool IsGlobalCatalog;
         }
-        public net_dclist(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public net_dclist(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -81,7 +81,7 @@ namespace Tasks
             }
 
             resp = CreateTaskResponse(
-                _dataSerializer.Serialize(results.ToArray()),
+                _jsonSerializer.Serialize(results.ToArray()),
                 true);
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }

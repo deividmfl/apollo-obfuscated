@@ -1,8 +1,8 @@
-﻿using PhantomInterop.Enums.PhantomEnums;
+﻿using ApolloInterop.Enums.ApolloEnums;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
-    public interface ICommandMessage
+    public interface IMythicMessage
     {
         MessageType GetTypeCode();
     }

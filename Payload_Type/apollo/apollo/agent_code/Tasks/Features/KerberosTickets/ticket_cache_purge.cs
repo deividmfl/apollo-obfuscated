@@ -10,9 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 
 namespace Tasks;
 
@@ -37,7 +37,7 @@ public class ticket_cache_purge : Tasking
         MythicTaskResponse resp = new MythicTaskResponse { };
         try
         {
-            ticket_cache_purgeParameters parameters = _dataSerializer.Deserialize<ticket_cache_purgeParameters>(_data.Parameters);
+            ticket_cache_purgeParameters parameters = _jsonSerializer.Deserialize<ticket_cache_purgeParameters>(_data.Parameters);
             string luid = parameters.luid ?? "";
             string? serviceFullName = parameters.serviceName ?? "";
             string serviceName = String.IsNullOrWhiteSpace(serviceFullName) ? "" : serviceFullName.Split('@').First();
@@ -46,16 +46,16 @@ public class ticket_cache_purge : Tasking
             bool ticketRemoved = false;
             string error = "";
             (ticketRemoved, error) = _agent.GetTicketManager().UnloadTicketFromCache(serviceName,domainName, luid, all);
-            
+            //if true return without error if false return with error
             resp = ticketRemoved ? CreateTaskResponse($"Purged Ticket from Cache", true) 
-                : CreateTaskResponse($"Failed to remove ticket from Cache\n{error}", true, "error"); } else { return null; }
+                : CreateTaskResponse($"Failed to remove ticket from Cache\n{error}", true, "error");
 
         }
         catch (Exception e)
         {
             resp = CreateTaskResponse($"Failed to remove ticket from session: {e.Message}", true, "error");
         }
-        
+        //get and send back any artifacts
         IEnumerable<Artifact> artifacts = _agent.GetTicketManager().GetArtifacts();
         var artifactResp = CreateArtifactTaskResponse(artifacts);
         _agent.GetTaskManager().AddTaskResponseToQueue(artifactResp);

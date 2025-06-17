@@ -1,4 +1,4 @@
-﻿namespace PhantomInterop.Interfaces
+﻿namespace ApolloInterop.Interfaces
 {
     public interface ICryptographySerializer : ISerializer
     {

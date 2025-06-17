@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\PhantomInterop\PhantomInterop.csproj" />
+    <ProjectReference Include="..\ApolloInterop\ApolloInterop.csproj" />
     <ProjectReference Include="..\ExecutePE\ExecutePE.csproj" />
   </ItemGroup>
 </Project>

@@ -1,18 +1,18 @@
-﻿using PhantomInterop.Classes.Events;
-using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Classes.Events;
+using ApolloInterop.Interfaces;
 using System;
 
-namespace PhantomInterop.Classes.Core
+namespace ApolloInterop.Classes.Core
 {
-    public class ChunkStore<T> where T : IChunkMessage
+    public class ChunkedMessageStore<T> where T : IChunkMessage
     {
         private T[] _messages = null;
         private object _lock = new object();
         private int _currentCount = 0;
 
-        public event EventHandler<ChunkEventData<T>> ChunkAdd;
-        public event EventHandler<ChunkEventData<T>> MessageComplete;
-        public void OnMessageComplete() => MessageComplete?.Invoke(this, new ChunkEventData<T>(_messages));
+        public event EventHandler<ChunkMessageEventArgs<T>> ChunkAdd;
+        public event EventHandler<ChunkMessageEventArgs<T>> MessageComplete;
+        public void OnMessageComplete() => MessageComplete?.Invoke(this, new ChunkMessageEventArgs<T>(_messages));
         public void AddMessage(T d)
         {
             lock(_lock)
@@ -29,7 +29,7 @@ namespace PhantomInterop.Classes.Core
                 OnMessageComplete();
             } else
             {
-                ChunkAdd?.Invoke(this, new ChunkEventData<T>(new T[1] { d }));
+                ChunkAdd?.Invoke(this, new ChunkMessageEventArgs<T>(new T[1] { d }));
             }
         }
     }

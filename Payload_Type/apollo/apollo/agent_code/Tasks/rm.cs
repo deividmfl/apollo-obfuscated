@@ -6,9 +6,9 @@
 
 #if RM
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.IO;
 using System.Linq;
@@ -35,7 +35,7 @@ namespace Tasks
             Environment.GetEnvironmentVariable("COMPUTERNAME").ToLower()
         };
         
-        public rm(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public rm(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -43,7 +43,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            RmParameters parameters = _dataSerializer.Deserialize<RmParameters>(_data.Parameters);
+            RmParameters parameters = _jsonSerializer.Deserialize<RmParameters>(_data.Parameters);
             string path = string.IsNullOrEmpty(parameters.File)
                 ? parameters.Path
                 : Path.Combine(new string[] {parameters.Path, parameters.File});
@@ -72,7 +72,7 @@ namespace Tasks
             }
 
             
-            if (PhantomInterop.Utils.PathUtils.TryGetExactPath(path, out realPath))
+            if (ApolloInterop.Utils.PathUtils.TryGetExactPath(path, out realPath))
             {
                 if (Directory.Exists(realPath))
                 {
@@ -80,7 +80,7 @@ namespace Tasks
                     {
                         Directory.Delete(realPath, true);
                         resp = CreateTaskResponse(
-                            $"Deleted {realPath}", true, "completed", new ICommandMessage[1]
+                            $"Deleted {realPath}", true, "completed", new IMythicMessage[1]
                             {
                                 Artifact.FileDelete(realPath)
                             });
@@ -97,7 +97,7 @@ namespace Tasks
                     {
                         File.Delete(realPath);
                         resp = CreateTaskResponse(
-                            $"Deleted {realPath}", true, "completed", new ICommandMessage[1]
+                            $"Deleted {realPath}", true, "completed", new IMythicMessage[1]
                             {
                                 Artifact.FileDelete(realPath)
                             });
@@ -127,8 +127,8 @@ namespace Tasks
                 };
             }
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

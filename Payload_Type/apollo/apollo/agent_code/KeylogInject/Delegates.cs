@@ -1,9 +1,9 @@
-﻿using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Interfaces;
 
 namespace KeylogInject
 {
     public static class Delegates
     {
-        public delegate bool PushKeylog(ICommandMessage info);
+        public delegate bool PushKeylog(IMythicMessage info);
     }
 }

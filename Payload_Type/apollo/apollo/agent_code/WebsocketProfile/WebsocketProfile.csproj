@@ -10,7 +10,7 @@
     <AssemblyName>WebsocketProfile</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PhantomInterop\PhantomInterop.csproj" />
+    <ProjectReference Include="..\ApolloInterop\ApolloInterop.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />

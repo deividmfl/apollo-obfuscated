@@ -1,7 +1,7 @@
-﻿using PhantomInterop.Classes.Core;
+﻿using ApolloInterop.Classes.Core;
 using System;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IInjectionManager
     {

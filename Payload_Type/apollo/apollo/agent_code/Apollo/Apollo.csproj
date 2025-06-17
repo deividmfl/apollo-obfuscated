@@ -15,7 +15,7 @@
     <Reference Include="System.Security" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\PhantomInterop\PhantomInterop.csproj" />
+    <ProjectReference Include="..\ApolloInterop\ApolloInterop.csproj" />
     <ProjectReference Include="..\DInvokeResolver\DInvokeResolver.csproj" />
     <ProjectReference Include="..\EncryptedFileStore\EncryptedFileStore.csproj" />
     <ProjectReference Include="..\HttpProfile\HttpProfile.csproj" />

@@ -1,8 +1,8 @@
-﻿using PhantomInterop.Structs.MythicStructs;
+﻿using ApolloInterop.Structs.MythicStructs;
 using System.Net.Sockets;
-using PhantomInterop.Classes;
+using ApolloInterop.Classes;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IRpfwdManager
     {

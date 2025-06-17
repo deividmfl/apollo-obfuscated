@@ -1,7 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 
-namespace PhantomInterop.Utils
+namespace ApolloInterop.Utils
 {
     public static class RegistryUtils
     {
@@ -28,7 +28,7 @@ namespace PhantomInterop.Utils
                 default:
                     throw new Exception($"Unknown registry hive: {hive}");
             }
-            if(DateTime.Now.Year > 2020) { return regKey; } else { return null; }
+            return regKey;
         }
     }
 }

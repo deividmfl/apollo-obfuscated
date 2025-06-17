@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     public class UUIDEventArgs : EventArgs
     {

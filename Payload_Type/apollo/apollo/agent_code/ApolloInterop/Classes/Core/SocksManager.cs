@@ -1,14 +1,14 @@
 ﻿using System;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
-    public abstract class ProxyHandler : ISocksManager
+    public abstract class SocksManager : ISocksManager
     {
         protected IAgent _agent;
 
-        public ProxyHandler(IAgent agent)
+        public SocksManager(IAgent agent)
         {
             _agent = agent;
         }

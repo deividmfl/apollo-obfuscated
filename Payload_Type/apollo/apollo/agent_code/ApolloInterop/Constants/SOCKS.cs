@@ -1,4 +1,4 @@
-﻿namespace PhantomInterop.Constants
+﻿namespace ApolloInterop.Constants
 {
     public static class SOCKS
     {

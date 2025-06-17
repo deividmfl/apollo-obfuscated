@@ -6,9 +6,9 @@
 
 #if CD
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
 
@@ -28,7 +28,7 @@ namespace Tasks
 
         public override void Start()
         {
-            CdParameters parameters = _dataSerializer.Deserialize<CdParameters>(_data.Parameters);
+            CdParameters parameters = _jsonSerializer.Deserialize<CdParameters>(_data.Parameters);
             if (!Directory.Exists(parameters.Path))
             {
                 _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse(
@@ -41,7 +41,12 @@ namespace Tasks
                 Directory.SetCurrentDirectory(parameters.Path);
                 _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse(
                     $"Working directory set to {Directory.GetCurrentDirectory()}",
-                    true));
+                    true, "",
+                    new IMythicMessage[]
+                    {
+                        new CallbackUpdate{  Cwd = parameters.Path }
+                    }
+                    ));
             }
         }
     }

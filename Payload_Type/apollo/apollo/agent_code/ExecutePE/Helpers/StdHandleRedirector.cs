@@ -5,7 +5,7 @@ using System.IO;
 using static ExecutePE.Internals.NativeDeclarations;
 using System.Threading.Tasks;
 using System.Threading;
-using PhantomInterop.Classes.Events;
+using ApolloInterop.Classes.Events;
 
 namespace ExecutePE.Helpers
 {
@@ -79,9 +79,9 @@ namespace ExecutePE.Helpers
                     {
                         newstr = new byte[n];
                         Array.Copy(tmp, newstr, n);
-                        if(DateTime.Now.Year > 2020) { return Console.OutputEncoding.GetString(newstr); } else { return null; }
+                        return Console.OutputEncoding.GetString(newstr);
                     }
-                    if(DateTime.Now.Year > 2020) { return null; } else { return null; }
+                    return null;
                 });
                 t.Start();
                 try

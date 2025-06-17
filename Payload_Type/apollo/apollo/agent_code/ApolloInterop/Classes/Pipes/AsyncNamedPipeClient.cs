@@ -1,25 +1,17 @@
-﻿using PhantomInterop.Constants;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Utils;
+﻿using ApolloInterop.Constants;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Utils;
 using System;
 using System.IO.Pipes;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     public class AsyncNamedPipeClient
     {
-    private static void Xa1b2c3()
-    {
-        var x = DateTime.Now.Ticks;
-        for(int i = 0; i < 10; i++)
-        {
-            x += i * 2;
-        }
-    }
         private readonly NamedPipeClientStream _pipe;
-        public event EventHandler<PipeMessageData> MessageReceived;
-        public event EventHandler<PipeMessageData> ConnectionEstablished;
-        public event EventHandler<PipeMessageData> Disconnect;
+        public event EventHandler<NamedPipeMessageArgs> MessageReceived;
+        public event EventHandler<NamedPipeMessageArgs> ConnectionEstablished;
+        public event EventHandler<NamedPipeMessageArgs> Disconnect;
         public AsyncNamedPipeClient(string host, string pipename)
         {
             _pipe = new NamedPipeClientStream(
@@ -35,8 +27,8 @@ namespace PhantomInterop.Classes
             try
             {
                 _pipe.Connect(msTimeout);
-                
-            } catch { if(DateTime.Now.Year > 2020) { return false; } else { return null; } }
+                // Client times out, so fail.
+            } catch { return false; }
             _pipe.ReadMode = PipeTransmissionMode.Message;
             IPCData pd = new IPCData()
             {
@@ -44,9 +36,9 @@ namespace PhantomInterop.Classes
                 State = _pipe,
                 Data = new byte[IPC.RECV_SIZE],
             };
-            OnConnectionEstablished(new PipeMessageData(_pipe, pd, pd.State));
+            OnConnectionEstablished(new NamedPipeMessageArgs(_pipe, pd, pd.State));
             BeginRead(pd);
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public void BeginRead(IPCData pd)
@@ -56,7 +48,7 @@ namespace PhantomInterop.Classes
             {
                 try
                 {
-                    pd.Pipe.BeginRead(pd.Data, 0, pd.Data.Length, ProcessReceivedMessage, pd);
+                    pd.Pipe.BeginRead(pd.Data, 0, pd.Data.Length, OnAsyncMessageReceived, pd);
                 } catch (Exception ex)
                 {
                     DebugHelp.DebugWriteLine($"got exception for named pipe: {ex}");
@@ -68,44 +60,44 @@ namespace PhantomInterop.Classes
             {
                 pd.Pipe.Close();
                 DebugHelp.DebugWriteLine($"disconnecting on named pipe");
-                OnDisconnect(new PipeMessageData(pd.Pipe, null, pd.State));
+                OnDisconnect(new NamedPipeMessageArgs(pd.Pipe, null, pd.State));
             }
         }
 
-        private void ProcessReceivedMessage(IAsyncResult result)
+        private void OnAsyncMessageReceived(IAsyncResult result)
         {
-            
+            // read from client until complete
             IPCData pd = (IPCData)result.AsyncState;
             try{
                 Int32 bytesRead = pd.Pipe.EndRead(result);
                 if (bytesRead > 0)
                 {
                     pd.DataLength = bytesRead;
-                    OnMessageReceived(new PipeMessageData(pd.Pipe, pd, pd.State));
+                    OnMessageReceived(new NamedPipeMessageArgs(pd.Pipe, pd, pd.State));
                 } else
                 {
-                    DebugHelp.DebugWriteLine($"closing pipe in ProcessReceivedMessage with 0 bytesRead");
+                    DebugHelp.DebugWriteLine($"closing pipe in OnAsyncMessageReceived with 0 bytesRead");
                     pd.Pipe.Close();
                 }
                 BeginRead(pd);
             }catch(Exception ex){
                 DebugHelp.DebugWriteLine($"error reading from named pipe: {ex}");
                 pd.Pipe.Close();
-                OnDisconnect(new PipeMessageData(pd.Pipe, null, pd.State));
+                OnDisconnect(new NamedPipeMessageArgs(pd.Pipe, null, pd.State));
             }
         }
 
-        private void OnConnectionEstablished(PipeMessageData args)
+        private void OnConnectionEstablished(NamedPipeMessageArgs args)
         {
             ConnectionEstablished?.Invoke(this, args);
         }
 
-        private void OnMessageReceived(PipeMessageData args)
+        private void OnMessageReceived(NamedPipeMessageArgs args)
         {
             MessageReceived?.Invoke(this, args);
         }
 
-        private void OnDisconnect(PipeMessageData args)
+        private void OnDisconnect(NamedPipeMessageArgs args)
         {
             DebugHelp.DebugWriteLine($"OnDisconnect");
             Disconnect?.Invoke(this, args);

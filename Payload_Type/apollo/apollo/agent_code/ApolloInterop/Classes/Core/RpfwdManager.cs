@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Net.Sockets;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
-    public abstract class TunnelHandler : IRpfwdManager
+    public abstract class RpfwdManager : IRpfwdManager
     {
         protected IAgent _agent;
 
-        public TunnelHandler(IAgent agent)
+        public RpfwdManager(IAgent agent)
         {
             _agent = agent;
         }

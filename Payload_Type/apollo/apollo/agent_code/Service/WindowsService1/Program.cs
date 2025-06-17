@@ -6,12 +6,12 @@ using System.Text;
 
 namespace WindowsService1
 {
-    static class Runtime
+    static class Program
     {
-        
-        
-        
-        static void J3m4n5o6()
+        /// <summary>
+        /// The main entry point for the application.
+        /// </summary>
+        static void Main()
         {
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]

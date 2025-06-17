@@ -7,9 +7,9 @@
 #if REGISTER_FILE
 
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
@@ -34,10 +34,10 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            RegisterFileParameters parameters = _dataSerializer.Deserialize<RegisterFileParameters>(_data.Parameters);
-            
+            RegisterFileParameters parameters = _jsonSerializer.Deserialize<RegisterFileParameters>(_data.Parameters);
+            // some additional upload logic
             if (_agent.GetFileManager().GetFile(
-                    _stopToken.Token,
+                    _cancellationToken.Token,
                     _data.ID,
                     parameters.FileID,
                     out byte[] fileData))
@@ -67,7 +67,7 @@ namespace Tasks
             }
             else
             {
-                if (_stopToken.IsCancellationRequested)
+                if (_cancellationToken.IsCancellationRequested)
                 {
                     resp = CreateTaskResponse($"Task killed.", true, "killed");
                 }

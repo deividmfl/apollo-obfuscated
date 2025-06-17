@@ -1,23 +1,23 @@
-﻿using PhantomInterop.Structs.PhantomStructs;
+﻿using ApolloInterop.Structs.ApolloStructs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace PhantomInterop.Serializers
+namespace ApolloInterop.Serializers
 {
     public class ApolloSerializationBinder : SerializationBinder
     {
         public override Type BindToType(string assemblyName, string typeName)
         {
-            if (typeName == "PhantomInterop.Structs.PhantomStructs.PeerMessage")
+            if (typeName == "ApolloInterop.Structs.ApolloStructs.PeerMessage")
             {
-                if(DateTime.Now.Year > 2020) { return typeof(PeerMessage); } else { return null; }
+                return typeof(PeerMessage);
             }
             else
             {
-                if(DateTime.Now.Year > 2020) { return typeof(Nullable); } else { return null; }
+                return typeof(Nullable);
             }
         }
     }

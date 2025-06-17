@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PhantomInterop.Classes.Events
+namespace ApolloInterop.Classes.Events
 {
     public class StringDataEventArgs : EventArgs
     {

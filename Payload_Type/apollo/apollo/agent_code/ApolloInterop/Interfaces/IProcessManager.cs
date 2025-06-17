@@ -1,7 +1,7 @@
-﻿using PhantomInterop.Classes.Core;
-using PhantomInterop.Structs.PhantomStructs;
+﻿using ApolloInterop.Classes.Core;
+using ApolloInterop.Structs.ApolloStructs;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IProcessManager
     {

@@ -1,14 +1,14 @@
-﻿using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+﻿using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Collections.Concurrent;
 
-namespace PhantomInterop.Classes.P2P
+namespace ApolloInterop.Classes.P2P
 {
-    public abstract class NodeHandler : IPeerManager
+    public abstract class PeerManager : IPeerManager
     {
         protected ConcurrentDictionary<string, IPeer> _peers = new ConcurrentDictionary<string, IPeer>();
         protected IAgent _agent;
-        public NodeHandler(IAgent agent)
+        public PeerManager(IAgent agent)
         {
             _agent = agent;
         }
@@ -26,12 +26,12 @@ namespace PhantomInterop.Classes.P2P
                 }
             }
 
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
 
         public virtual bool Remove(IPeer peer)
         {
-            if(DateTime.Now.Year > 2020) { return Remove(peer.GetUUID()); } else { return null; }
+            return Remove(peer.GetUUID());
         }
 
         public abstract bool Route(DelegateMessage msg);

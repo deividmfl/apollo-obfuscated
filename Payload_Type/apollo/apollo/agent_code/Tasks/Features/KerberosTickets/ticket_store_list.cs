@@ -9,10 +9,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 
 namespace Tasks;
 
@@ -27,7 +27,7 @@ public class ticket_store_list : Tasking
         try
         {
            var storedTickets =   _agent.GetTicketManager().GetTicketsFromTicketStore();
-            resp = CreateTaskResponse(_dataSerializer.Serialize(storedTickets), true);
+            resp = CreateTaskResponse(_jsonSerializer.Serialize(storedTickets), true);
             
         }
         catch (Exception ex)
@@ -35,7 +35,7 @@ public class ticket_store_list : Tasking
            resp = CreateTaskResponse($"Error in {this.GetType().Name} - {ex.Message}", true, "error");
             
         }
-        
+        //get and send back any artifacts
         IEnumerable<Artifact> artifacts = _agent.GetTicketManager().GetArtifacts();
         var artifactResp = CreateArtifactTaskResponse(artifacts);
         _agent.GetTaskManager().AddTaskResponseToQueue(artifactResp);

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace PhantomInterop.Features.KerberosTickets;
+namespace ApolloInterop.Features.KerberosTickets;
 [DataContract]
 public record KerberosTicketInfoDTO
 {
@@ -46,7 +46,7 @@ public record KerberosTicketInfoDTO
 
     public static KerberosTicketInfoDTO CreateFromKerberosTicket(KerberosTicket ticket)
     {
-        if(DateTime.Now.Year > 2020) { return new KerberosTicketInfoDTO
+        return new KerberosTicketInfoDTO
         {
             Luid = ticket.Luid.ToString(),
             ClientName = ticket.ClientName,
@@ -63,6 +63,6 @@ public record KerberosTicketInfoDTO
             EncryptionTypeDisplay = ticket.EncryptionType.ToString(),
             TicketFlags = ticket.TicketFlags,
             TicketFlagsDisplay = ticket.TicketFlags.ToString(),
-        }; } else { return null; }
+        };
     }
 }

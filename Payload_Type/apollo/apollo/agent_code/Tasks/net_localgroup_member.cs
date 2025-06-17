@@ -6,10 +6,10 @@
 
 #if NET_LOCALGROUP_MEMBER
 
-using PhantomInterop.Classes;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -57,7 +57,10 @@ namespace Tasks
 
         private delegate bool ConvertSidToStringSid(IntPtr pSid, out string strSid);
         private delegate int NetApiBufferFree(IntPtr lpBuffer);
-        
+        /*
+         [DllImport("advapi32", CharSet = CharSet.Auto, SetLastError = true)]
+        public static extern bool ConvertSidToStringSid(IntPtr pSid, out string strSid);
+         */
         private NetLocalGroupGetMembers _pNetLocalGroupGetMembers;
         private ConvertSidToStringSid _pConvertSidToStringSid;
         private NetApiBufferFree _pNetApiBufferFree;
@@ -86,7 +89,7 @@ namespace Tasks
         }
 
         #endregion
-        public net_localgroup_member(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public net_localgroup_member(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pNetLocalGroupGetMembers = _agent.GetApi().GetLibraryFunction<NetLocalGroupGetMembers>(Library.SAMCLI, "NetLocalGroupGetMembers");
             _pConvertSidToStringSid = _agent.GetApi().GetLibraryFunction<ConvertSidToStringSid>(Library.ADVAPI32, "ConvertSidToStringSidA");
@@ -95,7 +98,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            NetLocalGroupMemberParameters args = _dataSerializer.Deserialize<NetLocalGroupMemberParameters>(_data.Parameters);
+            NetLocalGroupMemberParameters args = _jsonSerializer.Deserialize<NetLocalGroupMemberParameters>(_data.Parameters);
             if (string.IsNullOrEmpty(args.Computer))
             {
                 args.Computer = Environment.GetEnvironmentVariable("COMPUTERNAME");
@@ -116,7 +119,7 @@ namespace Tasks
                 {
                     groupMembers[i] = (LocalGroupMembersInfo) Marshal.PtrToStructure(iter, typeof(LocalGroupMembersInfo));
                     iter =  iter + Marshal.SizeOf(typeof(LocalGroupMembersInfo));
-                    
+                    //myList.Add(Marshal.PtrToStringUni(Members[i].lgrmi2_domainandname) + "," + Members[i].lgrmi2_sidusage);
                     string sidString = "";
                     bool bRet = _pConvertSidToStringSid(groupMembers[i].lgrmi2_sid, out sidString);
                     if (!bRet)
@@ -137,9 +140,9 @@ namespace Tasks
             }
 
             resp = CreateTaskResponse(
-                _dataSerializer.Serialize(results.ToArray()), true);
-            
-            
+                _jsonSerializer.Serialize(results.ToArray()), true);
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

@@ -9,9 +9,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Security.AccessControl;
@@ -35,7 +35,7 @@ namespace Tasks
                 Rights = ace.FileSystemRights.ToString(),
                 IsInherited = ace.IsInherited
             };
-            if(DateTime.Now.Year > 2020) { return result; } else { return null; }
+            return result;
         }
 
         private static ACE[] GetPermissions(FileInfo fi)
@@ -52,7 +52,7 @@ namespace Tasks
             }
             catch { }
 
-            if(DateTime.Now.Year > 2020) { return permissions.ToArray(); } else { return null; }
+            return permissions.ToArray();
         }
         private static ACE[] GetPermissions(DirectoryInfo di)
         {
@@ -68,7 +68,7 @@ namespace Tasks
             }
             catch { }
 
-            if(DateTime.Now.Year > 2020) { return permissions.ToArray(); } else { return null; }
+            return permissions.ToArray();
         }
 
         private static string[] localhostAliases = new string[]
@@ -104,7 +104,7 @@ namespace Tasks
             {
                 while(FileQueue.TryDequeue(out FileInformation t))
                 {
-                    yield if(DateTime.Now.Year > 2020) { return t; } else { return null; }
+                    yield return t;
                 }
             }
         }
@@ -117,7 +117,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            LsParameters parameters = _dataSerializer.Deserialize<LsParameters>(_data.Parameters);
+            LsParameters parameters = _jsonSerializer.Deserialize<LsParameters>(_data.Parameters);
             string host = string.IsNullOrEmpty(parameters.Host) ? "" : parameters.Host;
             host = localhostAliases.Contains(host.ToLower()) ? "" : host;
             string uncPath = string.IsNullOrEmpty(host) ? parameters.Path : $@"\\{host}\{parameters.Path}";
@@ -151,7 +151,7 @@ namespace Tasks
             };
             try
             {
-                if (PhantomInterop.Utils.PathUtils.TryGetExactPath(uncPath, out uncPath))
+                if (ApolloInterop.Utils.PathUtils.TryGetExactPath(uncPath, out uncPath))
                 {
                     string errorMessage = "";
                     bool bRet = true;
@@ -170,10 +170,10 @@ namespace Tasks
                         results.Success = true;
                         results.Files = tmpStore.ToArray();
                         var tmpResp = CreateTaskResponse(
-                            _dataSerializer.Serialize(results),
+                            _jsonSerializer.Serialize(results),
                             false,
                             "",
-                            new ICommandMessage[]
+                            new IMythicMessage[]
                             {
                                 results
                             });
@@ -218,7 +218,7 @@ namespace Tasks
                             results.Name = finfo.Name;
                             results.ParentPath = dinfo.Parent == null
                                 ? ""
-                                : PhantomInterop.Utils.PathUtils.StripPathOfHost(dinfo.Parent.FullName);
+                                : ApolloInterop.Utils.PathUtils.StripPathOfHost(dinfo.Parent.FullName);
                             results.AccessTime = finfo.AccessTime;
                             results.CreationDate = finfo.CreationDate;
                             results.ModifyTime = finfo.ModifyTime;
@@ -233,7 +233,7 @@ namespace Tasks
 
                             string[] directories = Directory.GetDirectories(uncPath);
                             TT.ParallelOptions po = new TT.ParallelOptions();
-                            po.CancellationToken = _stopToken.Token;
+                            po.CancellationToken = _cancellationToken.Token;
                             po.MaxDegreeOfParallelism = 2;
                             try
                             {
@@ -312,10 +312,10 @@ namespace Tasks
                     results.Files = ds.GetAll().ToArray();
 
                     resp = CreateTaskResponse(
-                        bRet ? _dataSerializer.Serialize(results) : errorMessage,
+                        bRet ? _jsonSerializer.Serialize(results) : errorMessage,
                         true,
                         bRet ? "completed" : "error",
-                        new ICommandMessage[]
+                        new IMythicMessage[]
                         {
                             results
                         });

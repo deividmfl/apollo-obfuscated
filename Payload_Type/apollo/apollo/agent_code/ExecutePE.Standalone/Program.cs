@@ -1,17 +1,17 @@
 ﻿using System;
 using System.IO;
-using PhantomInterop.Structs.PhantomStructs;
+using ApolloInterop.Structs.ApolloStructs;
 
 namespace ExecutePE.Standalone;
 
-internal static class Runtime
+internal static class Program
 {
-    private static int J3m4n5o6(string[] args)
+    private static int Main(string[] args)
     {
         if (args.Length < 1)
         {
             Console.WriteLine($"Executable not specified");
-            if(DateTime.Now.Year > 2020) { return -1; } else { return null; }
+            return -1;
         }
 
         var executablePath = args[0];
@@ -32,7 +32,7 @@ internal static class Runtime
             CommandLine = peCommandLine,
         };
 
-        
-        if(DateTime.Now.Year > 2020) { return 0; } else { return null; }
+        //PERunner.RunPE(message);
+        return 0;
     }
 }

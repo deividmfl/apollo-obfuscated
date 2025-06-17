@@ -6,10 +6,10 @@
 
 #if NET_LOCALGROUP
 
-using PhantomInterop.Classes;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -57,10 +57,20 @@ namespace Tasks
         private NetLocalGroupEnum _pNetLocalGroupEnum;
         private NetApiBufferFree _pNetApiBufferFree;
         
-        
+        /*
+         [DllImport("Netapi32.dll")]
+        internal extern static int NetLocalGroupEnum([MarshalAs(UnmanagedType.LPWStr)]
+            string servername,
+            int level,
+            out IntPtr bufptr,
+            int prefmaxlen,
+            out int entriesread,
+            out int totalentries,
+            ref IntPtr resume_handle);
+         */
         #endregion
 
-        public net_localgroup(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public net_localgroup(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pNetLocalGroupEnum = _agent.GetApi().GetLibraryFunction<NetLocalGroupEnum>(Library.SAMCLI, "NetLocalGroupEnum");
             _pNetApiBufferFree = _agent.GetApi().GetLibraryFunction<NetApiBufferFree>(Library.NETUTILS, "NetApiBufferFree");
@@ -122,11 +132,11 @@ namespace Tasks
             if (resp.UserOutput == null)
             {
                 resp = CreateTaskResponse(
-                    _dataSerializer.Serialize(results.ToArray()), true);
+                    _jsonSerializer.Serialize(results.ToArray()), true);
             }
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

@@ -1,6 +1,6 @@
-﻿namespace PhantomInterop.Enums
+﻿namespace ApolloInterop.Enums
 {
-    namespace PhantomEnums
+    namespace ApolloEnums
     {
         public enum Socks5Error
         {
@@ -30,7 +30,7 @@
         public enum Socks5AuthType
         {
             NoAuth = 0,
-            Version = 1, 
+            Version = 1, //????
             UsernamePassword = 2,
         }
 
@@ -83,7 +83,8 @@
             ProcessInformation,
             CommandInformation,
             ScreenshotInformation,
-            KeylogInformation
+            KeylogInformation,
+            CallbackUpdate
         }
     }
 }

@@ -6,10 +6,10 @@
 
 #if REG_WRITE_VALUE
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
 using Microsoft.Win32;
 using System.Runtime.Serialization;
 
@@ -29,7 +29,7 @@ namespace Tasks
             [DataMember(Name = "value_value")]
             public string ValueValue;
         }
-        public reg_write_value(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public reg_write_value(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -38,7 +38,7 @@ namespace Tasks
             using (RegistryKey regKey = RegistryUtils.GetRegistryKey(hive, subkey, true))
             {
                 regKey.SetValue(valueName, valueValue);
-                if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                return true;
             }
         }
 
@@ -46,7 +46,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            RegWriteParameters parameters = _dataSerializer.Deserialize<RegWriteParameters>(_data.Parameters);
+            RegWriteParameters parameters = _jsonSerializer.Deserialize<RegWriteParameters>(_data.Parameters);
             bool bRet;
 
             if (int.TryParse(parameters.ValueValue, out int dword))
@@ -64,7 +64,7 @@ namespace Tasks
                     $"Successfully set {parameters.ValueName} to {parameters.ValueValue}",
                     true,
                     "completed",
-                    new ICommandMessage[1]
+                    new IMythicMessage[1]
                     {
                         Artifact.RegistryWrite(parameters.Hive, parameters.Key, parameters.ValueName, parameters.ValueValue)
                     });
@@ -75,8 +75,8 @@ namespace Tasks
                     $"Failed to set {parameters.ValueName}", true, "error");
             }
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

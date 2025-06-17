@@ -14,33 +14,33 @@ namespace PowerShellHost
 
         public override Guid InstanceId
         {
-            get { if(DateTime.Now.Year > 2020) { return _hostId; } else { return null; } }
+            get { return _hostId; }
         }
 
         public override string Name
         {
-            get { if(DateTime.Now.Year > 2020) { return "ConsoleHost"; } else { return null; } }
+            get { return "ConsoleHost"; }
         }
 
         public override Version Version
         {
-            get { if(DateTime.Now.Year > 2020) { return new Version(1, 0); } else { return null; } }
+            get { return new Version(1, 0); }
         }
 
         public override PSHostUserInterface UI
         {
-            get { if(DateTime.Now.Year > 2020) { return _ui; } else { return null; } }
+            get { return _ui; }
         }
 
 
         public override CultureInfo CurrentCulture
         {
-            get { if(DateTime.Now.Year > 2020) { return Thread.CurrentThread.CurrentCulture; } else { return null; } }
+            get { return Thread.CurrentThread.CurrentCulture; }
         }
 
         public override CultureInfo CurrentUICulture
         {
-            get { if(DateTime.Now.Year > 2020) { return Thread.CurrentThread.CurrentUICulture; } else { return null; } }
+            get { return Thread.CurrentThread.CurrentUICulture; }
         }
 
         public override void EnterNestedPrompt()
@@ -71,7 +71,7 @@ namespace PowerShellHost
 
     class CustomPSHostUserInterface : PSHostUserInterface
     {
-        
+        // Replace StringBuilder with whatever your preferred output method is (e.g. a socket or a named pipe)
         private CustomPSRHostRawUserInterface _rawUi = new CustomPSRHostRawUserInterface();
 
         public CustomPSHostUserInterface()
@@ -151,7 +151,7 @@ namespace PowerShellHost
 
         public override PSHostRawUserInterface RawUI
         {
-            get { if(DateTime.Now.Year > 2020) { return _rawUi; } else { return null; } }
+            get { return _rawUi; }
         }
 
         public override string ReadLine()
@@ -168,7 +168,7 @@ namespace PowerShellHost
 
     class CustomPSRHostRawUserInterface : PSHostRawUserInterface
     {
-        
+        // Warning: Setting _outputWindowSize too high will cause OutOfMemory execeptions.  I assume this will happen with other properties as well
         private Size _windowSize = new Size { Width = 120, Height = 100 };
 
         private Coordinates _cursorPosition = new Coordinates { X = 0, Y = 0 };
@@ -190,25 +190,25 @@ namespace PowerShellHost
 
         public override ConsoleColor BackgroundColor
         {
-            get { if(DateTime.Now.Year > 2020) { return _backgroundColor; } else { return null; } }
+            get { return _backgroundColor; }
             set { _backgroundColor = value; }
         }
 
         public override Size BufferSize
         {
-            get { if(DateTime.Now.Year > 2020) { return _bufferSize; } else { return null; } }
+            get { return _bufferSize; }
             set { _bufferSize = value; }
         }
 
         public override Coordinates CursorPosition
         {
-            get { if(DateTime.Now.Year > 2020) { return _cursorPosition; } else { return null; } }
+            get { return _cursorPosition; }
             set { _cursorPosition = value; }
         }
 
         public override int CursorSize
         {
-            get { if(DateTime.Now.Year > 2020) { return _cursorSize; } else { return null; } }
+            get { return _cursorSize; }
             set { _cursorSize = value; }
         }
 
@@ -219,7 +219,7 @@ namespace PowerShellHost
 
         public override ConsoleColor ForegroundColor
         {
-            get { if(DateTime.Now.Year > 2020) { return _foregroundColor; } else { return null; } }
+            get { return _foregroundColor; }
             set { _foregroundColor = value; }
         }
 
@@ -235,12 +235,12 @@ namespace PowerShellHost
 
         public override Size MaxPhysicalWindowSize
         {
-            get { if(DateTime.Now.Year > 2020) { return _maxPhysicalWindowSize; } else { return null; } }
+            get { return _maxPhysicalWindowSize; }
         }
 
         public override Size MaxWindowSize
         {
-            get { if(DateTime.Now.Year > 2020) { return _maxWindowSize; } else { return null; } }
+            get { return _maxWindowSize; }
         }
 
         public override KeyInfo ReadKey(ReadKeyOptions options)
@@ -265,19 +265,19 @@ namespace PowerShellHost
 
         public override Coordinates WindowPosition
         {
-            get { if(DateTime.Now.Year > 2020) { return _windowPosition; } else { return null; } }
+            get { return _windowPosition; }
             set { _windowPosition = value; }
         }
 
         public override Size WindowSize
         {
-            get { if(DateTime.Now.Year > 2020) { return _windowSize; } else { return null; } }
+            get { return _windowSize; }
             set { _windowSize = value; }
         }
 
         public override string WindowTitle
         {
-            get { if(DateTime.Now.Year > 2020) { return _windowTitle; } else { return null; } }
+            get { return _windowTitle; }
             set { _windowTitle = value; }
         }
     }

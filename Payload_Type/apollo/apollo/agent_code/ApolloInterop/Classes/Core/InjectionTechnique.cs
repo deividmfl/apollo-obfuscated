@@ -1,10 +1,10 @@
-﻿using PhantomInterop.Classes.Api;
-using PhantomInterop.Interfaces;
-using static PhantomInterop.Enums.Win32;
+﻿using ApolloInterop.Classes.Api;
+using ApolloInterop.Interfaces;
+using static ApolloInterop.Enums.Win32;
 using System;
 using System.ComponentModel;
 
-namespace PhantomInterop.Classes.Core
+namespace ApolloInterop.Classes.Core
 {
     public abstract class InjectionTechnique : IInjectionTechnique
     {
@@ -27,9 +27,9 @@ namespace PhantomInterop.Classes.Core
         protected DuplicateHandle _pDuplicateHandle;
         protected CloseHandle _pCloseHandle;
 
-        
-        
-        
+        // Dangerous - should only be used when resolving
+        // critical functions _pOpenProcess, _pDuplicateHandle,
+        // and _pCloseHandle.
         public InjectionTechnique()
         {
             

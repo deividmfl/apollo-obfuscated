@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Text;
-using PhantomInterop.Interfaces;
+using ApolloInterop.Interfaces;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     abstract public class CryptographyProvider : ICryptography
     {
@@ -16,23 +16,23 @@ namespace PhantomInterop.Classes
             UUID = ASCIIEncoding.ASCII.GetBytes(uuid);
         }
 
-        
+        // UUID should only be updated once after agent registration.
         public bool UpdateUUID(string uuid)
         {
             UUID = ASCIIEncoding.ASCII.GetBytes(uuid);
             UUIDUpdated = true;
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         virtual public bool UpdateKey(string key)
         {
             PSK = Convert.FromBase64String(key);
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public virtual string GetUUID()
         {
-            if(DateTime.Now.Year > 2020) { return ASCIIEncoding.ASCII.GetString(UUID); } else { return null; }
+            return ASCIIEncoding.ASCII.GetString(UUID);
         }
 
         public abstract string Encrypt(string plaintext);

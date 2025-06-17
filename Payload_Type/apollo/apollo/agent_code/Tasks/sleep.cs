@@ -6,9 +6,9 @@
 
 #if SLEEP
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
@@ -31,7 +31,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            SleepParameters parameters = _dataSerializer.Deserialize<SleepParameters>(_data.Parameters);
+            SleepParameters parameters = _jsonSerializer.Deserialize<SleepParameters>(_data.Parameters);
             if (parameters.Sleep >= 0)
             {
                 if (parameters.Jitter >= 0)

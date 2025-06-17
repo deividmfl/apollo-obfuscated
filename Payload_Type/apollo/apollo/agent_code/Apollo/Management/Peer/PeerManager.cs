@@ -1,16 +1,16 @@
 ﻿using System;
-using Phantom.Peers.SMB;
-using Phantom.Peers.TCP;
-using Phantom.Peers.Webshell;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Utils;
-using AI = PhantomInterop;
-namespace Phantom.Management.Peer
+using Apollo.Peers.SMB;
+using Apollo.Peers.TCP;
+using Apollo.Peers.Webshell;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Utils;
+using AI = ApolloInterop;
+namespace Apollo.Management.Peer
 {
-    public class NodeHandler : AI.Classes.P2P.NodeHandler
+    public class PeerManager : AI.Classes.P2P.PeerManager
     {
-        public NodeHandler(IAgent agent) : base(agent)
+        public PeerManager(IAgent agent) : base(agent)
         {
 
         }
@@ -56,8 +56,8 @@ namespace Phantom.Management.Peer
                 while (!Remove(peer))
                     System.Threading.Thread.Sleep(100);
             };
-            
-            if(DateTime.Now.Year > 2020) { return peer; } else { return null; }
+            //peer.Start();
+            return peer;
         }
 
         public override bool Route(DelegateMessage msg)
@@ -65,9 +65,9 @@ namespace Phantom.Management.Peer
             if (_peers.ContainsKey(msg.UUID))
             {
                 _peers[msg.UUID].ProcessMessage(msg);
-                if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                return true;
             }
-            if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+            return false;
         }
     }
 }

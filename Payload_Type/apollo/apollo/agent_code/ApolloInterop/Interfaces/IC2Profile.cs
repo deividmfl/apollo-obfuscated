@@ -1,8 +1,8 @@
-﻿using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Types.Delegates;
-using PhantomInterop.Enums.PhantomEnums;
+﻿using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Types.Delegates;
+using ApolloInterop.Enums.ApolloEnums;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IC2Profile
     {
@@ -10,14 +10,14 @@ namespace PhantomInterop.Interfaces
 
         void Start();
 
-        bool Send<ICommandMessage>(ICommandMessage message);
+        bool Send<IMythicMessage>(IMythicMessage message);
 
         bool SendRecv<T, TResult>(T message, OnResponse<TResult> onResponse);
 
-        bool Recv(MessageType mt, OnResponse<ICommandMessage> onResp);
+        bool Recv(MessageType mt, OnResponse<IMythicMessage> onResp);
 
-        
-        
+        // Basically tells the caller that this C2 profile is stateful,
+        // and as such it supports only the SendRecv operation.
         bool IsOneWay();
 
         bool IsConnected();

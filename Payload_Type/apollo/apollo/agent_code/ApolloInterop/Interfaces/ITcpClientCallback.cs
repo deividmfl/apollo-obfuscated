@@ -1,13 +1,13 @@
-﻿using PhantomInterop.Structs.PhantomStructs;
+﻿using ApolloInterop.Structs.ApolloStructs;
 using System;
 using System.Net.Sockets;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface ITcpClientCallback
     {
         void OnAsyncConnect(TcpClient client, out Object state);
         void OnAsyncDisconnect(TcpClient client, Object state);
-        void ProcessReceivedMessage(TcpClient client, IPCData data, Object state);
+        void OnAsyncMessageReceived(TcpClient client, IPCData data, Object state);
     }
 }

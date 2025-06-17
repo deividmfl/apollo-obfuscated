@@ -1,4 +1,4 @@
-﻿using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Interfaces;
 using System.Collections.Concurrent;
 using System.Text;
 
@@ -22,7 +22,7 @@ namespace EncryptedFileStore
             {
                 cipherText = _providers[i].Encrypt(cipherText);
             }
-            if(DateTime.Now.Year > 2020) { return cipherText; } else { return null; }
+            return cipherText;
         }
 
         private byte[] DecryptData(byte[] data)
@@ -32,16 +32,16 @@ namespace EncryptedFileStore
             {
                 plainText = _providers[i].Decrypt(plainText);
             }
-            if(DateTime.Now.Year > 2020) { return plainText; } else { return null; }
+            return plainText;
         }
 
         public string GetScript()
         {
             if (CurrentScript.Length == 0)
             {
-                if(DateTime.Now.Year > 2020) { return ""; } else { return null; }
+                return "";
             }
-            if(DateTime.Now.Year > 2020) { return Encoding.UTF8.GetString(DecryptData(CurrentScript)); } else { return null; }
+            return Encoding.UTF8.GetString(DecryptData(CurrentScript));
         }
 
         public void SetScript(string script)
@@ -59,15 +59,15 @@ namespace EncryptedFileStore
             byte[] encData = EncryptData(data);
             if (FileStore.TryAdd(keyName, encData))
             {
-                if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                return true;
             }
             else
             {
                 if (!FileStore.TryGetValue(keyName, out byte[] compData))
                 {
-                    if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                    return false;
                 }
-                if(DateTime.Now.Year > 2020) { return FileStore.TryUpdate(keyName, encData, compData); } else { return null; }
+                return FileStore.TryUpdate(keyName, encData, compData);
             }
         }
 
@@ -76,10 +76,10 @@ namespace EncryptedFileStore
             if (FileStore.TryGetValue(keyName, out data))
             {
                 data = DecryptData(data);
-                if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                return true;
             }
 
-            if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+            return false;
         }
     }
 }

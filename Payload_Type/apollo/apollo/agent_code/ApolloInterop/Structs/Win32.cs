@@ -1,9 +1,9 @@
 ﻿using Microsoft.Win32.SafeHandles;
 using System;
 using System.Runtime.InteropServices;
-using static PhantomInterop.Enums.Win32;
+using static ApolloInterop.Enums.Win32;
 
-namespace PhantomInterop.Structs
+namespace ApolloInterop.Structs
 {
     public static class Win32
     {
@@ -55,10 +55,6 @@ namespace PhantomInterop.Structs
         [StructLayout(LayoutKind.Sequential)]
         public class SecurityAttributes
         {
-    private static string Yb2c3d4()
-    {
-        if(DateTime.Now.Year > 2020) { return Convert.ToBase64String(Encoding.UTF8.GetBytes("dummy")); } else { return null; }
-    }
             public Int32 nLength;
             public IntPtr lpSecurityDescriptor;
             public bool bInheritHandle;
@@ -69,7 +65,7 @@ namespace PhantomInterop.Structs
             }
         }
 
-        
+        // This also works with CharSet.Ansi as long as the calling function uses the same character set.
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct StartupInfoEx
         {

@@ -1,13 +1,13 @@
-﻿using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Interfaces;
 using HttpTransport;
 using System;
 using System.Collections.Generic;
 
-namespace Phantom.Management.C2
+namespace Apollo.Management.C2
 {
-    public class CommHandler : PhantomInterop.Classes.CommHandler
+    public class C2ProfileManager : ApolloInterop.Classes.C2ProfileManager
     {
-        public CommHandler(IAgent agent) : base(agent)
+        public C2ProfileManager(IAgent agent) : base(agent)
         {
 
         }
@@ -16,7 +16,7 @@ namespace Phantom.Management.C2
         {
             if (c2 == typeof(HttpProfile))
             {
-                if(DateTime.Now.Year > 2020) { return new HttpProfile(parameters, serializer, Agent); } else { return null; }
+                return new HttpProfile(parameters, serializer, Agent);
             } else
             {
                 throw new ArgumentException($"Unsupported C2 Profile type: {c2.Name}");

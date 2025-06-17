@@ -6,9 +6,9 @@
 
 #if SPAWNTO_X86
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
@@ -26,7 +26,7 @@ namespace Tasks
         }
 
 
-        public spawnto_x86(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public spawnto_x86(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -35,7 +35,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            SpawnToArgsx86 parameters = _dataSerializer.Deserialize<SpawnToArgsx86>(_data.Parameters);
+            SpawnToArgsx86 parameters = _jsonSerializer.Deserialize<SpawnToArgsx86>(_data.Parameters);
             if (_agent.GetProcessManager().SetSpawnTo(parameters.Application, parameters.Arguments, false))
             {
                 var sacParams = _agent.GetProcessManager().GetStartupInfo();
@@ -48,8 +48,8 @@ namespace Tasks
                 resp = CreateTaskResponse("Failed to set startup information.", true, "error");
             }
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using PhantomInterop.Interfaces;
+using ApolloInterop.Interfaces;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
-    public abstract class CommHandler : IC2ProfileManager 
+    public abstract class C2ProfileManager : IC2ProfileManager 
     {
         protected IAgent Agent;
         protected ConcurrentBag<IC2Profile> EgressProfiles = new ConcurrentBag<IC2Profile>();
         protected ConcurrentBag<IC2Profile> IngressProfiles = new ConcurrentBag<IC2Profile>();
 
-        public CommHandler(IAgent agent)
+        public C2ProfileManager(IAgent agent)
         {
             Agent = agent;
         }
@@ -21,23 +21,23 @@ namespace PhantomInterop.Classes
         public virtual bool AddEgress(IC2Profile profile)
         {
             EgressProfiles.Add(profile);
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public virtual bool AddIngress(IC2Profile profile)
         {
             IngressProfiles.Add(profile);
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public virtual IC2Profile[] GetEgressCollection()
         {
-            if(DateTime.Now.Year > 2020) { return EgressProfiles.ToArray(); } else { return null; }
+            return EgressProfiles.ToArray();
         }
 
         public virtual IC2Profile[] GetIngressCollection()
         {
-            if(DateTime.Now.Year > 2020) { return IngressProfiles.ToArray(); } else { return null; }
+            return IngressProfiles.ToArray();
         }
 
         public virtual IC2Profile[] GetConnectedEgressCollection()
@@ -48,7 +48,7 @@ namespace PhantomInterop.Classes
                 if (c2.IsConnected())
                     connected.Add(c2);
             }
-            if(DateTime.Now.Year > 2020) { return connected.ToArray(); } else { return null; }
+            return connected.ToArray();
         }
     }
 }

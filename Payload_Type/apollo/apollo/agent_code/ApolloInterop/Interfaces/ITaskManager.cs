@@ -1,8 +1,8 @@
-﻿using PhantomInterop.Types.Delegates;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Enums.PhantomEnums;
+﻿using ApolloInterop.Types.Delegates;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Enums.ApolloEnums;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface ITaskManager
     {

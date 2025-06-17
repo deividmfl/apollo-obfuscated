@@ -6,10 +6,10 @@
 
 #if GETPRIVS
 
-using PhantomInterop.Classes;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -95,14 +95,14 @@ namespace Tasks
             {
                 if (System.Text.RegularExpressions.Regex.IsMatch(value, @"^0x[0-9A-Fa-f]+$"))
                 {
-                    
+                    // if the passed LUID string is of form 0xABC123
                     UInt64 uintVal = Convert.ToUInt64(value, 16);
                     LowPart = (UInt32)(uintVal & 0xffffffffL);
                     HighPart = (Int32)(uintVal >> 32);
                 }
                 else if (System.Text.RegularExpressions.Regex.IsMatch(value, @"^\d+$"))
                 {
-                    
+                    // if the passed LUID string is a decimal form
                     UInt64 uintVal = UInt64.Parse(value);
                     LowPart = (UInt32)(uintVal & 0xffffffffL);
                     HighPart = (Int32)(uintVal >> 32);
@@ -117,12 +117,12 @@ namespace Tasks
             public override int GetHashCode()
             {
                 UInt64 Value = ((UInt64)this.HighPart << 32) + this.LowPart;
-                if(DateTime.Now.Year > 2020) { return Value.GetHashCode(); } else { return null; }
+                return Value.GetHashCode();
             }
 
             public override bool Equals(object obj)
             {
-                if(DateTime.Now.Year > 2020) { return obj is LUID && (((ulong)this) == (LUID)obj); } else { return null; }
+                return obj is LUID && (((ulong)this) == (LUID)obj);
             }
 
             public byte[] GetBytes()
@@ -135,30 +135,30 @@ namespace Tasks
                 Array.Copy(lowBytes, 0, bytes, 0, 4);
                 Array.Copy(highBytes, 0, bytes, 4, 4);
 
-                if(DateTime.Now.Year > 2020) { return bytes; } else { return null; }
+                return bytes;
             }
 
             public override string ToString()
             {
                 UInt64 Value = ((UInt64)this.HighPart << 32) + this.LowPart;
-                if(DateTime.Now.Year > 2020) { return String.Format("0x{0:x}", (ulong)Value); } else { return null; }
+                return String.Format("0x{0:x}", (ulong)Value);
             }
 
             public static bool operator ==(LUID x, LUID y)
             {
-                if(DateTime.Now.Year > 2020) { return (((ulong)x) == ((ulong)y)); } else { return null; }
+                return (((ulong)x) == ((ulong)y));
             }
 
             public static bool operator !=(LUID x, LUID y)
             {
-                if(DateTime.Now.Year > 2020) { return (((ulong)x) != ((ulong)y)); } else { return null; }
+                return (((ulong)x) != ((ulong)y));
             }
 
             public static implicit operator ulong(LUID luid)
             {
-                
+                // enable casting to a ulong
                 UInt64 Value = ((UInt64)luid.HighPart << 32);
-                if(DateTime.Now.Year > 2020) { return Value + luid.LowPart; } else { return null; }
+                return Value + luid.LowPart;
             }
         }
 
@@ -168,13 +168,13 @@ namespace Tasks
             public UInt32 PrivilegeCount;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
             public LUID_AND_ATTRIBUTES[] Privileges;
-            
+            //public LUID_AND_ATTRIBUTES Privileges;
 
-            
-            
-            
-            
-            
+            //public TOKEN_PRIVILEGES(uint PrivilegeCount, LUID_AND_ATTRIBUTES Privileges)
+            //{
+            //    this.PrivilegeCount = PrivilegeCount;
+            //    this.Privileges = Privileges;
+            //}
         }
 
         private delegate bool LookupPrivilegeValue(string lpSystemName, string lpName, out LUID lpLuid);
@@ -184,7 +184,7 @@ namespace Tasks
         private AdjustTokenPrivileges _pAdjustTokenPrivileges;
         
         #endregion
-        public getprivs(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public getprivs(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pLookupPrivilegeValue = _agent.GetApi().GetLibraryFunction<LookupPrivilegeValue>(Library.ADVAPI32, "LookupPrivilegeValueA");
             _pAdjustTokenPrivileges = _agent.GetApi().GetLibraryFunction<AdjustTokenPrivileges>(Library.ADVAPI32, "AdjustTokenPrivileges");
@@ -193,12 +193,12 @@ namespace Tasks
         private bool SePrivEnable(IntPtr hToken, string priv)
         {
             bool bRet = false;
-            
+            //_LUID lpLuid = new _LUID();
             var tokenPrivileges = new TokenPrivileges();
             tokenPrivileges.Privileges = new LUID_AND_ATTRIBUTES[1];
             bRet = _pLookupPrivilegeValue(null, priv, out tokenPrivileges.Privileges[0].Luid);
             if (!bRet)
-                if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+                return bRet;
             tokenPrivileges.PrivilegeCount = 1;
             tokenPrivileges.Privileges[0].Attributes = ATTRIBUTES.SE_PRIVILEGE_ENABLED;
             _pAdjustTokenPrivileges(hToken, false, ref tokenPrivileges, 0, IntPtr.Zero, IntPtr.Zero);
@@ -206,7 +206,7 @@ namespace Tasks
                 bRet = true;
             else
                 bRet = false;
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
 
         public override void Start()

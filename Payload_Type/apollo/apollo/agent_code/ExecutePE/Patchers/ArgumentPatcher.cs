@@ -10,21 +10,21 @@ namespace ExecutePE.Patchers
     {
         private const int
             PEB_RTL_USER_PROCESS_PARAMETERS_OFFSET =
-                0x20; 
+                0x20; // Offset into the PEB that the RTL_USER_PROCESS_PARAMETERS pointer sits at
 
         private const int
             RTL_USER_PROCESS_PARAMETERS_COMMANDLINE_OFFSET =
-                0x70; 
+                0x70; // Offset into the RTL_USER_PROCESS_PARAMETERS that the CommandLine sits at https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-rtl_user_process_parameters
 
         private const int RTL_USER_PROCESS_PARAMETERS_MAX_LENGTH_OFFSET = 2;
 
         private const int
             RTL_USER_PROCESS_PARAMETERS_IMAGE_OFFSET =
-                0x60; 
+                0x60; // Offset into the RTL_USER_PROCESS_PARAMETERS that the CommandLine sits at https://docs.microsoft.com/en-us/windows/win32/api/winternl/ns-winternl-rtl_user_process_parameters
 
         private const int
             UNICODE_STRING_STRUCT_STRING_POINTER_OFFSET =
-                0x8; 
+                0x8; // Offset into the UNICODE_STRING struct that the string pointer sits at https://docs.microsoft.com/en-us/windows/win32/api/subauth/ns-subauth-unicode_string
 
         private byte[]? _originalCommandLineFuncBytes;
         private IntPtr _ppCommandLineString;
@@ -44,7 +44,7 @@ namespace ExecutePE.Patchers
             var pPEB = Utils.GetPointerToPeb();
             if (pPEB == IntPtr.Zero)
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
 
             GetPebCommandLineAndImagePointers(pPEB, out _ppCommandLineString, out _pOriginalCommandLineString,
@@ -56,21 +56,21 @@ namespace ExecutePE.Patchers
             if (!Utils.PatchAddress(_ppCommandLineString, pNewCommandLineString))
             {
 
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
             if (!Utils.PatchAddress(_ppImageString, pNewImageString))
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
             Marshal.WriteInt16(_pLength, 0, (short)commandLine.Length);
             Marshal.WriteInt16(_pMaxLength, 0, (short)commandLine.Length);
 
             if (!PatchGetCommandLineFunc(commandLine))
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
 
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         private bool PatchGetCommandLineFunc(string commandLine)
@@ -82,42 +82,42 @@ namespace ExecutePE.Patchers
             {
                 var stringBytes = new byte[commandLineString.Length];
 
-                
+                // Copy the command line string bytes into an array and check if it contains null bytes (so if it is wide or not
                 Marshal.Copy(pCommandLineString, stringBytes, 0,
-                    commandLineString.Length); 
+                    commandLineString.Length); // Even if ASCII won't include null terminating byte
 
                 if (!new List<byte>(stringBytes).Contains(0x00))
                 {
-                    _encoding = Encoding.ASCII; 
+                    _encoding = Encoding.ASCII; // At present assuming either ASCII or UTF8
                 }
 
                 PERunner.encoding = _encoding;
             }
 
-            
+            // Set the GetCommandLine func based on the determined encoding
             _commandLineFunc = _encoding.Equals(Encoding.ASCII) ? "GetCommandLineA" : "GetCommandLineW";
 
-            
+            // Write the new command line string into memory
             _pNewString = _encoding.Equals(Encoding.ASCII)
                 ? Marshal.StringToHGlobalAnsi(commandLine)
                 : Marshal.StringToHGlobalUni(commandLine);
 
-            
-            var patchBytes = new List<byte>() { 0x48, 0xB8 }; 
+            // Create the patch bytes that provide the new string pointer
+            var patchBytes = new List<byte>() { 0x48, 0xB8 }; // TODO architecture
             var pointerBytes = BitConverter.GetBytes(_pNewString.ToInt64());
 
             patchBytes.AddRange(pointerBytes);
 
             patchBytes.Add(0xC3);
 
-            
-            _originalCommandLineFuncBytes = Utils.PatchFunction("kernelbase", _commandLineFunc, patchBytes.ToArray()); } else { return null; }
+            // Patch the GetCommandLine function to return the new string
+            _originalCommandLineFuncBytes = Utils.PatchFunction("kernelbase", _commandLineFunc, patchBytes.ToArray());
             if (_originalCommandLineFuncBytes == null)
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
 
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         private static void GetPebCommandLineAndImagePointers(IntPtr pPEB, out IntPtr ppCommandLineString,

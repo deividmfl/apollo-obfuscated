@@ -6,9 +6,9 @@
 
 #if SPAWN
 
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
@@ -21,7 +21,7 @@ namespace Tasks
             [DataMember(Name = "template")]
             public string Template;
         }
-        public spawn(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public spawn(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -29,9 +29,9 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            SpawnParameters parameters = _dataSerializer.Deserialize<SpawnParameters>(_data.Parameters);
+            SpawnParameters parameters = _jsonSerializer.Deserialize<SpawnParameters>(_data.Parameters);
             if (_agent.GetFileManager().GetFile(
-                    _stopToken.Token,
+                    _cancellationToken.Token,
                     _data.ID,
                     parameters.Template,
                     out byte[] fileBytes))
@@ -59,8 +59,8 @@ namespace Tasks
                 resp = CreateTaskResponse("Failed to fetch file.", true, "error");
             }
 
-            
-            
+            // Your code here..
+            // Then add response to queue
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

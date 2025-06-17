@@ -65,9 +65,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Phantom\Phantom.csproj">
+    <ProjectReference Include="..\Apollo\Apollo.csproj">
       <Project>{d14e4a53-b9b5-4563-8290-ba8487575255}</Project>
-      <Name>Phantom</Name>
+      <Name>Apollo</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

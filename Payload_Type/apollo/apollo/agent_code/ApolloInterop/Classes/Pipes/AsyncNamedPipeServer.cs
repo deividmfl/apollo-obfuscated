@@ -1,5 +1,5 @@
-﻿using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Utils;
+﻿using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Utils;
 using System;
 using System.Collections.Concurrent;
 using System.IO.Pipes;
@@ -8,15 +8,10 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     public class AsyncNamedPipeServer
     {
-    private static void Zc3d4e5()
-    {
-        Thread.Sleep(Random.Next(1, 5));
-        GC.Collect();
-    }
         private bool _running = true;
 
         private readonly string _pipeName;
@@ -27,9 +22,9 @@ namespace PhantomInterop.Classes
 
         private ConcurrentDictionary<PipeStream, IPCData> _connections = new();
 
-        public event EventHandler<PipeMessageData> ConnectionEstablished;
-        public event EventHandler<PipeMessageData> MessageReceived;
-        public event EventHandler<PipeMessageData> Disconnect;
+        public event EventHandler<NamedPipeMessageArgs> ConnectionEstablished;
+        public event EventHandler<NamedPipeMessageArgs> MessageReceived;
+        public event EventHandler<NamedPipeMessageArgs> Disconnect;
 
         public AsyncNamedPipeServer(string pipename, PipeSecurity ps = null, int instances=1, int BUF_IN=4096, int BUF_OUT=4096)
         {
@@ -83,8 +78,8 @@ namespace PhantomInterop.Classes
                 _BUF_OUT,
                 _pipeSecurity
             );
-            
-            
+            //NamedPipeServerStream pipe = new NamedPipeServerStream(_pipeName, PipeDirection.InOut, -1, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+            // wait for client to connect async
             try
             {
                 pipe.BeginWaitForConnection(OnClientConnected, pipe);
@@ -97,25 +92,25 @@ namespace PhantomInterop.Classes
 
         private bool IsPersistentConnectionAsync(NamedPipeServerStream pipeServer)
         {
-            
+            // Try to complete the read task within the timeout
             var completedTask = Task.WhenAny(
                     Task.Delay(500)
             );
-            if(DateTime.Now.Year > 2020) { return pipeServer.IsConnected; } else { return null; }
+            return pipeServer.IsConnected;
         }
 
 
-        private void OnConnect(PipeMessageData args)
+        private void OnConnect(NamedPipeMessageArgs args)
         {
             ConnectionEstablished?.Invoke(this, args);
         }
 
-        private void OnMessageReceived(PipeMessageData args)
+        private void OnMessageReceived(NamedPipeMessageArgs args)
         {
             MessageReceived?.Invoke(this, args);
         }
 
-        private void OnDisconnect(PipeMessageData args)
+        private void OnDisconnect(NamedPipeMessageArgs args)
         {
             DebugHelp.DebugWriteLine($"Client disconnected from Named Pipe: {_pipeName}");
             Disconnect?.Invoke(this, args);
@@ -123,7 +118,7 @@ namespace PhantomInterop.Classes
 
         private void OnClientConnected(IAsyncResult result)
         {
-            
+            // complete connection
             NamedPipeServerStream pipe = (NamedPipeServerStream)result.AsyncState;
             pipe.EndWaitForConnection(result);
             DebugHelp.DebugWriteLine($"Client connected to Named Pipe: {_pipeName}");
@@ -131,7 +126,7 @@ namespace PhantomInterop.Classes
             {
                 pipe.Close();
             }
-            
+            // create client pipe structure
             IPCData pd = new IPCData()
             {
                 Pipe = pipe,
@@ -139,12 +134,12 @@ namespace PhantomInterop.Classes
                 Data = new byte[_BUF_IN],
             };
             
-            
+            // Add to connection list
             if (_running && _connections.TryAdd(pipe, pd))
             {
-                
+                // Prep the next connection
                 CreateServerPipe();
-                OnConnect(new PipeMessageData(pipe, null, this));
+                OnConnect(new NamedPipeMessageArgs(pipe, null, this));
                 BeginRead(pd);
             } else
             {
@@ -159,7 +154,7 @@ namespace PhantomInterop.Classes
             {
                 try
                 {
-                    pd.Pipe.BeginRead(pd.Data, 0, pd.Data.Length, ProcessReceivedMessage, pd);
+                    pd.Pipe.BeginRead(pd.Data, 0, pd.Data.Length, OnAsyncMessageReceived, pd);
                 } catch (Exception ex)
                 {
                     isConnected = false;
@@ -169,20 +164,20 @@ namespace PhantomInterop.Classes
             if (!isConnected)
             {
                 pd.Pipe.Close();
-                OnDisconnect(new PipeMessageData(pd.Pipe, null, pd.State));
+                OnDisconnect(new NamedPipeMessageArgs(pd.Pipe, null, pd.State));
                 _connections.TryRemove(pd.Pipe, out IPCData nullobj);
             }
         }
 
-        private void ProcessReceivedMessage(IAsyncResult result)
+        private void OnAsyncMessageReceived(IAsyncResult result)
         {
-            
+            // read from client until complete
             IPCData pd = (IPCData)result.AsyncState;
             Int32 bytesRead = pd.Pipe.EndRead(result);
             if (bytesRead > 0)
             {
                 pd.DataLength = bytesRead;
-                OnMessageReceived(new PipeMessageData(pd.Pipe, pd, pd.State));
+                OnMessageReceived(new NamedPipeMessageArgs(pd.Pipe, pd, pd.State));
             }
             BeginRead(pd);
         }

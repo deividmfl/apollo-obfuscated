@@ -1,12 +1,12 @@
-﻿using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Interfaces;
 using System;
 
-namespace PhantomInterop.Classes.Events
+namespace ApolloInterop.Classes.Events
 {
     public class MythicMessageEventArgs : EventArgs
     {
-        public ICommandMessage Message;
+        public IMythicMessage Message;
 
-        public MythicMessageEventArgs(ICommandMessage msg) => Message = msg;
+        public MythicMessageEventArgs(IMythicMessage msg) => Message = msg;
     }
 }

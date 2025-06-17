@@ -1,13 +1,13 @@
-﻿using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Interfaces;
 using System;
 
-namespace PhantomInterop.Classes.Events
+namespace ApolloInterop.Classes.Events
 {
-    public class ChunkEventData<T> : EventArgs where T : IChunkMessage
+    public class ChunkMessageEventArgs<T> : EventArgs where T : IChunkMessage
     {
         public T[] Chunks;
 
-        public ChunkEventData(T[] chunks)
+        public ChunkMessageEventArgs(T[] chunks)
         {
             Chunks = chunks;
         }

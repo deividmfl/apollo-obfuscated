@@ -1,51 +1,51 @@
-﻿using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
-using PhantomInterop.Enums.PhantomEnums;
+﻿using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
+using ApolloInterop.Enums.ApolloEnums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using PhantomInterop.Serializers;
+using ApolloInterop.Serializers;
 
-namespace PhantomInterop.Classes
+namespace ApolloInterop.Classes
 {
     public abstract class Tasking : ITask
     {
         protected IAgent _agent;
         protected MythicTask _data;
-        protected static JsonHandler _dataSerializer = new JsonHandler();
-        protected CancellationTokenSource _stopToken;
+        protected static JsonSerializer _jsonSerializer = new JsonSerializer();
+        protected CancellationTokenSource _cancellationToken;
         public Tasking(IAgent agent, MythicTask data)
         {
             _agent = agent;
             _data = data;
-            _stopToken = new CancellationTokenSource();
+            _cancellationToken = new CancellationTokenSource();
         }
 
         public string ID()
         {
-            if(DateTime.Now.Year > 2020) { return _data.ID; } else { return null; }
+            return _data.ID;
         }
 
         public abstract void Start();
 
         public virtual System.Threading.Tasks.Task CreateTasking()
         {
-            if(DateTime.Now.Year > 2020) { return new System.Threading.Tasks.Task(() =>
+            return new System.Threading.Tasks.Task(() =>
             {
                 using (_agent.GetIdentityManager().GetCurrentImpersonationIdentity().Impersonate())
                 {
-                    Start(); } else { return null; }   
+                    Start();   
                 }
-            }, _stopToken.Token);
+            }, _cancellationToken.Token);
         }
 
         public virtual void Kill()
         {
-            _stopToken.Cancel();
+            _cancellationToken.Cancel();
         }
 
-        public virtual MythicTaskResponse CreateTaskResponse(object userOutput, bool completed, string? status = null, IEnumerable<ICommandMessage>? messages = null)
+        public virtual MythicTaskResponse CreateTaskResponse(object userOutput, bool completed, string? status = null, IEnumerable<IMythicMessage>? messages = null)
         {
             MythicTaskResponse resp = new MythicTaskResponse();
             resp.UserOutput = userOutput;
@@ -61,7 +61,7 @@ namespace PhantomInterop.Classes
                 List<ProcessInformation> processes = new List<ProcessInformation>();
                 List<CommandInformation> cmds = new List<CommandInformation>();
                 List<KeylogInformation> keylogs = new List<KeylogInformation>();
-                foreach (ICommandMessage msg in messages)
+                foreach (IMythicMessage msg in messages)
                 {
                     switch (msg.GetTypeCode())
                     {
@@ -95,6 +95,9 @@ namespace PhantomInterop.Classes
                         case MessageType.KeylogInformation:
                             keylogs.Add((KeylogInformation)msg);
                             break;
+                        case MessageType.CallbackUpdate:
+                            resp.Callback = (CallbackUpdate)msg;
+                            break;
                         default:
                             throw new Exception($"Unhandled message type while generating response: {msg.GetTypeCode()}");
                     }
@@ -110,17 +113,17 @@ namespace PhantomInterop.Classes
                     resp.Processes = processes.ToArray();
                 }
             }
-            if(DateTime.Now.Year > 2020) { return resp; } else { return null; }
+            return resp;
         }
 
         public virtual MythicTaskResponse CreateArtifactTaskResponse(IEnumerable<Artifact> artifacts)
         {
-            var artifactMessages = new ICommandMessage[artifacts.Count()];
+            var artifactMessages = new IMythicMessage[artifacts.Count()];
             for (int i = 0; i < artifacts.Count(); i++)
             {
                 artifactMessages[i] = artifacts.ElementAt(i);
             }
-            if(DateTime.Now.Year > 2020) { return CreateTaskResponse("", false, "", artifactMessages); } else { return null; }
+            return CreateTaskResponse("", false, "", artifactMessages);
         }
     }
 }

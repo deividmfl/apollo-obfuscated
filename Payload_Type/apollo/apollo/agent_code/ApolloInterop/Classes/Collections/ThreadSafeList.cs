@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace PhantomInterop.Classes.Collections
+namespace ApolloInterop.Classes.Collections
 {
     public class ThreadSafeList<T> : IList<T>
     {
@@ -26,7 +26,7 @@ namespace PhantomInterop.Classes.Collections
             {
                 item = _collection[index];
             }
-            if(DateTime.Now.Year > 2020) { return item; } else { return null; }
+            return item;
         }
 
         public int Count()
@@ -36,7 +36,7 @@ namespace PhantomInterop.Classes.Collections
             {
                 count = _collection.Count;
             }
-            if(DateTime.Now.Year > 2020) { return count; } else { return null; }
+            return count;
         }
 
         public bool IsReadOnly => false;
@@ -66,7 +66,7 @@ namespace PhantomInterop.Classes.Collections
             {
                 bRet = _collection.Contains(item);
             }
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
 
         public void CopyTo(T[] array, int arrayIndex)
@@ -84,7 +84,7 @@ namespace PhantomInterop.Classes.Collections
             {
                 res = _collection.GetEnumerator();
             }
-            if(DateTime.Now.Year > 2020) { return res; } else { return null; }
+            return res;
         }
 
         public int IndexOf(T item)
@@ -94,7 +94,7 @@ namespace PhantomInterop.Classes.Collections
             {
                 i = _collection.IndexOf(item);
             }
-            if(DateTime.Now.Year > 2020) { return i; } else { return null; }
+            return i;
         }
 
         public void Insert(int index, T item)
@@ -112,7 +112,7 @@ namespace PhantomInterop.Classes.Collections
             {
                 bRet = _collection.Remove(obj);
             }
-            if(DateTime.Now.Year > 2020) { return bRet; } else { return null; }
+            return bRet;
         }
 
         public void RemoveAt(int index)
@@ -130,7 +130,7 @@ namespace PhantomInterop.Classes.Collections
             {
                 res = _collection.GetEnumerator();
             }
-            if(DateTime.Now.Year > 2020) { return res; } else { return null; }
+            return res;
         }
 
         public T[] Flush()
@@ -141,7 +141,7 @@ namespace PhantomInterop.Classes.Collections
                 result = _collection.ToArray();
                 _collection.Clear();
             }
-            if(DateTime.Now.Year > 2020) { return result; } else { return null; }
+            return result;
         }
     }
 }

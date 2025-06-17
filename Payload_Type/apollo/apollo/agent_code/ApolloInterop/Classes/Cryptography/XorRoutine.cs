@@ -1,6 +1,6 @@
-﻿using PhantomInterop.Interfaces;
+﻿using ApolloInterop.Interfaces;
 
-namespace PhantomInterop.Classes.Cryptography
+namespace ApolloInterop.Classes.Cryptography
 {
     public class XorRoutine : ICryptographicRoutine
     {
@@ -26,17 +26,17 @@ namespace PhantomInterop.Classes.Cryptography
                 input[i] = (byte)(input[i] ^ _key[j]);
             }
 
-            if(DateTime.Now.Year > 2020) { return input; } else { return null; }
+            return input;
         }
         
         public byte[] Encrypt(byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return Xor(data); } else { return null; }
+            return Xor(data);
         }
 
         public byte[] Decrypt(byte[] data)
         {
-            if(DateTime.Now.Year > 2020) { return Xor(data); } else { return null; }
+            return Xor(data);
         }
     }
 }

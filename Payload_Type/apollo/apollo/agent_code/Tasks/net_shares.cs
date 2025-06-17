@@ -6,10 +6,10 @@
 
 #if NET_SHARES
 
-using PhantomInterop.Classes;
-using PhantomInterop.Classes.Api;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+using ApolloInterop.Classes;
+using ApolloInterop.Classes.Api;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -90,7 +90,7 @@ namespace Tasks
             }
             public override string ToString()
             {
-                if(DateTime.Now.Year > 2020) { return shi1_netname; } else { return null; }
+                return shi1_netname;
             }
         }
 
@@ -101,7 +101,7 @@ namespace Tasks
         }
 
 
-        public net_shares(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public net_shares(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pNetApiBufferFree = _agent.GetApi().GetLibraryFunction<NetApiBufferFree>(Library.NETUTILS, "NetApiBufferFree");
             _pNetShareEnum = _agent.GetApi().GetLibraryFunction<NetShareEnum>(Library.SRVCLI, "NetShareEnum");
@@ -125,12 +125,12 @@ namespace Tasks
                     currentPtr = (IntPtr)(currentPtr.ToInt64() + nStructSize);
                 }
                 _pNetApiBufferFree(bufPtr);
-                if(DateTime.Now.Year > 2020) { return ShareInfos.ToArray(); } else { return null; }
+                return ShareInfos.ToArray();
             }
             else
             {
                 ShareInfos.Add(new ShareInfo("ERROR=" + ret.ToString(), ShareType.STYPE_UNKNOWN, string.Empty));
-                if(DateTime.Now.Year > 2020) { return ShareInfos.ToArray(); } else { return null; }
+                return ShareInfos.ToArray();
             }
         }
 
@@ -138,7 +138,7 @@ namespace Tasks
         public override void Start()
         {
             MythicTaskResponse resp;
-            NetSharesParameters parameters = _dataSerializer.Deserialize<NetSharesParameters>(_data.Parameters);
+            NetSharesParameters parameters = _jsonSerializer.Deserialize<NetSharesParameters>(_data.Parameters);
             string computer = parameters.Computer;
             if (string.IsNullOrEmpty(computer))
             {
@@ -185,7 +185,7 @@ namespace Tasks
                             break;
                         case ShareType.STYPE_SPECIAL:
                             result.Type = "Special Reserved for IPC.";
-                            
+                            //result.Type = "Special share reserved for interprocess communication (IPC$) or remote administration of the server (ADMIN$). Can also refer to administrative shares such as C$, D$, E$, and so forth.";
                             break;
                         case ShareType.STYPE_CLUSTER_FS:
                             result.Type = "Cluster Share";
@@ -209,7 +209,7 @@ namespace Tasks
             }
 
             resp = CreateTaskResponse(
-                _dataSerializer.Serialize(results.ToArray()), true);
+                _jsonSerializer.Serialize(results.ToArray()), true);
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

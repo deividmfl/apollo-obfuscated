@@ -1,7 +1,7 @@
 ﻿using System;
-using PhantomInterop.Classes.Api;
+using ApolloInterop.Classes.Api;
 
-namespace PhantomInterop.Interfaces
+namespace ApolloInterop.Interfaces
 {
     public interface IWin32ApiResolver
     {

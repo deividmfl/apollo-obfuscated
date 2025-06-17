@@ -1,15 +1,15 @@
-﻿using AI = PhantomInterop;
-using PhantomInterop.Interfaces;
-using PhantomInterop.Structs.MythicStructs;
+﻿using AI = ApolloInterop;
+using ApolloInterop.Interfaces;
+using ApolloInterop.Structs.MythicStructs;
 using System.Collections.Concurrent;
 
-namespace Phantom.Management.Socks
+namespace Apollo.Management.Socks
 {
-    public class ProxyHandler : AI.Classes.ProxyHandler
+    public class SocksManager : AI.Classes.SocksManager
     {
         private ConcurrentDictionary<int, SocksClient> _connections = new ConcurrentDictionary<int, SocksClient>();
         
-        public ProxyHandler(IAgent agent) : base(agent)
+        public SocksManager(IAgent agent) : base(agent)
         {
 
         }
@@ -21,21 +21,21 @@ namespace Phantom.Management.Socks
                 if (!dg.Exit)
                 {
                     SocksClient c = new SocksClient(_agent, dg.ServerID);
-                    _connections.AddOrUpdate(c.ID, c, (int i, SocksClient d) => { if(DateTime.Now.Year > 2020) { return d; } else { return null; } });
-                } else { if(DateTime.Now.Year > 2020) { return dg.Exit; } else { return null; } }
+                    _connections.AddOrUpdate(c.ID, c, (int i, SocksClient d) => { return d; });
+                } else { return dg.Exit; }
             }
             if (dg.Exit)
             {
                 _connections[dg.ServerID].Exit();
-                if(DateTime.Now.Year > 2020) { return dg.Exit; } else { return null; }
+                return dg.Exit;
             }
-            if(DateTime.Now.Year > 2020) { return _connections[dg.ServerID].HandleDatagram(dg); } else { return null; }
+            return _connections[dg.ServerID].HandleDatagram(dg);
         }
 
         public override bool Remove(int id)
         {
             _connections[id].Exit();
-            if(DateTime.Now.Year > 2020) { return _connections.TryRemove(id, out SocksClient _); } else { return null; }
+            return _connections.TryRemove(id, out SocksClient _);
         }
     }
 }
