@@ -1,20 +1,20 @@
-![Apollo](documentation-payload/apollo/ApolloLandscape.svg)
+![SystemCore](documentation-payload/SystemCore/SystemCoreLandscape.svg)
 
-Apollo is a Windows agent written in C# using the 4.0 .NET Framework designed to be used in SpecterOps training offerings.
+SystemCore is a Windows agent written in C# using the 4.0 .NET Framework designed to be used in SpecterOps training offerings.
 
 ## Installation
-To install Apollo, you'll need Mythic installed on a remote computer. You can find installation instructions for Mythic at the [Mythic project page](https://github.com/its-a-feature/Mythic/).
+To install SystemCore, you'll need Mythic installed on a remote computer. You can find installation instructions for Mythic at the [Mythic project page](https://github.com/its-a-feature/Mythic/).
 
-From the Mythic install directory, use the following command to install Apollo as the **root** user:
-
-```
-./mythic-cli install github https://github.com/MythicAgents/Apollo.git
-```
-
-From the Mythic install directory, use the following command to install Apollo as a **non-root** user:
+From the Mythic install directory, use the following command to install SystemCore as the **root** user:
 
 ```
-sudo -E ./mythic-cli install github https://github.com/MythicAgents/Apollo.git
+./mythic-cli install github https://github.com/MythicAgents/SystemCore.git
+```
+
+From the Mythic install directory, use the following command to install SystemCore as a **non-root** user:
+
+```
+sudo -E ./mythic-cli install github https://github.com/MythicAgents/SystemCore.git
 ```
 
 Once installed, restart Mythic to build a new agent.
@@ -98,7 +98,7 @@ whoami | `whoami`                                                               
 
 ### [HTTP Profile](https://github.com/MythicC2Profiles/http)
 
-The HTTP profile calls back to the Mythic server over the basic, non-dynamic profile. When selecting options to be stamped into Apollo at compile time, all options are respected with the exception of those parameters relating to GET requests.
+The HTTP profile calls back to the Mythic server over the basic, non-dynamic profile. When selecting options to be stamped into SystemCore at compile time, all options are respected with the exception of those parameters relating to GET requests.
 
 ### [SMB Profile](https://github.com/MythicC2Profiles/smb)
 
@@ -110,7 +110,7 @@ Establish communications over a specified network socket. Note: If unelevated, t
 
 ## SOCKSv5 Support
 
-Apollo can route SOCKS traffic regardless of what other commands are compiled in. To start the socks server, issue `socks -Port [port]`. This starts a SOCKS server on the Mythic server which is `proxychains4` compatible. To stop the SOCKS proxy, navigate to the SOCKS page in the Mythic UI and terminate it.
+SystemCore can route SOCKS traffic regardless of what other commands are compiled in. To start the socks server, issue `socks -Port [port]`. This starts a SOCKS server on the Mythic server which is `proxychains4` compatible. To stop the SOCKS proxy, navigate to the SOCKS page in the Mythic UI and terminate it.
 
 ## Quality of Life Improvements
 
@@ -119,10 +119,10 @@ Apollo can route SOCKS traffic regardless of what other commands are compiled in
 The `ls` command reports back a wealth of information and allows operators to easily copy file paths and examine permissions of files, in addition to being able to sort and filter files. Clicking the icon under the ACLs column will show all the permissions of a file. Additionally, this hooks into Mythic's native file browser.
 
 This shows typical ls output:
-![ls browserscript](documentation-payload/apollo/commands/images/ls02.png)
+![ls browserscript](documentation-payload/SystemCore/commands/images/ls02.png)
 
 Interfaces with Mythic's filebrowser and caches data server-side:
-![ls mythic builtin](documentation-payload/apollo/commands/images/filebrowser.png)
+![ls mythic builtin](documentation-payload/SystemCore/commands/images/filebrowser.png)
 
 ### Process Listings
 
@@ -138,11 +138,11 @@ This process listing also interfaces with Mythic's builtin process browser, whic
 
 Lastly, the associated browser script will do row highlighting based on the process's name (in a one-to-one port of [this script](https://github.com/harleyQu1nn/AggressorScripts/blob/master/ProcessColor.cna))
 
-![ps](documentation-payload/apollo/commands/images/ps.png)
+![ps](documentation-payload/SystemCore/commands/images/ps.png)
 
 ### Portable Executable, Assembly, and PowerShell Script Caching
 
-Apollo can cache files for expeditious task execution. In general, control flow follows the `register_file` command followed by whatever command you wish to execute (`execute_assembly`, `powerpick`, `execute_pe`, etc.). These files are cached client side via DPAPI encrypted AES256 blobs, preventing their signatures being exposed outside of task execution.
+SystemCore can cache files for expeditious task execution. In general, control flow follows the `register_file` command followed by whatever command you wish to execute (`execute_assembly`, `powerpick`, `execute_pe`, etc.). These files are cached client side via DPAPI encrypted AES256 blobs, preventing their signatures being exposed outside of task execution.
 
 ### Dynamic Injection Techniques
 
@@ -151,19 +151,19 @@ The agent can change what code injection technique is in use by post-exploitatio
 - CreateRemoteThread
 - QueueUserAPC (Early Bird)
 
-![injection](documentation-payload/apollo/commands/images/get_injection_techniques.png)
+![injection](documentation-payload/SystemCore/commands/images/get_injection_techniques.png)
 
 ### Job Tracking
 
 Agent jobs are tracked by job ID, by command, and by the arguments passed to the command so that you know what job correlates to what tasking.
 
-![jobs](documentation-payload/apollo/commands/images/jobs.png)
+![jobs](documentation-payload/SystemCore/commands/images/jobs.png)
 
 ### Artifact Tracking
 
 Commands that manipulate the disk, create new logons, or spawn new processes will document those changes in the Artifact Reporting page as shown below.
 
-![artifacts](documentation-payload/apollo/commands/images/artifacts.png)
+![artifacts](documentation-payload/SystemCore/commands/images/artifacts.png)
 
 ### And more!
 
