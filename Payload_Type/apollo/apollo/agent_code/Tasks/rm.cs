@@ -6,9 +6,9 @@
 
 #if RM
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.IO;
 using System.Linq;
@@ -16,10 +16,10 @@ using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class rm : Tasking
+    public class StealthProcessorD7CC : Tasking
     {
         [DataContract]
-        internal struct RmParameters
+        internal struct StealthManagerBB52
         {
             [DataMember(Name = "host")]
             public string Host;
@@ -35,7 +35,7 @@ namespace Tasks
             Environment.GetEnvironmentVariable("COMPUTERNAME").ToLower()
         };
         
-        public rm(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public rm(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -44,13 +44,13 @@ namespace Tasks
         {
             MythicTaskResponse resp;
             RmParameters parameters = _jsonSerializer.Deserialize<RmParameters>(_data.Parameters);
-            string path = string.IsNullOrEmpty(parameters.File)
+            string path = ValidationHelper.IsStringEmpty(parameters.File)
                 ? parameters.Path
                 : Path.Combine(new string[] {parameters.Path, parameters.File});
             string rmFilePath = path;
             string host = parameters.Host;
             string realPath = "";
-            if (string.IsNullOrEmpty(host))
+            if (ValidationHelper.IsStringEmpty(host))
             {
                 host = Environment.GetEnvironmentVariable("COMPUTERNAME");
             }
@@ -72,7 +72,7 @@ namespace Tasks
             }
 
             
-            if (ApolloInterop.Utils.PathUtils.TryGetExactPath(path, out realPath))
+            if (PhantomInterop.Utils.PathUtils.TryGetExactPath(path, out realPath))
             {
                 if (Directory.Exists(realPath))
                 {

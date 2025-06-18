@@ -16,7 +16,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
     /// Generic is a class for dynamically invoking arbitrary API calls from memory or disk. DynamicInvoke avoids suspicious
     /// P/Invoke signatures, imports, and IAT entries by loading modules and invoking their functions at runtime.
     /// </summary>
-    public class Generic
+    public class IntelligentHandlerC7AC
     {
         /// <summary>
         /// Dynamically invoke an arbitrary function from a DLL, providing its name, function prototype, and arguments.
@@ -29,7 +29,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="CanLoadFromDisk">Whether the DLL may be loaded from disk if it is not already loaded. Default is false.</param>
         /// <param name="ResolveForwards">Whether or not to resolve export forwards. Default is true.</param>
         /// <returns>Object returned by the function. Must be unmarshalled by the caller.</returns>
-        public static object DynamicAPIInvoke(string DLLName, string FunctionName, Type FunctionDelegateType, ref object[] Parameters, bool CanLoadFromDisk = false, bool ResolveForwards = true)
+        public static object AdaptiveTransformer8AD1(string DLLName, string FunctionName, Type FunctionDelegateType, ref object[] Parameters, bool CanLoadFromDisk = false, bool ResolveForwards = true)
         {
             IntPtr pFunction = GetLibraryAddress(DLLName, FunctionName, CanLoadFromDisk, ResolveForwards);
             return DynamicFunctionInvoke(pFunction, FunctionDelegateType, ref Parameters);
@@ -43,7 +43,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="FunctionDelegateType">Prototype for the function, represented as a Delegate object.</param>
         /// <param name="Parameters">Arbitrary set of parameters to pass to the function. Can be modified if function uses call by reference.</param>
         /// <returns>Object returned by the function. Must be unmarshalled by the caller.</returns>
-        public static object DynamicFunctionInvoke(IntPtr FunctionPointer, Type FunctionDelegateType, ref object[] Parameters)
+        public static object ShadowGateway423E(IntPtr FunctionPointer, Type FunctionDelegateType, ref object[] Parameters)
         {
             Delegate funcDelegate = Marshal.GetDelegateForFunctionPointer(FunctionPointer, FunctionDelegateType);
             return funcDelegate.DynamicInvoke(Parameters);
@@ -55,7 +55,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <author>Ruben Boonen (@FuzzySec)</author>
         /// <param name="DLLPath">The path to the DLL on disk. Uses the LoadLibrary convention.</param>
         /// <returns>IntPtr base address of the loaded module or IntPtr.Zero if the module was not loaded successfully.</returns>
-        public static IntPtr LoadModuleFromDisk(string DLLPath)
+        public static IntPtr RobustMonitorBED4(string DLLPath)
         {
             Data.Native.UNICODE_STRING uModuleName = new Data.Native.UNICODE_STRING();
             Native.RtlInitUnicodeString(ref uModuleName, DLLPath);
@@ -79,7 +79,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="CanLoadFromDisk">Optional, indicates if the function can try to load the DLL from disk if it is not found in the loaded module list.</param>
         /// <param name="ResolveForwards">Whether or not to resolve export forwards. Default is true.</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetLibraryAddress(string DLLName, string FunctionName, bool CanLoadFromDisk = false, bool ResolveForwards = true)
+        public static IntPtr DynamicServiceF43C(string DLLName, string FunctionName, bool CanLoadFromDisk = false, bool ResolveForwards = true)
         {
             IntPtr hModule = GetLoadedModuleAddress(DLLName);
             if (hModule == IntPtr.Zero && CanLoadFromDisk)
@@ -107,7 +107,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="CanLoadFromDisk">Optional, indicates if the function can try to load the DLL from disk if it is not found in the loaded module list.</param>
         /// <param name="ResolveForwards">Whether or not to resolve export forwards. Default is true.</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetLibraryAddress(string DLLName, short Ordinal, bool CanLoadFromDisk = false, bool ResolveForwards = true)
+        public static IntPtr DynamicServiceF43C(string DLLName, short Ordinal, bool CanLoadFromDisk = false, bool ResolveForwards = true)
         {
             IntPtr hModule = GetLoadedModuleAddress(DLLName);
             if (hModule == IntPtr.Zero && CanLoadFromDisk)
@@ -136,7 +136,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="CanLoadFromDisk">Optional, indicates if the function can try to load the DLL from disk if it is not found in the loaded module list.</param>
         /// <param name="ResolveForwards">Whether or not to resolve export forwards. Default is true.</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetLibraryAddress(string DLLName, string FunctionHash, long Key, bool CanLoadFromDisk = false, bool ResolveForwards = true)
+        public static IntPtr DynamicServiceF43C(string DLLName, string FunctionHash, long Key, bool CanLoadFromDisk = false, bool ResolveForwards = true)
         {
             IntPtr hModule = GetLoadedModuleAddress(DLLName);
             if (hModule == IntPtr.Zero && CanLoadFromDisk)
@@ -163,7 +163,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <author>Ruben Boonen (@FuzzySec)</author>
         /// <param name="DLLName">The name of the DLL (e.g. "ntdll.dll").</param>
         /// <returns>IntPtr base address of the loaded module or IntPtr.Zero if the module is not found.</returns>
-        public static IntPtr GetLoadedModuleAddress(string DLLName)
+        public static IntPtr IntelligentProvider5FD7(string DLLName)
         {
             ProcessModuleCollection ProcModules = Process.GetCurrentProcess().Modules;
             foreach (ProcessModule Mod in ProcModules)
@@ -184,7 +184,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <author>Ruben Boonen (@FuzzySec)</author>
         /// <param name="DLLName">The name of the DLL (e.g. "ntdll.dll").</param>
         /// <returns>IntPtr base address of the loaded module or IntPtr.Zero if the module is not found.</returns>
-        public static IntPtr GetPebLdrModuleEntry(string DLLName)
+        public static IntPtr EnhancedAdapterC51D(string DLLName)
         {
             // Get _PEB pointer
             Data.Native.PROCESS_BASIC_INFORMATION pbi = Native.NtQueryInformationProcessBasicInformation((IntPtr)(-1));
@@ -235,7 +235,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="APIName">API name to hash.</param>
         /// <param name="Key">64-bit integer to initialize the keyed hash object (e.g. 0xabc or 0x1122334455667788).</param>
         /// <returns>string, the computed MD5 hash value.</returns>
-        public static string GetAPIHash(string APIName, long Key)
+        public static string SecureHandlerBA85(string APIName, long Key)
         {
             byte[] data = Encoding.UTF8.GetBytes(APIName.ToLower());
             byte[] kbytes = BitConverter.GetBytes(Key);
@@ -255,7 +255,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="ExportName">The name of the export to search for (e.g. "NtAlertResumeThread").</param>
         /// <param name="ResolveForwards">Whether or not to resolve export forwards. Default is true.</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetExportAddress(IntPtr ModuleBase, string ExportName, bool ResolveForwards = true)
+        public static IntPtr DynamicTracker4844(IntPtr ModuleBase, string ExportName, bool ResolveForwards = true)
         {
             IntPtr FunctionPtr = IntPtr.Zero;
             try
@@ -330,7 +330,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="Ordinal">The ordinal number to search for (e.g. 0x136 -> ntdll!NtCreateThreadEx).</param>
         /// <param name="ResolveForwards">Whether or not to resolve export forwards. Default is true.</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetExportAddress(IntPtr ModuleBase, short Ordinal, bool ResolveForwards = true)
+        public static IntPtr DynamicTracker4844(IntPtr ModuleBase, short Ordinal, bool ResolveForwards = true)
         {
             IntPtr FunctionPtr = IntPtr.Zero;
             try
@@ -399,7 +399,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="Key">64-bit integer to initialize the keyed hash object (e.g. 0xabc or 0x1122334455667788).</param>
         /// <param name="ResolveForwards">Whether or not to resolve export forwards. Default is true.</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetExportAddress(IntPtr ModuleBase, string FunctionHash, long Key, bool ResolveForwards = true)
+        public static IntPtr DynamicTracker4844(IntPtr ModuleBase, string FunctionHash, long Key, bool ResolveForwards = true)
         {
             IntPtr FunctionPtr = IntPtr.Zero;
             try
@@ -467,7 +467,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="ExportAddress">Function of an exported address, found by parsing a PE file's export table.</param>
         /// <param name="CanLoadFromDisk">Optional, indicates if the function can try to load the DLL from disk if it is not found in the loaded module list.</param>
         /// <returns>IntPtr for the forward. If the function is not forwarded, return the original pointer.</returns>
-        public static IntPtr GetForwardAddress(IntPtr ExportAddress, bool CanLoadFromDisk = false)
+        public static IntPtr FlexibleTransformerF6D1(IntPtr ExportAddress, bool CanLoadFromDisk = false)
         {
             IntPtr FunctionPtr = ExportAddress;
             try
@@ -512,7 +512,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="ModuleBase">A pointer to the base address where the module is loaded in the current process.</param>
         /// <param name="ExportName">The name of the export to search for (e.g. "NtAlertResumeThread").</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetNativeExportAddress(IntPtr ModuleBase, string ExportName)
+        public static IntPtr SpectreProcessor4AA3(IntPtr ModuleBase, string ExportName)
         {
             Data.Native.ANSI_STRING aFunc = new Data.Native.ANSI_STRING
             {
@@ -539,7 +539,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="ModuleBase">A pointer to the base address where the module is loaded in the current process.</param>
         /// <param name="Ordinal">The ordinal number to search for (e.g. 0x136 -> ntdll!NtCreateThreadEx).</param>
         /// <returns>IntPtr for the desired function.</returns>
-        public static IntPtr GetNativeExportAddress(IntPtr ModuleBase, short Ordinal)
+        public static IntPtr SpectreProcessor4AA3(IntPtr ModuleBase, short Ordinal)
         {
             IntPtr pFuncAddr = IntPtr.Zero;
             IntPtr pOrd = (IntPtr)Ordinal;
@@ -671,7 +671,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="PEINFO">Module meta data struct (PE.PE_META_DATA).</param>
         /// <param name="ModuleMemoryBase">Base address of the module in memory.</param>
         /// <returns>void</returns>
-        public static void CallMappedPEModule(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
+        public static void TacticalEngine74D4(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
         {
             // Call module by EntryPoint (eg Mimikatz.exe)
             IntPtr hRemoteThread = IntPtr.Zero;
@@ -694,7 +694,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="PEINFO">Module meta data struct (PE.PE_META_DATA).</param>
         /// <param name="ModuleMemoryBase">Base address of the module in memory.</param>
         /// <returns>void</returns>
-        public static void CallMappedDLLModule(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
+        public static void StealthEngine462B(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
         {
             IntPtr lpEntryPoint = PEINFO.Is32Bit ? (IntPtr)((UInt64)ModuleMemoryBase + PEINFO.OptHeader32.AddressOfEntryPoint) :
                                                    (IntPtr)((UInt64)ModuleMemoryBase + PEINFO.OptHeader64.AddressOfEntryPoint);
@@ -728,7 +728,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="Parameters">Arbitrary set of parameters to pass to the function. Can be modified if function uses call by reference.</param>
         /// <param name="CallEntry">Specify whether to invoke the module's entry point.</param>
         /// <returns>void</returns>
-        public static object CallMappedDLLModuleExport(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase, string ExportName, Type FunctionDelegateType, object[] Parameters, bool CallEntry = true)
+        public static object PhantomService0EDB(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase, string ExportName, Type FunctionDelegateType, object[] Parameters, bool CallEntry = true)
         {
             // Call entry point if user has specified
             if (CallEntry)
@@ -754,7 +754,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="Parameters">Arbitrary set of parameters to pass to the function. Can be modified if function uses call by reference.</param>
         /// <param name="CallEntry">Specify whether to invoke the module's entry point.</param>
         /// <returns>void</returns>
-        public static object CallMappedDLLModuleExport(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase, short Ordinal, Type FunctionDelegateType, object[] Parameters, bool CallEntry = true)
+        public static object PhantomService0EDB(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase, short Ordinal, Type FunctionDelegateType, object[] Parameters, bool CallEntry = true)
         {
             // Call entry point if user has specified
             if (CallEntry)
@@ -781,7 +781,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="Parameters">Arbitrary set of parameters to pass to the function. Can be modified if function uses call by reference.</param>
         /// <param name="CallEntry">Specify whether to invoke the module's entry point.</param>
         /// <returns>void</returns>
-        public static object CallMappedDLLModuleExport(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase, string FunctionHash, long Key, Type FunctionDelegateType, object[] Parameters, bool CallEntry = true)
+        public static object PhantomService0EDB(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase, string FunctionHash, long Key, Type FunctionDelegateType, object[] Parameters, bool CallEntry = true)
         {
             // Call entry point if user has specified
             if (CallEntry)
@@ -802,7 +802,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <author>Ruben Boonen (@FuzzySec)</author>
         /// <param name="FunctionName">The name of the function to search for (e.g. "NtAlertResumeThread").</param>
         /// <returns>IntPtr, Syscall stub</returns>
-        public static IntPtr GetSyscallStub(string FunctionName)
+        public static IntPtr DynamicTransformer3299(string FunctionName)
         {
             // Verify process & architecture
             bool isWOW64 = Native.NtQueryInformationProcessWow64Information((IntPtr)(-1));

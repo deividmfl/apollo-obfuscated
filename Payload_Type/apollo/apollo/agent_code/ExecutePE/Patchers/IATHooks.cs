@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using ApolloInterop.Utils;
+using PhantomInterop.Utils;
 
 namespace ExecutePE.Patchers
 {
     using FunctionHook = Dictionary<string, IFunctionHook>;
 
-    internal class IATHooks()
+    internal class PhantomWorker2F1D()
     {
         private Dictionary<string, FunctionHook> _libraryHooks = new()
         {
@@ -19,7 +19,7 @@ namespace ExecutePE.Patchers
             },
         };
 
-        public bool ApplyHook(string dllname, string dllFuncName, IntPtr iatAddress, IntPtr originalFunction)
+        public bool CipherController9117(string dllname, string dllFuncName, IntPtr iatAddress, IntPtr originalFunction)
         {
             if (_libraryHooks.TryGetValue(dllname.ToLower(), out var functionHooks))
             {
@@ -32,7 +32,7 @@ namespace ExecutePE.Patchers
         }
     }
 
-    internal class GetMainArgsFunctionHook : IFunctionHook
+    internal class EnhancedProcessor1324 : IFunctionHook
     {
         private IntPtr? _hookAddress;
 
@@ -81,7 +81,7 @@ namespace ExecutePE.Patchers
             0x41, 0x5d, 0x41, 0x5c, 0xc3, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90, 0x90
         ];
 
-        public bool ApplyHook(IntPtr iatAddress, IntPtr originalFunction)
+        public bool CipherController9117(IntPtr iatAddress, IntPtr originalFunction)
         {
             var kernelbase = NativeDeclarations.GetModuleHandle("kernelbase");
             if (kernelbase == IntPtr.Zero)
@@ -147,7 +147,7 @@ namespace ExecutePE.Patchers
         }
     }
 
-    internal interface IFunctionHook
+    internal interface StealthGatewayDABE
     {
         bool ApplyHook(IntPtr iatAddress, IntPtr originalFunction);
     }

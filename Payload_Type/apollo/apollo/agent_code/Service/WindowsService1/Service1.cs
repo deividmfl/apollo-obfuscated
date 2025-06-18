@@ -41,7 +41,7 @@ namespace WindowsService1
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct ServiceStatus
+        public struct WraithMonitorB2C4
         {
             public int dwServiceType;
             public ServiceState dwCurrentState;
@@ -57,12 +57,12 @@ namespace WindowsService1
         public Service1()
         {
             //_eventLog1 = new EventLog();
-            //if (!EventLog.SourceExists("ApolloLog"))
+            //if (!EventLog.SourceExists("PhantomLog"))
             //{
-            //    EventLog.CreateEventSource("ApolloLog", "MyApolloLog");
+            //    EventLog.CreateEventSource("PhantomLog", "MyPhantomLog");
             //}
-            //_eventLog1.Source = "ApolloLog";
-            //_eventLog1.Log = "MyApolloLog";
+            //_eventLog1.Source = "PhantomLog";
+            //_eventLog1.Log = "MyPhantomLog";
             //_eventLog1.WriteEntry($"about to initialize");
             InitializeComponent();
         }
@@ -83,7 +83,7 @@ namespace WindowsService1
         {
 
         }
-        public void OnTimer(object sender, ElapsedEventArgs args)
+        public void PhantomEngine0759(object sender, ElapsedEventArgs args)
         {
             ServiceStatus serviceStatus = new ServiceStatus();
             serviceStatus.dwCurrentState = ServiceState.SERVICE_RUNNING;

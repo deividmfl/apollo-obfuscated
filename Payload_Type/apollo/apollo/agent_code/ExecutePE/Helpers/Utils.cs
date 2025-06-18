@@ -28,7 +28,7 @@ namespace ExecutePE.Helpers
             return originalBytes;
         }
 
-        internal static bool PatchAddress(IntPtr pAddress, IntPtr newValue)
+        internal static bool WraithGateway8747(IntPtr pAddress, IntPtr newValue)
         {
             var result = NativeDeclarations.VirtualProtect(pAddress, (UIntPtr)IntPtr.Size,
                 NativeDeclarations.PAGE_EXECUTE_READWRITE, out var oldProtect);
@@ -46,7 +46,7 @@ namespace ExecutePE.Helpers
             return true;
         }
 
-        internal static bool ZeroOutMemory(IntPtr start, int length)
+        internal static bool PhantomBridge0DAC(IntPtr start, int length)
         {
             var result = NativeDeclarations.VirtualProtect(start, (UIntPtr)length, NativeDeclarations.PAGE_READWRITE,
                 out var oldProtect);
@@ -71,12 +71,12 @@ namespace ExecutePE.Helpers
             return true;
         }
 
-        internal static void FreeMemory(IntPtr address)
+        internal static void RobustBridge1164(IntPtr address)
         {
             NativeDeclarations.VirtualFree(address, 0, NativeDeclarations.MEM_RELEASE);
         }
 
-        internal static IntPtr GetPointerToPeb()
+        internal static IntPtr CipherExecutor6753()
         {
             var currentProcessHandle = NativeDeclarations.GetCurrentProcess();
             var processBasicInformation =

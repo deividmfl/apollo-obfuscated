@@ -61,7 +61,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
 
-        public struct IMAGE_DOS_HEADER
+        public struct StealthValidator8A0F
         {      // DOS .EXE header
             public UInt16 e_magic;              // Magic number
             public UInt16 e_cblp;               // Bytes on last page of file
@@ -97,14 +97,14 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct IMAGE_DATA_DIRECTORY
+        public struct EnhancedControllerCB88
         {
             public UInt32 VirtualAddress;
             public UInt32 Size;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct IMAGE_OPTIONAL_HEADER32
+        public struct OptimizedExecutor053D
         {
             public UInt16 Magic;
             public Byte MajorLinkerVersion;
@@ -156,7 +156,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct IMAGE_OPTIONAL_HEADER64
+        public struct FlexibleResolverAB4C
         {
             public UInt16 Magic;
             public Byte MajorLinkerVersion;
@@ -207,7 +207,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct IMAGE_FILE_HEADER
+        public struct StealthHandlerDA5E
         {
             public UInt16 Machine;
             public UInt16 NumberOfSections;
@@ -219,7 +219,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct IMAGE_SECTION_HEADER
+        public struct AdaptiveMonitor808A
         {
             [FieldOffset(0)]
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
@@ -250,7 +250,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct IMAGE_EXPORT_DIRECTORY
+        public struct SpectreHandlerDECE
         {
             [FieldOffset(0)]
             public UInt32 Characteristics;
@@ -277,14 +277,14 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct IMAGE_BASE_RELOCATION
+        public struct IntelligentDispatcherFE17
         {
             public uint VirtualAdress;
             public uint SizeOfBlock;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct PE_META_DATA
+        public struct SecureRouter711F
         {
             public UInt32 Pe;
             public Boolean Is32Bit;
@@ -295,7 +295,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct PE_MANUAL_MAP
+        public struct PhantomControllerB1D5
         {
             public String DecoyModule;
             public IntPtr ModuleBase;
@@ -303,7 +303,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct IMAGE_THUNK_DATA32
+        public struct StealthMonitor6DCE
         {
             [FieldOffset(0)]
             public UInt32 ForwarderString;
@@ -316,7 +316,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct IMAGE_THUNK_DATA64
+        public struct StrategicResolver70C4
         {
             [FieldOffset(0)]
             public UInt64 ForwarderString;
@@ -330,7 +330,7 @@ namespace DInvokeResolver.DInvoke.Data
 
         // API_SET_NAMESPACE_ARRAY
         [StructLayout(LayoutKind.Explicit)]
-        public struct ApiSetNamespace
+        public struct AdvancedRouter84BF
         {
             [FieldOffset(0x0C)]
             public int Count;
@@ -341,7 +341,7 @@ namespace DInvokeResolver.DInvoke.Data
 
         // API_SET_NAMESPACE_ENTRY
         [StructLayout(LayoutKind.Explicit)]
-        public struct ApiSetNamespaceEntry
+        public struct FlexibleCoordinatorF124
         {
             [FieldOffset(0x04)]
             public int NameOffset;
@@ -358,7 +358,7 @@ namespace DInvokeResolver.DInvoke.Data
 
         // API_SET_VALUE_ENTRY
         [StructLayout(LayoutKind.Explicit)]
-        public struct ApiSetValueEntry
+        public struct TacticalAdapter8A10
         {
             [FieldOffset(0x00)]
             public int Flags;
@@ -377,7 +377,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct LDR_DATA_TABLE_ENTRY
+        public struct TacticalCoordinator1D7B
         {
             public Data.Native.LIST_ENTRY InLoadOrderLinks;
             public Data.Native.LIST_ENTRY InMemoryOrderLinks;

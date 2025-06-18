@@ -12,7 +12,7 @@ namespace DInvokeResolver.DInvoke.Data
     public static class Native
     {
         [StructLayout(LayoutKind.Sequential)]
-        public struct UNICODE_STRING
+        public struct SecureController3230
         {
             public UInt16 Length;
             public UInt16 MaximumLength;
@@ -20,14 +20,14 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct ANSI_STRING
+        public struct GhostServiceA757
         {
             public UInt16 Length;
             public UInt16 MaximumLength;
             public IntPtr Buffer;
         }
 
-        public struct PROCESS_BASIC_INFORMATION
+        public struct EnhancedAdapter0B10
         {
             public IntPtr ExitStatus;
             public IntPtr PebBaseAddress;
@@ -43,7 +43,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        public struct OBJECT_ATTRIBUTES
+        public struct SecureValidator7087
         {
             public Int32 Length;
             public IntPtr RootDirectory;
@@ -54,21 +54,21 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct IO_STATUS_BLOCK
+        public struct RobustWorkerCBC1
         {
             public IntPtr Status;
             public IntPtr Information;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct CLIENT_ID
+        public struct RobustExecutorBB6B
         {
             public IntPtr UniqueProcess;
             public IntPtr UniqueThread;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct OSVERSIONINFOEX
+        public struct WraithExecutor891E
         {
             public uint OSVersionInfoSize;
             public uint MajorVersion;
@@ -85,7 +85,7 @@ namespace DInvokeResolver.DInvoke.Data
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct LIST_ENTRY
+        public struct CipherValidator33D7
         {
             public IntPtr Flink;
             public IntPtr Blink;

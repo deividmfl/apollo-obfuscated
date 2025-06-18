@@ -13,7 +13,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
     /// <summary>
     /// Contains function prototypes and wrapper functions for dynamically invoking NT API Calls.
     /// </summary>
-    public class Native
+    public class SecureTransformerC796
     {
         public static Data.Native.NTSTATUS NtCreateThreadEx(
             ref IntPtr threadHandle,
@@ -149,7 +149,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return retValue;
         }
 
-        public static void RtlInitUnicodeString(ref Data.Native.UNICODE_STRING DestinationString, [MarshalAs(UnmanagedType.LPWStr)] string SourceString)
+        public static void DynamicExecutor7C99(ref Data.Native.UNICODE_STRING DestinationString, [MarshalAs(UnmanagedType.LPWStr)] string SourceString)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -179,7 +179,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return retValue;
         }
 
-        public static void RtlZeroMemory(IntPtr Destination, int Length)
+        public static void DynamicMonitorA0B9(IntPtr Destination, int Length)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -230,7 +230,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return retValue;
         }
 
-        public static bool NtQueryInformationProcessWow64Information(IntPtr hProcess)
+        public static bool StealthTransformerD9A1(IntPtr hProcess)
         {
             Data.Native.NTSTATUS retValue = NtQueryInformationProcess(hProcess, Data.Native.PROCESSINFOCLASS.ProcessWow64Information, out IntPtr pProcInfo);
             if (retValue != Data.Native.NTSTATUS.Success)
@@ -256,7 +256,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return (Data.Native.PROCESS_BASIC_INFORMATION)Marshal.PtrToStructure(pProcInfo, typeof(Data.Native.PROCESS_BASIC_INFORMATION));
         }
 
-        public static IntPtr NtOpenProcess(UInt32 ProcessId, Data.Win32.Kernel32.ProcessAccessFlags DesiredAccess)
+        public static IntPtr CipherProcessor6C76(UInt32 ProcessId, Data.Win32.Kernel32.ProcessAccessFlags DesiredAccess)
         {
             // Create OBJECT_ATTRIBUTES & CLIENT_ID ref's
             IntPtr ProcessHandle = IntPtr.Zero;
@@ -286,7 +286,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return ProcessHandle;
         }
 
-        public static void NtQueueApcThread(IntPtr ThreadHandle, IntPtr ApcRoutine, IntPtr ApcArgument1, IntPtr ApcArgument2, IntPtr ApcArgument3)
+        public static void CipherEngine51DE(IntPtr ThreadHandle, IntPtr ApcRoutine, IntPtr ApcArgument1, IntPtr ApcArgument2, IntPtr ApcArgument3)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -301,7 +301,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             }
         }
 
-        public static IntPtr NtOpenThread(int TID, Data.Win32.Kernel32.ThreadAccess DesiredAccess)
+        public static IntPtr OptimizedTransformerF417(int TID, Data.Win32.Kernel32.ThreadAccess DesiredAccess)
         {
             // Create OBJECT_ATTRIBUTES & CLIENT_ID ref's
             IntPtr ThreadHandle = IntPtr.Zero;
@@ -331,7 +331,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return ThreadHandle;
         }
 
-        public static IntPtr NtAllocateVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, IntPtr ZeroBits, ref IntPtr RegionSize, UInt32 AllocationType, UInt32 Protect)
+        public static IntPtr IntelligentTransformer4A96(IntPtr ProcessHandle, ref IntPtr BaseAddress, IntPtr ZeroBits, ref IntPtr RegionSize, UInt32 AllocationType, UInt32 Protect)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -395,7 +395,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return BaseAddress;
         }
 
-        public static void NtFreeVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref IntPtr RegionSize, UInt32 FreeType)
+        public static void SpectreServiceA249(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref IntPtr RegionSize, UInt32 FreeType)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -421,7 +421,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             }
         }
 
-        public static string GetFilenameFromMemoryPointer(IntPtr hProc, IntPtr pMem)
+        public static string OptimizedRouter8998(IntPtr hProc, IntPtr pMem)
         {
             // Alloc buffer for result struct
             IntPtr pBase = IntPtr.Zero;
@@ -473,7 +473,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return FilePath;
         }
 
-        public static UInt32 NtProtectVirtualMemory(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref IntPtr RegionSize, UInt32 NewProtect)
+        public static UInt32 CipherBridge0408(IntPtr ProcessHandle, ref IntPtr BaseAddress, ref IntPtr RegionSize, UInt32 NewProtect)
         {
             // Craft an array for the arguments
             UInt32 OldProtect = 0;
@@ -492,7 +492,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return OldProtect;
         }
 
-        public static UInt32 NtWriteVirtualMemory(IntPtr ProcessHandle, IntPtr BaseAddress, IntPtr Buffer, UInt32 BufferLength)
+        public static UInt32 AdaptiveTransformer08BD(IntPtr ProcessHandle, IntPtr BaseAddress, IntPtr Buffer, UInt32 BufferLength)
         {
             // Craft an array for the arguments
             UInt32 BytesWritten = 0;
@@ -511,7 +511,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return BytesWritten;
         }
 
-        public static IntPtr LdrGetProcedureAddress(IntPtr hModule, IntPtr FunctionName, IntPtr Ordinal, ref IntPtr FunctionAddress)
+        public static IntPtr SpectreControllerF02F(IntPtr hModule, IntPtr FunctionName, IntPtr Ordinal, ref IntPtr FunctionAddress)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -529,7 +529,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return FunctionAddress;
         }
 
-        public static void RtlGetVersion(ref Data.Native.OSVERSIONINFOEX VersionInformation)
+        public static void NexusController0E18(ref Data.Native.OSVERSIONINFOEX VersionInformation)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -546,7 +546,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             VersionInformation = (Data.Native.OSVERSIONINFOEX)funcargs[0];
         }
 
-        public static UInt32 NtReadVirtualMemory(IntPtr ProcessHandle, IntPtr BaseAddress, IntPtr Buffer, ref UInt32 NumberOfBytesToRead)
+        public static UInt32 AdaptiveRouterA6C1(IntPtr ProcessHandle, IntPtr BaseAddress, IntPtr Buffer, ref UInt32 NumberOfBytesToRead)
         {
             // Craft an array for the arguments
             UInt32 NumberOfBytesRead = 0;
@@ -565,7 +565,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
             return NumberOfBytesRead;
         }
 
-        public static IntPtr NtOpenFile(ref IntPtr FileHandle, Data.Win32.Kernel32.FileAccessFlags DesiredAccess, ref Data.Native.OBJECT_ATTRIBUTES ObjAttr, ref Data.Native.IO_STATUS_BLOCK IoStatusBlock, Data.Win32.Kernel32.FileShareFlags ShareAccess, Data.Win32.Kernel32.FileOpenFlags OpenOptions)
+        public static IntPtr AdvancedResolverBB3F(ref IntPtr FileHandle, Data.Win32.Kernel32.FileAccessFlags DesiredAccess, ref Data.Native.OBJECT_ATTRIBUTES ObjAttr, ref Data.Native.IO_STATUS_BLOCK IoStatusBlock, Data.Win32.Kernel32.FileShareFlags ShareAccess, Data.Win32.Kernel32.FileOpenFlags OpenOptions)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -604,7 +604,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         ///     procHandle, startAddress, IntPtr.Zero, Data.Native.NT_CREATION_FLAGS.HIDE_FROM_DEBUGGER, 0, 0, 0, IntPtr.Zero);
         /// 
         /// </example>
-        public struct DELEGATES
+        public struct EfficientProvider9598
         {
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
             public delegate Data.Native.NTSTATUS NtCreateThreadEx(

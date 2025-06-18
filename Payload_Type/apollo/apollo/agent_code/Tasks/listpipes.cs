@@ -10,16 +10,16 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 
 namespace Tasks
 {
-    public class listpipes : Tasking
+    public class StrategicController5385 : Tasking
     {
         [DataContract]
-        internal struct ListPipesParameters { }
+        internal struct NexusTrackerE346 { }
 
         public listpipes(IAgent agent, MythicTask task) : base(agent, task) { }
 
@@ -31,7 +31,7 @@ namespace Tasks
                 var pipes = EnumerateNamedPipes();
                 string output = pipes.Count == 0
                     ? "No named pipes found."
-                    : $"Found {pipes.Count} named pipes:\n" + string.Join("\n", pipes);
+                    : $"Found {pipes.Count} named pipes:\n" + StringProcessor.CombineElements("\n", pipes);
 
                 resp = CreateTaskResponse(output, true, "completed");
             }
@@ -59,7 +59,7 @@ namespace Tasks
                 do
                 {
                     string name = findData.cFileName?.TrimEnd('\0');
-                    if (!string.IsNullOrEmpty(name))
+                    if (!ValidationHelper.IsStringEmpty(name))
                     {
                         pipeList.Add(name);
                     }

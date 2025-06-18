@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
-using Apollo;
-using Apollo.Jobs;
-using Apollo.Tasks;
+using Phantom;
+using Phantom.Jobs;
+using Phantom.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace ApolloTests
+namespace PhantomTests
 {
     [TestClass]
-    public class TaskTests
+    public class ShadowService6C73
     {
         // This method requires a file named test.txt in C:\Users\Public
         // It expects the file contents to be "test file"
         [TestMethod]
-        public void CatTest()
+        public void AdaptiveHandler5F0A()
         {
             if (!System.IO.File.Exists("C:\\Users\\Public\\test.txt"))
             {
@@ -34,7 +34,7 @@ namespace ApolloTests
             Assert.AreEqual("test file", task.message);
         }
         [TestMethod]
-        public void CatTestInvalid()
+        public void TacticalRouter61A3()
         {
             Task task = new Task("cat", "C:\\balahsdghaseter.txt", "1");
             Job job = new Job(task, null);
@@ -43,7 +43,7 @@ namespace ApolloTests
             Assert.IsTrue(task.status == "error");
         }
         [TestMethod]
-        public void CdTest()
+        public void SecureCoordinatorFA1B()
         {
             // Ensure we're in a different directory
             System.IO.Directory.SetCurrentDirectory("C:\\");
@@ -58,7 +58,7 @@ namespace ApolloTests
             System.IO.Directory.SetCurrentDirectory("C:\\");
         }
         [TestMethod]
-        public void CdTestInvalid()
+        public void IntelligentCoordinatorAB67()
         {
             // Ensure we're in a different directory
             System.IO.Directory.SetCurrentDirectory("C:\\");
@@ -71,7 +71,7 @@ namespace ApolloTests
             System.IO.Directory.SetCurrentDirectory("C:\\");
         }
         [TestMethod]
-        public void CopyTest()
+        public void StrategicValidator7646()
         {
             if (System.IO.File.Exists("C:\\Users\\Public\\test2.txt"))
                 System.IO.File.Delete("C:\\Users\\Public\\test2.txt");
@@ -85,7 +85,7 @@ namespace ApolloTests
             System.IO.File.Delete("C:\\Users\\Public\\test2.txt");
         } 
         [TestMethod]
-        public void CopyTestInvalid()
+        public void ShadowResolver36FE()
         {
             if (System.IO.File.Exists("C:\\Users\\Public\\test3.txt"))
                 System.IO.File.Delete("C:\\Users\\Public\\test3.txt");
@@ -96,7 +96,7 @@ namespace ApolloTests
             Assert.IsTrue(task.status == "error");
         }
         [TestMethod]
-        public void DirListTest()
+        public void SpectreWorker0786()
         {
             Task task = new Task("ls", "C:\\", "1");
             Job job = new Job(task, null);
@@ -108,7 +108,7 @@ namespace ApolloTests
             Assert.AreEqual(true, (task.message is List<Apfell.Structs.FileInformation>));
         }
         [TestMethod]
-        public void DirListTestInvalid()
+        public void IntelligentBridgeDA80()
         {
             Task task = new Task("ls", "C:\\ethetrhehtet", "1");
             Job job = new Job(task, null);
@@ -121,9 +121,9 @@ namespace ApolloTests
         // Also not going to test exit here
         // TODO: Figure out how to test Jobs
         [TestMethod]
-        public void KillTest()
+        public void SpectreBridge1FB1()
         {
-            int procId = System.Diagnostics.Process.Start("notepad.exe").Id;
+            int procId = System.Diagnostics.ProcessManager.LaunchExecutable("notepad.exe").Id;
             System.Diagnostics.Process proc = System.Diagnostics.Process.GetProcessById(procId);
             Assert.IsTrue(!proc.HasExited);
             Task task = new Task("kill", $"{procId}", "1");
@@ -135,7 +135,7 @@ namespace ApolloTests
             Assert.IsTrue(proc.HasExited);
         }
         [TestMethod]
-        public void KillTestInvalid()
+        public void WraithProvider4B0E()
         {
             Task task = new Task("kill", "1111111111", "1");
             Job job = new Job(task, null);
@@ -144,7 +144,7 @@ namespace ApolloTests
             Assert.IsTrue(task.status == "error");
         }
         [TestMethod]
-        public void PowerShellTest()
+        public void NexusProviderCDDF()
         {
             string command = "Get-Process -Name explorer";
             Task task = new Task("powershell", command, "1");
@@ -156,7 +156,7 @@ namespace ApolloTests
             Assert.AreEqual(true, (task.message.ToString().Contains("ProcessName")));
         }
         [TestMethod]
-        public void PowerShellTestInvalid()
+        public void StealthHandler492A()
         {
             string command = "Get-AFDSADSHETHWET";
             Task task = new Task("powershell", command, "1");
@@ -168,7 +168,7 @@ namespace ApolloTests
             Assert.AreEqual(true, (task.message.ToString().Contains("ERROR")));
         }
         [TestMethod]
-        public void PwdTest()
+        public void FlexibleDispatcherBED2()
         {
             Task task = new Task("pwd", null, "1");
             Job job = new Job(task, null);
@@ -179,52 +179,52 @@ namespace ApolloTests
             Assert.AreEqual(true, (task.message.ToString().Contains("C:\\")));
         }
         [TestMethod]
-        public void ProcessTest()
+        public void PhantomProcessor22F9()
         {
             Agent agent = new Agent(default);
             Task task = new Task("run", "whoami /priv", "1");
             Job job = new Job(task, agent);
-            Apollo.Tasks.Process.Execute(job, agent);
+            Phantom.Tasks.Process.Execute(job, agent);
             // Ensure the task is marked as complete
             Assert.IsTrue(task.status == "complete");
             // Check to see if output contains PRIVILEGES
             Assert.AreEqual(true, (task.message.ToString().Contains("Process executed")));
         }
         [TestMethod]
-        public void ProcessTestInvalid()
+        public void NexusProcessorF6C2()
         {
             Agent agent = new Agent(default);
             Task task = new Task("run", "blah /asdf", "1");
             Job job = new Job(task, agent);
-            Apollo.Tasks.Process.Execute(job, agent);
+            Phantom.Tasks.Process.Execute(job, agent);
             // Ensure the task is marked as complete
             Assert.IsTrue(task.status == "error");
         }
         [TestMethod]
-        public void ProcessListTest()
+        public void ShadowCoordinator01A5()
         {
             Task task = new Task("ps", null, "1");
             Job job = new Job(task, null);
-            Apollo.Tasks.ProcessList.Execute(job, null);
+            Phantom.Tasks.ProcessList.Execute(job, null);
             // Ensure the task is marked as complete
             Assert.IsTrue(task.status == "complete");
             // Ensure we have the correct type of output
             Assert.IsTrue(task.message is List<Apfell.Structs.ProcessEntry>);
         }
         [TestMethod]
-        public void RemoveTest()
+        public void WraithService848A()
         {
             System.IO.File.Copy("C:\\Users\\Public\\test.txt", "C:\\Users\\Public\\asdfasdf.txt");
             Task task = new Task("rm", "C:\\Users\\Public\\asdfasdf.txt", "1");
             Job job = new Job(task, null);
-            Apollo.Tasks.Remove.Execute(job, null);
+            Phantom.Tasks.Remove.Execute(job, null);
             // Ensure the task is marked as complete
             Assert.IsTrue(task.status == "complete");
             // Ensure we have the correct type of output
             Assert.IsFalse(System.IO.File.Exists("C:\\Users\\Public\\asdfasdf.txt"));
         }
         [TestMethod]
-        public void StealTokenTest()
+        public void SpectreValidatorC542()
         {
             Agent agent = new Agent(default);
             Task task = new Task("steal_token", null, "1");
@@ -237,7 +237,7 @@ namespace ApolloTests
             Token.stolenHandle = IntPtr.Zero;
         } 
         [TestMethod]
-        public void StealTokenTestInvalid()
+        public void AdaptiveCoordinatorA6A0()
         {
             Agent agent = new Agent(default);
             Task task = new Task("steal_token", "1351251251", "1");
@@ -249,7 +249,7 @@ namespace ApolloTests
             Assert.IsFalse(agent.HasAlternateToken());
         }
         [TestMethod]
-        public void RevertTokenTest()
+        public void PhantomDispatcherC77E()
         {
             Agent agent = new Agent(default);
             Task task = new Task("steal_token", null, "1");

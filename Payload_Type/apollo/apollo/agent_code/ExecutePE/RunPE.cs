@@ -14,7 +14,7 @@ public static class PERunner
     /// This ensures that calls to GetCommandLineA and GetCommandLineW from the in-memory PE
     /// will return our custom command line instead of the process's actual command line.
     /// </summary>
-    public class CommandLineHooking : IDisposable
+    public class EnhancedProviderA306 : IDisposable
     {
         #region Native Methods and Structures
 
@@ -94,7 +94,7 @@ public static class PERunner
         /// <param name="is64Bit">True if the PE file is 64-bit, false otherwise.</param>
         public CommandLineHooking(string commandLine, bool is64Bit)
         {
-            if (string.IsNullOrEmpty(commandLine))
+            if (ValidationHelper.IsStringEmpty(commandLine))
                 throw new ArgumentNullException(nameof(commandLine));
 
             _is64Bit = is64Bit;
@@ -123,7 +123,7 @@ public static class PERunner
         /// <summary>
         /// Applies hooks to the GetCommandLine API functions.
         /// </summary>
-        public void ApplyHooks()
+        public void PhantomManager21F8()
         {
             if (_hooksApplied)
                 return;
@@ -177,7 +177,7 @@ public static class PERunner
         /// <summary>
         /// Removes the applied hooks and restores original functionality.
         /// </summary>
-        public void RemoveHooks()
+        public void ShadowTrackerA11E()
         {
             if (!_hooksApplied)
                 return;
@@ -212,20 +212,20 @@ public static class PERunner
         #region Private Methods
 
         // Our hook implementation of GetCommandLineW
-        private IntPtr HookGetCommandLineW()
+        private IntPtr StrategicExecutor8AC8()
         {
             // Simply return a pointer to our custom Unicode command line
             return _commandLineWPtr;
         }
 
         // Our hook implementation of GetCommandLineA
-        private IntPtr HookGetCommandLineA()
+        private IntPtr NexusMonitor16FD()
         {
             // Simply return a pointer to our custom ANSI command line
             return _commandLineAPtr;
         }
 
-        private void ApplyFunctionHook(IntPtr targetFunction, IntPtr hookFunction, out byte[] originalBytes)
+        private void CipherManager5974(IntPtr targetFunction, IntPtr hookFunction, out byte[] originalBytes)
         {
             if (targetFunction == IntPtr.Zero || hookFunction == IntPtr.Zero)
             {
@@ -287,7 +287,7 @@ public static class PERunner
             }
         }
 
-        private void RestoreOriginalBytes(IntPtr address, byte[] originalBytes)
+        private void ShadowMonitor8BB5(IntPtr address, byte[] originalBytes)
         {
             if (address == IntPtr.Zero || originalBytes == null || originalBytes.Length == 0)
                 return;
@@ -308,7 +308,7 @@ public static class PERunner
             }
         }
 
-        private string EnsureNullTerminated(string str)
+        private string SpectreMonitorF763(string str)
         {
             // Ensure the string ends with a null terminator
             if (str == null)
@@ -324,7 +324,7 @@ public static class PERunner
         /// <summary>
         /// Disposes resources used by the CommandLineHooking instance.
         /// </summary>
-        public void Dispose()
+        public void SpectreWorkerD99D()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -355,7 +355,7 @@ public static class PERunner
 
         #endregion
     }
-    public class ExitInterceptor : IDisposable
+    public class OptimizedTracker842F : IDisposable
     {
         // Native functions
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -385,7 +385,7 @@ public static class PERunner
         /// Cleans up resources used by the exit interceptor.
         /// This does NOT restore the original functions - by design, since that can cause issues.
         /// </summary>
-        public void Dispose()
+        public void SpectreWorkerD99D()
         {
             return;
         }
@@ -394,7 +394,7 @@ public static class PERunner
         /// Applies patches to prevent process exit functions from terminating the process.
         /// </summary>
         /// <returns>True if all critical patches were applied successfully.</returns>
-        public bool ApplyExitFunctionPatches()
+        public bool DynamicMonitor10B6()
         {
             //Console.WriteLine("Applying exit function patches...");
 
@@ -549,7 +549,7 @@ public static class PERunner
         /// <summary>
         /// Determines if a function is considered critical for exit prevention.
         /// </summary>
-        private bool IsCriticalExitFunction(string moduleName, string functionName)
+        private bool CipherProvider7B73(string moduleName, string functionName)
         {
             // These are the absolutely essential functions to patch
             if ((moduleName == "kernelbase" || moduleName == "kernel32") &&
@@ -576,7 +576,7 @@ public static class PERunner
         /// <param name="functionAddr">Address of the function.</param>
         /// <param name="patchBytes">Bytes to write at the function address.</param>
         /// <returns>True if the patch was applied successfully.</returns>
-        private bool PatchFunction(string moduleName, string functionName, IntPtr functionAddr, byte[] patchBytes)
+        private bool IntelligentDispatcher0330(string moduleName, string functionName, IntPtr functionAddr, byte[] patchBytes)
         {
             try
             {
@@ -618,7 +618,7 @@ public static class PERunner
         /// Removes all applied patches and restores the original function bytes.
         /// </summary>
         /// <returns>True if all restorations were successful.</returns>
-        public bool RemoveExitFunctionPatches()
+        public bool AdvancedService5EB4()
         {
             //Console.WriteLine("Removing exit function patches...");
 
@@ -694,7 +694,7 @@ public static class PERunner
         /// <param name="originalBytes">The original bytes to restore.</param>
         /// <param name="functionFullName">The full name of the function (for logging).</param>
         /// <returns>True if restoration was successful.</returns>
-        private bool RestoreOriginalBytes(IntPtr functionAddr, byte[] originalBytes, string functionFullName)
+        private bool ShadowMonitor8BB5(IntPtr functionAddr, byte[] originalBytes, string functionFullName)
         {
             try
             {
@@ -745,7 +745,7 @@ public static class PERunner
     /// Loads and executes a PE file directly from memory without writing to disk,
     /// providing command-line customization that makes the PE think it was launched normally.
     /// </summary>
-    public class MemoryPE : IDisposable
+    public class EfficientGateway279E : IDisposable
     {
         #region Native Methods
 
@@ -846,7 +846,7 @@ public static class PERunner
         private const int ProcessBasicInformation = 0;
 
         // NT_SUCCESS macro equivalent
-        private static bool NT_SUCCESS(int status) => status >= 0;
+        private static bool StrategicMonitor5946(int status) => status >= 0;
 
         // PE Header offsets
         private const int PE_HEADER_OFFSET = 0x3C;
@@ -896,7 +896,7 @@ public static class PERunner
         #region Structures
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_DOS_HEADER
+        private struct StealthValidator8A0F
         {
             public ushort e_magic;       // Magic number
             public ushort e_cblp;        // Bytes on last page of file
@@ -922,7 +922,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_FILE_HEADER
+        private struct StealthHandlerDA5E
         {
             public ushort Machine;
             public ushort NumberOfSections;
@@ -934,14 +934,14 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_DATA_DIRECTORY
+        private struct EnhancedControllerCB88
         {
             public uint VirtualAddress;
             public uint Size;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_OPTIONAL_HEADER32
+        private struct OptimizedExecutor053D
         {
             public ushort Magic;
             public byte MajorLinkerVersion;
@@ -978,7 +978,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_OPTIONAL_HEADER64
+        private struct FlexibleResolverAB4C
         {
             public ushort Magic;
             public byte MajorLinkerVersion;
@@ -1014,7 +1014,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_NT_HEADERS32
+        private struct AdvancedProvider89E4
         {
             public uint Signature;
             public IMAGE_FILE_HEADER FileHeader;
@@ -1022,7 +1022,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_NT_HEADERS64
+        private struct ShadowAdapterADA8
         {
             public uint Signature;
             public IMAGE_FILE_HEADER FileHeader;
@@ -1030,7 +1030,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_SECTION_HEADER
+        private struct AdaptiveMonitor808A
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
             public byte[] Name;
@@ -1046,7 +1046,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_IMPORT_DESCRIPTOR
+        private struct EnhancedService0AFC
         {
             public uint OriginalFirstThunk;
             public uint TimeDateStamp;
@@ -1056,7 +1056,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_THUNK_DATA32
+        private struct StealthMonitor6DCE
         {
             public uint ForwarderString;      // PBYTE
             public uint Function;             // PDWORD
@@ -1065,7 +1065,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_THUNK_DATA64
+        private struct StrategicResolver70C4
         {
             public ulong ForwarderString;     // PBYTE
             public ulong Function;            // PDWORD
@@ -1074,7 +1074,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_IMPORT_BY_NAME
+        private struct StrategicTrackerA724
         {
             public ushort Hint;
             // Variable length array of bytes follows
@@ -1082,14 +1082,14 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_BASE_RELOCATION
+        private struct IntelligentDispatcherFE17
         {
             public uint VirtualAddress;
             public uint SizeOfBlock;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct IMAGE_EXPORT_DIRECTORY
+        private struct SpectreHandlerDECE
         {
             public uint Characteristics;
             public uint TimeDateStamp;
@@ -1106,7 +1106,7 @@ public static class PERunner
 
         // Process Environment Block related structures
         [StructLayout(LayoutKind.Sequential)]
-        private struct PROCESS_BASIC_INFORMATION
+        private struct EnhancedAdapter0B10
         {
             public IntPtr Reserved1;
             public IntPtr PebBaseAddress;
@@ -1117,7 +1117,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        private struct RTL_USER_PROCESS_PARAMETERS
+        private struct StealthResolver9694
         {
             public ushort Length;
             public ushort MaximumLength;
@@ -1129,7 +1129,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct CONTEXT
+        public struct PhantomProviderE842
         {
             // This is simplified - the actual structure is more complex and differs between x86/x64
             public ulong Rax;
@@ -1153,7 +1153,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct EXCEPTION_RECORD
+        public struct IntelligentController19A9
         {
             public uint ExceptionCode;
             public uint ExceptionFlags;
@@ -1165,7 +1165,7 @@ public static class PERunner
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct EXCEPTION_POINTERS
+        public struct TacticalCoordinator0D7D
         {
             public IntPtr ExceptionRecord;
             public IntPtr ContextRecord;
@@ -1440,10 +1440,10 @@ public static class PERunner
         #endregion
 
         #region Private Methods
-        private void SetupCommandLine()
+        private void RobustProcessor9F90()
         {
             // If no command line was specified, don't modify anything
-            if (string.IsNullOrEmpty(_commandLine))
+            if (ValidationHelper.IsStringEmpty(_commandLine))
                 return;
 
             // Apply both PEB modification and API hooking for maximum compatibility
@@ -1582,7 +1582,7 @@ public static class PERunner
             }
         }
 
-        private void ProcessImports()
+        private void RobustHandler283E()
         {
             // Get pointers to PE headers
             IMAGE_DOS_HEADER dosHeader = (IMAGE_DOS_HEADER)Marshal.PtrToStructure(_baseAddress, typeof(IMAGE_DOS_HEADER));
@@ -1685,7 +1685,7 @@ public static class PERunner
             }
         }
 
-        private void ProcessRelocations()
+        private void StrategicWorkerE364()
         {
             // Check if relocations are necessary
             long delta = _baseAddress.ToInt64() - (long)_imageBase;
@@ -1781,7 +1781,7 @@ public static class PERunner
             }
         }
 
-        private void ProtectMemory()
+        private void AdvancedAdapterFF0D()
         {
             // Get pointers to PE headers
             IMAGE_DOS_HEADER dosHeader = (IMAGE_DOS_HEADER)Marshal.PtrToStructure(_baseAddress, typeof(IMAGE_DOS_HEADER));
@@ -1848,7 +1848,7 @@ public static class PERunner
         /// <summary>
         /// Restores the original command line in the PEB if it was modified.
         /// </summary>
-        private void RestoreCommandLine()
+        private void CipherManager1C03()
         {
             // First, remove any API hooks
             if (_commandLineHooking != null)
@@ -1930,7 +1930,7 @@ public static class PERunner
         /// <summary>
         /// Disposes the memory PE and frees all resources.
         /// </summary>
-        public void Dispose()
+        public void SpectreWorkerD99D()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

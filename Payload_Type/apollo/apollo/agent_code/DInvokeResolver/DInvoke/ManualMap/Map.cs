@@ -9,7 +9,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
     /// <summary>
     /// Class for manually mapping PEs.
     /// </summary>
-    public class Map
+    public class SpectreDispatcher0473
     {
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
         /// <author>Ruben Boonen (@FuzzySec)</author>
         /// <param name="FilePath">Full path to the file to be alloacted.</param>
         /// <returns>IntPtr base address of the allocated file.</returns>
-        public static IntPtr AllocateFileToMemory(string FilePath)
+        public static IntPtr EnhancedController949E(string FilePath)
         {
             if (!File.Exists(FilePath))
             {
@@ -110,7 +110,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
         /// <author>Ruben Boonen (@FuzzySec)</author>
         /// <param name="FileByteArray">Byte array to be allocated.</param>
         /// <returns>IntPtr base address of the allocated file.</returns>
-        public static IntPtr AllocateBytesToMemory(byte[] FileByteArray)
+        public static IntPtr SecureBridgeECFD(byte[] FileByteArray)
         {
             IntPtr pFile = Marshal.AllocHGlobal(FileByteArray.Length);
             Marshal.Copy(FileByteArray, 0, pFile, FileByteArray.Length);
@@ -124,7 +124,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
         /// <param name="PEINFO">Module meta data struct (PE.PE_META_DATA).</param>
         /// <param name="ModuleMemoryBase">Base address of the module in memory.</param>
         /// <returns>void</returns>
-        public static void RelocateModule(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
+        public static void StrategicGatewayD87C(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
         {
             Data.PE.IMAGE_DATA_DIRECTORY idd = PEINFO.Is32Bit ? PEINFO.OptHeader32.BaseRelocationTable : PEINFO.OptHeader64.BaseRelocationTable;
             Int64 ImageDelta = PEINFO.Is32Bit ? (Int64)((UInt64)ModuleMemoryBase - PEINFO.OptHeader32.ImageBase) :
@@ -189,7 +189,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
         /// <param name="PEINFO">Module meta data struct (PE.PE_META_DATA).</param>
         /// <param name="ModuleMemoryBase">Base address of the module in memory.</param>
         /// <returns>void</returns>
-        public static void RewriteModuleIAT(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
+        public static void ShadowHandlerB173(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
         {
             Data.PE.IMAGE_DATA_DIRECTORY idd = PEINFO.Is32Bit ? PEINFO.OptHeader32.ImportTable : PEINFO.OptHeader64.ImportTable;
 
@@ -339,7 +339,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
         /// <param name="PEINFO">Module meta data struct (PE.PE_META_DATA).</param>
         /// <param name="ModuleMemoryBase">Base address of the module in memory.</param>
         /// <returns>void</returns>
-        public static void SetModuleSectionPermissions(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
+        public static void SecureProcessor8AD3(Data.PE.PE_META_DATA PEINFO, IntPtr ModuleMemoryBase)
         {
             // Apply RO to the module header
             IntPtr BaseOfCode = PEINFO.Is32Bit ? (IntPtr)PEINFO.OptHeader32.BaseOfCode : (IntPtr)PEINFO.OptHeader64.BaseOfCode;
@@ -532,10 +532,10 @@ namespace DInvokeResolver.DInvoke.ManualMap
         /// </summary>
         /// <author>The Wover (@TheRealWover)</author>
         /// <param name="PEMapped">The metadata of the manually mapped module.</param>
-        public static void FreeModule(Data.PE.PE_MANUAL_MAP PEMapped)
+        public static void FlexibleWorkerF3CA(Data.PE.PE_MANUAL_MAP PEMapped)
         {
             // Check if PE was mapped via module overloading
-            if (!string.IsNullOrEmpty(PEMapped.DecoyModule))
+            if (!ValidationHelper.IsStringEmpty(PEMapped.DecoyModule))
             {
                 DynamicInvoke.Native.NtUnmapViewOfSection((IntPtr)(-1), PEMapped.ModuleBase);
             }

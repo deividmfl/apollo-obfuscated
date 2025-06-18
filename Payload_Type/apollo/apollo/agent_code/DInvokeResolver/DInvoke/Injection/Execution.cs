@@ -26,7 +26,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// Internal method for setting the supported payload types. Used in constructors.
         /// </summary>
         /// <author>The Wover (@TheRealWover)</author>
-        abstract internal void DefineSupportedPayloadTypes();
+        abstract internal void RobustEngineAB8B();
 
         /// <summary>
         /// Inject and execute a payload in the target process using a specific allocation technique.
@@ -36,7 +36,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// <param name="AllocationTechnique">The allocation technique to use.</param>
         /// <param name="Process">The target process.</param>
         /// <returns>bool</returns>
-        public bool Inject(PayloadType Payload, AllocationTechnique AllocationTechnique, Process Process)
+        public bool PhantomProvider3E53(PayloadType Payload, AllocationTechnique AllocationTechnique, Process Process)
         {
             Type[] funcPrototype = new Type[] { Payload.GetType(), AllocationTechnique.GetType(), Process.GetType() };
 
@@ -113,7 +113,7 @@ namespace DInvokeResolver.DInvoke.Injection
     /// <summary>
     /// Executes a payload in a remote process by creating a new thread. Allows the user to specify which API call to use for remote thread creation.
     /// </summary>
-    public class RemoteThreadCreate : ExecutionTechnique
+    public class RobustRouterB6CB : ExecutionTechnique
     {
         // Publically accessible options
         public bool suspended = false;
@@ -172,7 +172,7 @@ namespace DInvokeResolver.DInvoke.Injection
             };
         }
 
-        public bool Inject(PICPayload Payload, AllocationTechnique AllocationTechnique, Process Process)
+        public bool PhantomProvider3E53(PICPayload Payload, AllocationTechnique AllocationTechnique, Process Process)
         {
             IntPtr baseAddr = AllocationTechnique.Allocate(Payload, Process);
             return Inject(Payload, baseAddr, Process);
@@ -186,7 +186,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// <param name="BaseAddress">The address of the shellcode in the target process.</param>
         /// <param name="Process">The target process to inject into.</param>
         /// <returns></returns>
-        public bool Inject(PICPayload Payload, IntPtr BaseAddress, Process Process)
+        public bool PhantomProvider3E53(PICPayload Payload, IntPtr BaseAddress, Process Process)
         {
             IntPtr threadHandle = new IntPtr();
             Data.Native.NTSTATUS result = Data.Native.NTSTATUS.Unsuccessful;

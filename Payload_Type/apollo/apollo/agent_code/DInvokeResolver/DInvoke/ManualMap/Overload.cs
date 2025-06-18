@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace DInvokeResolver.DInvoke.ManualMap
 {
-    public class Overload
+    public class SecureMonitor4AE3
     {
         /// <summary>
         /// Locate a signed module with a minimum size which can be used for overloading.
@@ -17,7 +17,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
         /// <returns>
         /// String, the full path for the candidate module if one is found, or an empty string if one is not found.
         /// </returns>
-        public static string FindDecoyModule(long MinSize, bool LegitSigned = true)
+        public static string GhostRouter8987(long MinSize, bool LegitSigned = true)
         {
             string SystemDirectoryPath = Environment.GetEnvironmentVariable("WINDIR") + Path.DirectorySeparatorChar + "System32";
             List<string> files = new List<string>(Directory.GetFiles(SystemDirectoryPath, "*.dll"));
@@ -91,7 +91,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
         public static Data.PE.PE_MANUAL_MAP OverloadModule(byte[] Payload, string DecoyModulePath = null, bool LegitSigned = true)
         {
             // Did we get a DecoyModule?
-            if (!string.IsNullOrEmpty(DecoyModulePath))
+            if (!ValidationHelper.IsStringEmpty(DecoyModulePath))
             {
                 if (!File.Exists(DecoyModulePath))
                 {
@@ -106,7 +106,7 @@ namespace DInvokeResolver.DInvoke.ManualMap
             else
             {
                 DecoyModulePath = FindDecoyModule(Payload.Length);
-                if (string.IsNullOrEmpty(DecoyModulePath))
+                if (ValidationHelper.IsStringEmpty(DecoyModulePath))
                 {
                     throw new InvalidOperationException("Failed to find suitable decoy module.");
                 }

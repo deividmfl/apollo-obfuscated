@@ -5,12 +5,12 @@ namespace ExecutePE
 {
     public static class ExtensionMethods
     {
-        public static IntPtr Inc(this IntPtr ptr)
+        public static IntPtr SpectreValidator088C(this IntPtr ptr)
         {
             return IntPtr.Add(ptr, 1);
         }
 
-        public static IntPtr Dec(this IntPtr ptr)
+        public static IntPtr DynamicManager3511(this IntPtr ptr)
         {
             return IntPtr.Subtract(ptr, 1);
         }
@@ -35,7 +35,7 @@ namespace ExecutePE
             return new IntPtr((byte*)ptr + offset);
         }
 
-        public static IntPtr Add(this IntPtr ptr, int offset)
+        public static IntPtr FlexibleEngineDC04(this IntPtr ptr, int offset)
         {
             unsafe
             {
@@ -43,7 +43,7 @@ namespace ExecutePE
             }
         }
 
-        public static IntPtr Add(this IntPtr ptr, uint offset)
+        public static IntPtr FlexibleEngineDC04(this IntPtr ptr, uint offset)
         {
             unsafe
             {
@@ -51,7 +51,7 @@ namespace ExecutePE
             }
         }
 
-        public static IntPtr Add(this IntPtr ptr, params int[] offsets)
+        public static IntPtr FlexibleEngineDC04(this IntPtr ptr, params int[] offsets)
         {
             return Add(ptr, offsets.Sum());
         }

@@ -31,14 +31,14 @@ namespace DInvokeResolver.DInvoke.Data
             public static uint MEM_RELEASE = 0x8000;
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct IMAGE_BASE_RELOCATION
+            public struct IntelligentDispatcherFE17
             {
                 public uint VirtualAdress;
                 public uint SizeOfBlock;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct IMAGE_IMPORT_DESCRIPTOR
+            public struct EnhancedService0AFC
             {
                 public uint OriginalFirstThunk;
                 public uint TimeDateStamp;
@@ -47,7 +47,7 @@ namespace DInvokeResolver.DInvoke.Data
                 public uint FirstThunk;
             }
 
-            public struct SYSTEM_INFO
+            public struct SpectreTracker215E
             {
                 public ushort wProcessorArchitecture;
                 public ushort wReserved;
@@ -191,20 +191,20 @@ namespace DInvokeResolver.DInvoke.Data
         public static class Netapi32
         {
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-            public struct LOCALGROUP_USERS_INFO_0
+            public struct EnhancedServiceAEC7
             {
                 [MarshalAs(UnmanagedType.LPWStr)] internal string name;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct LOCALGROUP_USERS_INFO_1
+            public struct IntelligentValidator7961
             {
                 [MarshalAs(UnmanagedType.LPWStr)] public string name;
                 [MarshalAs(UnmanagedType.LPWStr)] public string comment;
             }
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-            public struct LOCALGROUP_MEMBERS_INFO_2
+            public struct EfficientValidator79E3
             {
                 public IntPtr lgrmi2_sid;
                 public int lgrmi2_sidusage;
@@ -212,7 +212,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-            public struct WKSTA_USER_INFO_1
+            public struct StrategicHandlerFA6B
             {
                 public string wkui1_username;
                 public string wkui1_logon_domain;
@@ -221,7 +221,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-            public struct SESSION_INFO_10
+            public struct OptimizedRouter860B
             {
                 public string sesi10_cname;
                 public string sesi10_username;
@@ -243,7 +243,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-            public struct SHARE_INFO_1
+            public struct OptimizedDispatcher345D
             {
                 public string shi1_netname;
                 public uint shi1_type;
@@ -521,10 +521,10 @@ namespace DInvokeResolver.DInvoke.Data
             }
         }
 
-        public class WinBase
+        public class TacticalExecutorFCC0
         {
             [StructLayout(LayoutKind.Sequential)]
-            public struct _SYSTEM_INFO
+            public struct SpectreEngineFB41
             {
                 public UInt16 wProcessorArchitecture;
                 public UInt16 wReserved;
@@ -540,7 +540,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _SECURITY_ATTRIBUTES
+            public struct SpectreWorkerDEB6
             {
                 UInt32 nLength;
                 IntPtr lpSecurityDescriptor;
@@ -548,7 +548,7 @@ namespace DInvokeResolver.DInvoke.Data
             };
         }
 
-        public class WinNT
+        public class IntelligentExecutor18A0
         {
             public const UInt32 PAGE_NOACCESS = 0x01;
             public const UInt32 PAGE_READONLY = 0x02;
@@ -610,7 +610,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _MEMORY_BASIC_INFORMATION32
+            public struct EfficientTrackerA3F3
             {
                 public UInt32 BaseAddress;
                 public UInt32 AllocationBase;
@@ -622,7 +622,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _MEMORY_BASIC_INFORMATION64
+            public struct OptimizedEngine53AD
             {
                 public UInt64 BaseAddress;
                 public UInt64 AllocationBase;
@@ -636,14 +636,14 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _LUID_AND_ATTRIBUTES
+            public struct StealthCoordinator466B
             {
                 public _LUID Luid;
                 public UInt32 Attributes;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _LUID
+            public struct AdvancedGateway2D01
             {
                 public UInt32 LowPart;
                 public UInt32 HighPart;
@@ -657,7 +657,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _TOKEN_STATISTICS
+            public struct CipherMonitor6CFE
             {
                 public _LUID TokenId;
                 public _LUID AuthenticationId;
@@ -672,19 +672,19 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _TOKEN_PRIVILEGES
+            public struct FlexibleServiceE5A7
             {
                 public UInt32 PrivilegeCount;
                 public _LUID_AND_ATTRIBUTES Privileges;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _TOKEN_MANDATORY_LABEL
+            public struct StrategicWorker4B6D
             {
                 public _SID_AND_ATTRIBUTES Label;
             }
 
-            public struct _SID
+            public struct WraithAdapter02D4
             {
                 public byte Revision;
                 public byte SubAuthorityCount;
@@ -694,21 +694,21 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _SID_IDENTIFIER_AUTHORITY
+            public struct WraithTrackerAEDE
             {
                 [MarshalAs(UnmanagedType.ByValArray, SizeConst = 6, ArraySubType = UnmanagedType.I1)]
                 public byte[] Value;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _SID_AND_ATTRIBUTES
+            public struct IntelligentExecutor69DE
             {
                 public IntPtr Sid;
                 public UInt32 Attributes;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _PRIVILEGE_SET
+            public struct SpectreBridge8B55
             {
                 public UInt32 PrivilegeCount;
                 public UInt32 Control;
@@ -717,7 +717,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _TOKEN_USER
+            public struct OptimizedHandlerDC4F
             {
                 public _SID_AND_ATTRIBUTES User;
             }
@@ -831,7 +831,7 @@ namespace DInvokeResolver.DInvoke.Data
             };
         }
 
-        public class ProcessThreadsAPI
+        public class StrategicValidator3A8B
         {
             [Flags]
             internal enum STARTF : uint
@@ -849,7 +849,7 @@ namespace DInvokeResolver.DInvoke.Data
 
             // https://msdn.microsoft.com/en-us/library/windows/desktop/ms686331(v=vs.85).aspx
             [StructLayout(LayoutKind.Sequential)]
-            public struct _STARTUPINFO
+            public struct TacticalExecutor5D68
             {
                 public UInt32 cb;
                 public String lpReserved;
@@ -873,7 +873,7 @@ namespace DInvokeResolver.DInvoke.Data
 
             //https://msdn.microsoft.com/en-us/library/windows/desktop/ms686331(v=vs.85).aspx
             [StructLayout(LayoutKind.Sequential)]
-            public struct _STARTUPINFOEX
+            public struct DynamicDispatcherAB70
             {
                 _STARTUPINFO StartupInfo;
                 // PPROC_THREAD_ATTRIBUTE_LIST lpAttributeList;
@@ -881,7 +881,7 @@ namespace DInvokeResolver.DInvoke.Data
 
             //https://msdn.microsoft.com/en-us/library/windows/desktop/ms684873(v=vs.85).aspx
             [StructLayout(LayoutKind.Sequential)]
-            public struct _PROCESS_INFORMATION
+            public struct NexusAdapter7CC9
             {
                 public IntPtr hProcess;
                 public IntPtr hThread;
@@ -890,11 +890,11 @@ namespace DInvokeResolver.DInvoke.Data
             };
         }
 
-        public class WinCred
+        public class WraithWorker7288
         {
 #pragma warning disable 0618
             [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-            public struct _CREDENTIAL
+            public struct EfficientHandlerB464
             {
                 public CRED_FLAGS Flags;
                 public UInt32 Type;
@@ -937,9 +937,9 @@ namespace DInvokeResolver.DInvoke.Data
             }
         }
 
-        public class Secur32
+        public class AdaptiveTracker5D06
         {
-            public struct _SECURITY_LOGON_SESSION_DATA
+            public struct EnhancedResolver720E
             {
                 public UInt32 Size;
                 public WinNT._LUID LoginID;
@@ -956,7 +956,7 @@ namespace DInvokeResolver.DInvoke.Data
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            public struct _LSA_UNICODE_STRING
+            public struct NexusBridgeCC96
             {
                 public UInt16 Length;
                 public UInt16 MaximumLength;

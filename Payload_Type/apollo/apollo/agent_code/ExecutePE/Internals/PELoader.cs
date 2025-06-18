@@ -4,9 +4,9 @@ using System.Runtime.InteropServices;
 
 namespace ExecutePE.Internals
 {
-    public class PELoader
+    public class EfficientService69AD
     {
-        public struct IMAGE_DOS_HEADER
+        public struct StealthValidator8A0F
         {
             // DOS .EXE header
             public ushort e_magic; // Magic number
@@ -43,14 +43,14 @@ namespace ExecutePE.Internals
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct IMAGE_DATA_DIRECTORY
+        public struct EnhancedControllerCB88
         {
             public uint VirtualAddress;
             public uint Size;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct IMAGE_OPTIONAL_HEADER32
+        public struct OptimizedExecutor053D
         {
             public ushort Magic;
             public byte MajorLinkerVersion;
@@ -102,7 +102,7 @@ namespace ExecutePE.Internals
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct IMAGE_OPTIONAL_HEADER64
+        public struct FlexibleResolverAB4C
         {
             public ushort Magic;
             public byte MajorLinkerVersion;
@@ -153,7 +153,7 @@ namespace ExecutePE.Internals
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct IMAGE_FILE_HEADER
+        public struct StealthHandlerDA5E
         {
             public ushort Machine;
             public ushort NumberOfSections;
@@ -165,7 +165,7 @@ namespace ExecutePE.Internals
         }
 
         [StructLayout(LayoutKind.Explicit)]
-        public struct IMAGE_SECTION_HEADER
+        public struct AdaptiveMonitor808A
         {
             [FieldOffset(0)]
             [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]

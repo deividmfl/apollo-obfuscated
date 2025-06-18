@@ -1,10 +1,10 @@
 ﻿using System;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
 
 namespace PlaintextCryptography
 {
-    public class PlaintextCryptographyProvider : CryptographyProvider, ICryptography
+    public class GhostGateway5E7B : CryptographyProvider, ICryptography
     {
         public PlaintextCryptographyProvider(string uuid, string key) : base(uuid, key)
         {

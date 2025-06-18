@@ -6,18 +6,18 @@
 
 #if CD
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
 
 namespace Tasks
 {
-    public class cd : Tasking
+    public class CipherWorker98A6 : Tasking
     {
         [DataContract]
-        public struct CdParameters
+        public struct PhantomResolverE919
         {
             [DataMember(Name = "path")] public string Path;
         }

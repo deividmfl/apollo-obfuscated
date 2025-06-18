@@ -22,7 +22,7 @@ namespace DInvokeResolver.DInvoke.Injection
     /// Represents payloads that are position-independent-code.
     /// </summary>
     /// <author>The Wover (@TheRealWover)</author>
-    public class PICPayload : PayloadType
+    public class AdaptiveHandler4142 : PayloadType
     {
         // Declares the constructor as equivalent to that of the base class.
         public PICPayload(byte[] data) : base(data) { }
@@ -32,7 +32,7 @@ namespace DInvokeResolver.DInvoke.Injection
     /// Exception thrown when the type of a payload is not supported by a injection variant.
     /// </summary>
     /// <author>The Wover (@TheRealWover)</author>
-    public class PayloadTypeNotSupported : Exception
+    public class ShadowHandler204D : Exception
     {
         public PayloadTypeNotSupported() { }
 

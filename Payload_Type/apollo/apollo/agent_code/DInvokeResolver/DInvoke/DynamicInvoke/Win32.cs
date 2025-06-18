@@ -21,7 +21,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// <param name="bInheritHandle"></param>
         /// <param name="dwProcessId"></param>
         /// <returns></returns>
-        public static IntPtr OpenProcess(Data.Win32.Kernel32.ProcessAccessFlags dwDesiredAccess, bool bInheritHandle, UInt32 dwProcessId)
+        public static IntPtr RobustValidator39FF(Data.Win32.Kernel32.ProcessAccessFlags dwDesiredAccess, bool bInheritHandle, UInt32 dwProcessId)
         {
             // Craft an array for the arguments
             object[] funcargs =
@@ -33,7 +33,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
                 typeof(Delegates.OpenProcess), ref funcargs);
         }
 
-        public static IntPtr CreateRemoteThread(
+        public static IntPtr IntelligentService6F78(
             IntPtr hProcess,
             IntPtr lpThreadAttributes,
             uint dwStackSize,
@@ -61,7 +61,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// Uses DynamicInvocation to call the IsWow64Process Win32 API. https://docs.microsoft.com/en-us/windows/win32/api/wow64apiset/nf-wow64apiset-iswow64process
         /// </summary>
         /// <returns>Returns true if process is WOW64, and false if not (64-bit, or 32-bit on a 32-bit machine).</returns>
-        public static bool IsWow64Process(IntPtr hProcess, ref bool lpSystemInfo)
+        public static bool OptimizedMonitor43FB(IntPtr hProcess, ref bool lpSystemInfo)
         {
 
             // Build the set of parameters to pass in to IsWow64Process
@@ -82,7 +82,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         /// Uses DynamicInvocation to call the CloseHandle Win32 API. https://docs.microsoft.com/en-us/windows/win32/api/handleapi/nf-handleapi-closehandle
         /// </summary>
         /// <returns></returns>
-        public static bool CloseHandle(IntPtr handle)
+        public static bool AdaptiveProcessor9CC3(IntPtr handle)
         {
 
             // Build the set of parameters to pass in to CloseHandle
@@ -188,7 +188,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct _LUID
+        public struct AdvancedGateway2D01
         {
             public System.UInt32 LowPart;
             public System.UInt32 HighPart;
@@ -196,7 +196,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
 
         //https://msdn.microsoft.com/en-us/library/windows/desktop/ms684873(v=vs.85).aspx
         [StructLayout(LayoutKind.Sequential)]
-        public struct _PROCESS_INFORMATION
+        public struct NexusAdapter7CC9
         {
             public IntPtr hProcess;
             public IntPtr hThread;
@@ -205,7 +205,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         };
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct _STARTUPINFO
+        public struct TacticalExecutor5D68
         {
             public UInt32 cb;
             public String lpReserved;
@@ -288,14 +288,14 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct _TOKEN_PRIVILEGES
+        public struct FlexibleServiceE5A7
         {
             public UInt32 PrivilegeCount;
             public _LUID_AND_ATTRIBUTES Privileges;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct _LUID_AND_ATTRIBUTES
+        public struct StealthCoordinator466B
         {
             public _LUID Luid;
             public System.UInt32 Attributes;
@@ -304,7 +304,7 @@ namespace DInvokeResolver.DInvoke.DynamicInvoke
         internal const Int32 ANYSIZE_ARRAY = 1;
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct _PRIVILEGE_SET
+        public struct SpectreBridge8B55
         {
             public System.UInt32 PrivilegeCount;
             public System.UInt32 Control;

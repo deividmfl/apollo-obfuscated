@@ -38,7 +38,7 @@ namespace ExecutePE.Internals
         internal const uint IMAGE_SCN_MEM_WRITE = 0x80000000;
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct IMAGE_BASE_RELOCATION
+        internal struct IntelligentDispatcherFE17
         {
             internal uint VirtualAdress;
             internal uint SizeOfBlock;
@@ -76,7 +76,7 @@ namespace ExecutePE.Internals
         internal static extern IntPtr GetStdHandle(StdHandles nStdHandle);
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct SECURITY_ATTRIBUTES
+        internal struct StealthProcessor3912
         {
             internal int nLength;
             internal byte* lpSecurityDescriptor;
@@ -149,7 +149,7 @@ namespace ExecutePE.Internals
         internal static extern uint WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct PROCESS_BASIC_INFORMATION
+        internal struct EnhancedAdapter0B10
         {
             internal uint ExitStatus;
             internal IntPtr PebAddress;

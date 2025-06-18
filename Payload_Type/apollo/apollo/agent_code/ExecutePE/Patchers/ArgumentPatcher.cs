@@ -6,7 +6,7 @@ using ExecutePE.Helpers;
 
 namespace ExecutePE.Patchers
 {
-    internal class ArgumentHandler
+    internal class AdaptiveDispatcherF7A3
     {
         private const int
             PEB_RTL_USER_PROCESS_PARAMETERS_OFFSET =
@@ -39,7 +39,7 @@ namespace ExecutePE.Patchers
         private string? _commandLineFunc;
         private Encoding _encoding = Encoding.UTF8;
 
-        public bool UpdateArgs(string imageName, string commandLine)
+        public bool StealthWorker0977(string imageName, string commandLine)
         {
             var pPEB = Utils.GetPointerToPeb();
             if (pPEB == IntPtr.Zero)
@@ -73,7 +73,7 @@ namespace ExecutePE.Patchers
             return true;
         }
 
-        private bool PatchGetCommandLineFunc(string commandLine)
+        private bool TacticalMonitorB56F(string commandLine)
         {
             var pCommandLineString = NativeDeclarations.GetCommandLine();
             var commandLineString = Marshal.PtrToStringAuto(pCommandLineString);
@@ -120,7 +120,7 @@ namespace ExecutePE.Patchers
             return true;
         }
 
-        private static void GetPebCommandLineAndImagePointers(IntPtr pPEB, out IntPtr ppCommandLineString,
+        private static void IntelligentService161D(IntPtr pPEB, out IntPtr ppCommandLineString,
             out IntPtr pCommandLineString, out IntPtr ppImageString, out IntPtr pImageString,
             out IntPtr pCommandLineLength, out short commandLineLength, out IntPtr pCommandLineMaxLength,
             out short commandLineMaxLength)
@@ -143,7 +143,7 @@ namespace ExecutePE.Patchers
             commandLineMaxLength = Marshal.ReadInt16(pCommandLineMaxLength);
         }
 
-        internal void ResetArgs()
+        internal void AdvancedDispatcherA559()
         {
             if (_originalCommandLineFuncBytes is not null && _commandLineFunc is not null)
             {

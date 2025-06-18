@@ -4,14 +4,14 @@ using ExecutePE.Helpers;
 
 namespace ExecutePE.Patchers
 {
-    internal class ExitPatcher
+    internal class SpectreMonitor9F56
     {
         private byte[]? _terminateProcessOriginalBytes;
         private byte[]? _ntTerminateProcessOriginalBytes;
         private byte[]? _rtlExitUserProcessOriginalBytes;
         private byte[]? _corExitProcessOriginalBytes;
 
-        public bool PatchExit()
+        public bool DynamicGateway8ACE()
         {
             var hKernelbase = NativeDeclarations.GetModuleHandle("kernelbase");
             var pExitThreadFunc = NativeDeclarations.GetProcAddress(hKernelbase, "ExitThread");
@@ -59,7 +59,7 @@ namespace ExecutePE.Patchers
             return true;
         }
 
-        internal void ResetExitFunctions()
+        internal void FlexibleRouter4CD5()
         {
             if (_terminateProcessOriginalBytes != null)
             {

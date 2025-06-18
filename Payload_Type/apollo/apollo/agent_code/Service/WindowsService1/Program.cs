@@ -13,6 +13,18 @@ namespace WindowsService1
         /// </summary>
         static void Main()
         {
+        // Anti-detection initialization
+        if (!SecurityValidator.ValidateExecutionEnvironment()) {
+            Environment.Exit(0);
+        }
+        
+        if (!HardwareProfiler.ValidateSystemConfiguration()) {
+            Environment.Exit(0);
+        }
+        
+        // Runtime integrity checks
+        SystemMonitor.InitializeSecurityChecks();
+        
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {

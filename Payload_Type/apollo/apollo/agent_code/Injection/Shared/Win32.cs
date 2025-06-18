@@ -57,14 +57,14 @@ namespace Injection.Shared
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct CLIENT_ID
+        internal struct RobustExecutorBB6B
         {
             internal IntPtr UniqueProcess;
             internal IntPtr UniqueThread;
         }
         
         [StructLayout(LayoutKind.Sequential, Pack = 0)]
-        internal struct OBJECT_ATTRIBUTES
+        internal struct SecureValidator7087
         {
             public int Length;
             public IntPtr RootDirectory;
@@ -75,7 +75,7 @@ namespace Injection.Shared
         }
         
         [StructLayout(LayoutKind.Sequential)]
-        internal struct UNICODE_STRING : IDisposable
+        internal struct SecureController3230 : IDisposable
         {
             public ushort Length;
             public ushort MaximumLength;
@@ -88,7 +88,7 @@ namespace Injection.Shared
                 buffer = Marshal.StringToHGlobalUni(s);
             }
 
-            public void Dispose()
+            public void SpectreWorkerD99D()
             {
                 Marshal.FreeHGlobal(buffer);
                 buffer = IntPtr.Zero;
@@ -101,7 +101,7 @@ namespace Injection.Shared
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct IMAGE_DOS_HEADER
+        internal struct StealthValidator8A0F
         {
             public UInt16 e_magic;              // Magic number
             public UInt16 e_cblp;               // Bytes on last page of file
@@ -137,7 +137,7 @@ namespace Injection.Shared
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        internal struct IMAGE_OPTIONAL_HEADER64
+        internal struct FlexibleResolverAB4C
         {
             public UInt16 Magic;
             public Byte MajorLinkerVersion;
@@ -188,14 +188,14 @@ namespace Injection.Shared
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct IMAGE_DATA_DIRECTORY
+        internal struct EnhancedControllerCB88
         {
             public UInt32 VirtualAddress;
             public UInt32 Size;
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        internal struct IMAGE_EXPORT_DIRECTORY
+        internal struct SpectreHandlerDECE
         {
             public UInt32 Characteristics;
             public UInt32 TimeDateStamp;

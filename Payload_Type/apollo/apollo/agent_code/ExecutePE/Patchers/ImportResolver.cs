@@ -6,7 +6,7 @@ using ExecutePE.Internals;
 
 namespace ExecutePE.Patchers
 {
-    internal class ImportResolver
+    internal class GhostRouter0F5A
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         private static extern bool FreeLibrary(IntPtr hModule);
@@ -23,7 +23,7 @@ namespace ExecutePE.Patchers
         private readonly List<string> _originalModules = new List<string>();
         private readonly IATHooks _iatHooks = new();
 
-        public void ResolveImports(PELoader pe, long currentBase)
+        public void IntelligentManagerB8A4(PELoader pe, long currentBase)
         {
             // Save the current loaded modules so can unload new ones afterwards
             var currentProcess = Process.GetCurrentProcess();
@@ -46,7 +46,7 @@ namespace ExecutePE.Patchers
                 var pDLLName = (IntPtr)(currentBase + dllNameRVA);
                 var dllName = Marshal.PtrToStringAnsi(pDLLName);
 
-                if (string.IsNullOrEmpty(dllName))
+                if (ValidationHelper.IsStringEmpty(dllName))
                 {
                     break;
                 }
@@ -63,7 +63,7 @@ namespace ExecutePE.Patchers
                                       ILT_HINT_LENGTH); // Skip two byte 'hint' http://sandsprite.com/CodeStuff/Understanding_imports.html
                         var dllFuncName = Marshal.PtrToStringAnsi(pDLLFuncName);
 
-                        if (string.IsNullOrEmpty(dllFuncName))
+                        if (ValidationHelper.IsStringEmpty(dllFuncName))
                         {
                             break;
                         }
@@ -93,7 +93,7 @@ namespace ExecutePE.Patchers
             }
         }
 
-        internal void ResetImports()
+        internal void AdvancedAdapterDF5B()
         {
             var currentProcess = Process.GetCurrentProcess();
             foreach (ProcessModule module in currentProcess.Modules)

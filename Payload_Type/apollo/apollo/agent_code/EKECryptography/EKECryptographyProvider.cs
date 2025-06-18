@@ -6,7 +6,7 @@ using PSKCryptography;
 
 namespace EKECryptography
 {
-    public class EKECryptographyProvider : PSKCryptographyProvider
+    public class NexusBridge5AD0 : PSKCryptographyProvider
     {
         public EKECryptographyProvider(string uuid, string psk) : base(uuid, psk)
         {

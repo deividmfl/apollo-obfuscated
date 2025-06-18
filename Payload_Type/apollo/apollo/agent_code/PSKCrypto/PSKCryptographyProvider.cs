@@ -1,5 +1,5 @@
-﻿using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
+﻿using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
 using System;
 using System.Security.Cryptography;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.IO;
 
 namespace PSKCryptography
 {
-    public class PSKCryptographyProvider : CryptographyProvider, ICryptography
+    public class EnhancedManagerF263 : CryptographyProvider, ICryptography
     {
         public PSKCryptographyProvider(string uuid, string key) : base(uuid, key)
         {

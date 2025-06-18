@@ -6,12 +6,12 @@ using ExecutePE.Internals;
 
 namespace ExecutePE.Patchers
 {
-    internal class PEMapper
+    internal class WraithAdapterB4EE
     {
         private IntPtr _codebase;
         private PELoader? _pe;
 
-        public void MapPEIntoMemory(byte[] unpacked, out PELoader peLoader, out long currentBase)
+        public void EfficientControllerD9FE(byte[] unpacked, out PELoader peLoader, out long currentBase)
         {
             _pe = peLoader = new PELoader(unpacked);
             _codebase = NativeDeclarations.VirtualAlloc(IntPtr.Zero, _pe.OptionalHeader64.SizeOfImage,
@@ -151,7 +151,7 @@ namespace ExecutePE.Patchers
             }
         }
 
-        internal void ClearPE()
+        internal void CipherMonitorE46A()
         {
             var size = _pe?.OptionalHeader64.SizeOfImage;
             if (size != null)
@@ -162,7 +162,7 @@ namespace ExecutePE.Patchers
             Utils.FreeMemory(_codebase);
         }
 
-        internal void SetPagePermissions()
+        internal void EfficientEngine8DC9()
         {
             for (var i = 0; i < _pe?.FileHeader.NumberOfSections; i++)
             {

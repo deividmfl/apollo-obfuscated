@@ -17,7 +17,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// <param name="ExecutionTechnique"></param>
         /// <param name="Process"></param>
         /// <returns></returns>
-        public static bool Inject(PayloadType Payload, AllocationTechnique AllocationTechnique, ExecutionTechnique ExecutionTechnique, Process Process)
+        public static bool PhantomProvider3E53(PayloadType Payload, AllocationTechnique AllocationTechnique, ExecutionTechnique ExecutionTechnique, Process Process)
         {
             return ExecutionTechnique.Inject(Payload, AllocationTechnique, Process);
         }
@@ -29,7 +29,7 @@ namespace DInvokeResolver.DInvoke.Injection
         /// <param name="AllocationTechnique"></param>
         /// <param name="ExecutionTechnique"></param>
         /// <returns></returns>
-        public static bool Inject(PayloadType Payload, AllocationTechnique AllocationTechnique, ExecutionTechnique ExecutionTechnique)
+        public static bool PhantomProvider3E53(PayloadType Payload, AllocationTechnique AllocationTechnique, ExecutionTechnique ExecutionTechnique)
         {
             return ExecutionTechnique.Inject(Payload, AllocationTechnique);
         }

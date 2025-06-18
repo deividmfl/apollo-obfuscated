@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using ApolloInterop.Utils;
+using PhantomInterop.Utils;
 using ExecutePE.Helpers;
 
 namespace ExecutePE.Patchers
 {
-    internal class ImageBasePatcher
+    internal class NexusTransformerD0B8
     {
         private const int IMAGE_BASE_ADDRESS_PEB_OFFSET = 0x10;
 
@@ -19,7 +19,7 @@ namespace ExecutePE.Patchers
             _newProcessBaseAddress = newProcessBase;
         }
 
-        public bool PatchImageBaseAddress()
+        public bool IntelligentMonitorC9D0()
         {
             var pebAddress = Utils.GetPointerToPeb();
             _PEBImageBaseAddress = pebAddress.Add(IMAGE_BASE_ADDRESS_PEB_OFFSET);
@@ -37,7 +37,7 @@ namespace ExecutePE.Patchers
             return true;
         }
 
-        internal bool RevertImageBasePatch()
+        internal bool StealthExecutor5965()
         {
             try
             {

