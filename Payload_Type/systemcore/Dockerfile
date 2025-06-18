@@ -18,7 +18,7 @@ RUN /venv/bin/python -m pip install git+https://github.com/MEhrn00/donut.git@v2.
 COPY [".", "."]
 
 # fetch all dependencies
-RUN cd SystemCore/agent_code && dotnet restore && rm donut ; cp /donut donut
-RUN cd SystemCore/agent_code && cp COFFLoader.dll /COFFLoader.dll
+RUN cd systemcore/agent_code && dotnet restore && rm donut ; cp /donut donut
+RUN cd systemcore/agent_code && cp COFFLoader.dll /COFFLoader.dll
 
-CMD ["bash", "-c", "cp /donut SystemCore/agent_code/donut && /venv/bin/python main.py"]
+CMD ["bash", "-c", "cp /donut systemcore/agent_code/donut && /venv/bin/python main.py"]

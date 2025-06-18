@@ -14,7 +14,7 @@ from mythic_container.MythicRPC import *
 
 
 class SystemCore(PayloadType):
-    name = "SystemCore"
+    name = "systemcore"
     file_extension = "exe"
     author = "@djhohnstein, @its_a_feature_"
     mythic_encrypts = True
